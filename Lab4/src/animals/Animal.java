@@ -9,15 +9,11 @@ public abstract class Animal {
         this.legs = legs;
     }
 
-    public abstract String getDescription();
-
-    public String getName() {
-        return name;
-    }
-
+    public String getName() { return name; }
     public int getLegs() {
         return legs;
     }
 
-    public void makeSound() {}
+    public abstract String getDescription();
+    public abstract void makeSound();
 }
