@@ -8,6 +8,8 @@
 /Lab4/Lab4.iml
 /po2025
 /po2025-2.iml
+/target/
+/pom.xml
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files

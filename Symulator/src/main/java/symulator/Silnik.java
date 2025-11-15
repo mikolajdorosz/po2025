@@ -6,8 +6,9 @@ public class Silnik extends Komponent {
     private int deltaObroty;
     private int minObroty;
 
-    public Silnik(int _maxObroty) {
-        this.maxObroty = _maxObroty;
+    public Silnik(int maxObroty, String nazwa, double waga, double cena, String producent, String model) {
+        super(nazwa, waga, cena, producent, model);
+        this.maxObroty = maxObroty;
         this.obroty = 0;
         this.deltaObroty = 250;
         this.minObroty = 1000;

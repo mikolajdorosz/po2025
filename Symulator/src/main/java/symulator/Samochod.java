@@ -1,6 +1,7 @@
 package symulator;
 
 public class Samochod {
+    private Pozycja aktualnaPozycja;
     private Silnik silnik;
     private SkrzyniaBiegow skrzynia;
     private boolean stanWlaczenia;
@@ -8,13 +9,14 @@ public class Samochod {
     private String model;
     private int predkoscMax;
 
-    public Samochod(Silnik _silnik, SkrzyniaBiegow _skrzynia, String _nrRejest, String _model, int _predkoscMax) {
-        silnik = _silnik;
-        skrzynia = _skrzynia;
-        stanWlaczenia = false;
-        nrRejest = _nrRejest;
-        model = _model;
-        predkoscMax = _predkoscMax;
+    public Samochod(String nrRejest, String model, int predkoscMax, Pozycja pozycja, Silnik silnik, SkrzyniaBiegow skrzynia) {
+        this.stanWlaczenia = false;
+        this.nrRejest = nrRejest;
+        this.model = model;
+        this.predkoscMax = predkoscMax;
+        this.aktualnaPozycja = pozycja;
+        this.silnik = silnik;
+        this.skrzynia = skrzynia;
     }
 
     public void wlacz() {
@@ -26,14 +28,15 @@ public class Samochod {
         skrzynia.zmniejszBieg();
         stanWlaczenia = false;
     }
-    public void jedzDo(Pozycja cel) {
-        Pozycja aktualnaPozycja = new Pozycja();
-        while (!aktualnaPozycja.getPozycja().equals(cel.getPozycja())) {
+    public void jedzDo(Pozycja cel) {}
 
-        }
+    public double getWaga() { return silnik.getWaga() + skrzynia.getWaga(); }
+    public int getAktualnaPredkosc() {
+//        if (!stanWlaczenia) retrun 0;
+//        else {
+//            return
+//        }
+        return 1;
     }
-
-    public int getWaga() { return silnik.getWaga() + skrzynia.getWaga(); }
-    public int getAktualnaPredkosc() {}
-    public String getAktualnaPozycja() {}
+    public String getAktualnaPozycja() { return aktualnaPozycja.getPozycja(); }
 }
