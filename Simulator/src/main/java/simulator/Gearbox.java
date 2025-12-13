@@ -1,0 +1,40 @@
+package simulator;
+
+public class Gearbox extends Component {
+    private Clutch clutch;
+    private int currentGear;
+    private int gearsNumber;
+    private int currentRatio;
+
+    public Gearbox(int gearsNumber, String name, int weight, int price, Clutch clutch) {
+        super(name, weight, price);
+        this.clutch = clutch;
+        this.currentGear = 1;
+        this.gearsNumber = gearsNumber;
+        this.currentRatio = 2;
+    }
+
+    public void gearUp() {
+        clutch.press();
+        if (currentGear < gearsNumber) {
+            currentGear += 1;
+            currentRatio -= 0.25;
+        }
+        clutch.release();
+        System.out.println("Current gear: " + getCurrentGear());
+    }
+    public void gearDown() {
+        clutch.press();
+        if (currentGear > 0) {
+            currentGear -= 1;
+            currentRatio += 0.25;
+        }
+        clutch.release();
+        System.out.println("Current gear: " + getCurrentGear());
+    }
+
+    @Override
+    public double getWeight() { return super.getWeight() + clutch.getWeight(); }
+    public int getCurrentGear() { return currentGear; }
+    public int getCurrentRatio() { return currentRatio; }
+}

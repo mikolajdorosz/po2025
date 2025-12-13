@@ -1,0 +1,40 @@
+package simulator;
+
+public class Car {
+    private Position currentPosition;
+    private Engine engine;
+    private Gearbox gearbox;
+    private boolean isRunning;
+    private String plateNumber;
+    private String model;
+    private int vMax;
+
+    public Car(String plateNumber, String model, int vMax, Position position, Engine engine, Gearbox gearbox) {
+        this.isRunning = false;
+        this.plateNumber = plateNumber;
+        this.model = model;
+        this.vMax = vMax;
+        this.currentPosition = position;
+        this.engine = engine;
+        this.gearbox = gearbox;
+    }
+
+    public void start() {
+        engine.start();
+        isRunning = true;
+        System.out.println("Car is running...");
+    }
+    public void turnOff() {
+        engine.stop();
+        gearbox.gearDown();
+        isRunning = false;
+        System.out.println("Car turned off.");
+    }
+    public void goTo(Position destination) {}
+
+    public double getWeight() { return engine.getWeight() + gearbox.getWeight(); }
+    public int getCurrentV() {
+        return 1;
+    }
+    public String getCurrentPosition() { return currentPosition.getPosition(); }
+}

@@ -1,0 +1,15 @@
+import simulator.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Car testCar = null;
+        // set breakpoint here and create a watch for testCar object in debugger
+        // call start() method on testCar and gearUp(), gearDown() methods on testCar.gearbox
+        // observe how they affect testCar components' fields
+        Car ford = new Car("RPR10101", "Ford", 180,
+                new Position(0, 0),
+                new Engine(3200, "Cummins 6.7L TurboDiesel", 444.97, 15000),
+                new Gearbox(6, "TorqShift 6R140", 220, 8000,
+                        new Clutch("Clutch", 35, 2000)));
+    }
+}
