@@ -1,13 +1,80 @@
-# po2025
-Repozytorium dla przedmiotu Programowanie Obiektowe.
-
-
-
 Projekt laboratoryjny Samochod (symulacja) - GUI
 ===============================================
 
+Scene Builder - aplikacja zewnętrzna:
+https://www.oracle.com/java/technologies/javafxscenebuilder-1x-archive-downloads.html
+
+
 Diagramy UML
 ------------
+
+### Diagram przypadków użycia
+
+```plantuml
+@startuml
+
+left to right direction
+actor "Użytkownik" as User
+
+package "Aplikacja Symulator Samochodu" {
+
+    package "Zarządzanie Flotą" {
+        usecase "Wybór samochodu z listy" as UC_Select
+        usecase "Dodanie nowego samochodu" as UC_Add
+        usecase "Usunięcie samochodu" as UC_Remove
+        usecase "Wprowadzenie danych modelu\n(Model, Rejestracja, Waga, Vmax)" as UC_InputData
+    }
+
+    package "Sterowanie Mechaniką" {
+        usecase "Włączenie/Wyłączenie silnika" as UC_Engine
+        usecase "Zmiana biegu" as UC_Gear
+        usecase "Zwiększenie biegu" as UC_GearUp
+        usecase "Zmniejszenie biegu" as UC_GearDown
+        usecase "Zmiana prędkości" as UC_Speed
+        usecase "Przyspieszanie" as UC_SpeedUp
+        usecase "Zwalnianie/hamowanie" as UC_SpeedDown
+        usecase "Operowanie sprzęgłem" as UC_Clutch
+        usecase "Wciśnięcie sprzęgła" as UC_ClutchPress
+        usecase "Zwolnienie sprzęgła" as UC_ClutchRelease
+    }
+
+    package "Nawigacja i Symulacja" {
+        usecase "Wskazanie celu na mapie" as UC_SetTarget
+        usecase "Jazda do celu\n(Symulacja ruchu)" as UC_Drive
+        usecase "Podgląd aktualnego stanu\n(Prędkość, Obroty, Pozycja)" as UC_View
+    }
+}
+
+' Relacje aktora z przypadkami użycia
+User --> UC_Select
+User --> UC_Add
+User --> UC_Remove
+User --> UC_Engine
+User --> UC_Gear
+User --> UC_Speed
+User --> UC_Clutch
+User --> UC_SetTarget
+User --> UC_View
+
+' Relacje między przypadkami użycia (Include/Extend/Generalization)
+UC_Add ..> UC_InputData : <<include>>
+note right of UC_InputData : Walidacja formularza\n(Lab 9)
+
+UC_Gear <|-- UC_GearUp
+UC_Gear <|-- UC_GearDown
+
+UC_Speed <|-- UC_SpeedUp
+UC_Speed <|-- UC_SpeedDown
+
+UC_Clutch <|-- UC_ClutchPress
+UC_Clutch <|-- UC_ClutchRelease
+
+' Kliknięcie na mapie uruchamia logikę jazdy (wątek)
+UC_SetTarget ..> UC_Drive : <<include>>
+note right of UC_Drive : Wątek (Thread)\naktualizuje pozycję\n(Lab 10)
+
+@enduml
+```
 
 ### Diagram klas
 
