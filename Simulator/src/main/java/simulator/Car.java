@@ -7,12 +7,14 @@ public class Car {
     private boolean isRunning;
     private String plateNumber;
     private String model;
+    private double weight;
     private int vMax;
 
-    public Car(String plateNumber, String model, int vMax, Position position, Engine engine, Gearbox gearbox) {
+    public Car(String plateNumber, String model, double weight, int vMax, Position position, Engine engine, Gearbox gearbox) {
         this.isRunning = false;
         this.plateNumber = plateNumber;
         this.model = model;
+        this.weight = weight;
         this.vMax = vMax;
         this.currentPosition = position;
         this.engine = engine;
@@ -32,9 +34,15 @@ public class Car {
     }
     public void goTo(Position destination) {}
 
-    public double getWeight() { return engine.getWeight() + gearbox.getWeight(); }
+    public double getWeight() { return weight + engine.getWeight() + gearbox.getWeight(); }
     public int getCurrentV() {
         return 1;
     }
     public String getCurrentPosition() { return currentPosition.getPosition(); }
+    public Gearbox getGearbox() { return gearbox; }
+
+    @Override
+    public String toString() {
+        return model + " [" + plateNumber + "]";
+    }
 }

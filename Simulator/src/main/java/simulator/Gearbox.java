@@ -6,10 +6,17 @@ public class Gearbox extends Component {
     private int gearsNumber;
     private int currentRatio;
 
-    public Gearbox(int gearsNumber, String name, int weight, int price, Clutch clutch) {
+    public Gearbox(int gearsNumber, String name, double weight, double price, Clutch clutch) {
         super(name, weight, price);
         this.clutch = clutch;
-        this.currentGear = 1;
+        this.currentGear = 0;
+        this.gearsNumber = gearsNumber;
+        this.currentRatio = 2;
+    }
+    public Gearbox(int gearsNumber, String name, double weight, double price, Clutch clutch, int currentGear) {
+        super(name, weight, price);
+        this.clutch = clutch;
+        this.currentGear = currentGear;
         this.gearsNumber = gearsNumber;
         this.currentRatio = 2;
     }

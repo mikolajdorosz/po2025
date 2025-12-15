@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.simulatorgui.controller.EngineController" animated="false" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 8;" text="Engine">
+    <AnchorPane style="-fx-background-color: #ffffff; -fx-background-radius: 0 0 8 8;">
+        <VBox spacing="12" style="-fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 110;" text="Name" />
+                <TextField fx:id="engineNameTextField" promptText="Enter name" text="Engine"
+                           style="-fx-background-color: #f8f9fa; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-color: #d1d8e0; -fx-border-width: 1; -fx-border-radius: 6; -fx-padding: 8;" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 110;" text="Price" />
+                <TextField fx:id="enginePriceTextField" promptText="Enter price [PLN]" text="200000"
+                           style="-fx-background-color: #f8f9fa; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-color: #d1d8e0; -fx-border-width: 1; -fx-border-radius: 6; -fx-padding: 8;" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 110;" text="Weight" />
+                <TextField fx:id="engineWeightTextField" promptText="Enter weight [kg]" text="200"
+                           style="-fx-background-color: #f8f9fa; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-color: #d1d8e0; -fx-border-width: 1; -fx-border-radius: 6; -fx-padding: 8;" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 110;" text="RPM" />
+                <TextField fx:id="engineSpeedTextField" promptText="Enter number" text="10000"
+                           style="-fx-background-color: #f8f9fa; -fx-text-fill: #2c3e50; -fx-background-radius: 6; -fx-border-color: #d1d8e0; -fx-border-width: 1; -fx-border-radius: 6; -fx-padding: 8;" />
+            </HBox>
+            <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10 0 0 0;">
+                <Button fx:id="speedUpButton" onAction="#onSpeedUp" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand;" text="Speed up" />
+                <Button fx:id="slowDownButton" onAction="#onSlowDown" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand;" text="Slow down" />
+            </HBox>
+        </VBox>
+    </AnchorPane>
+</TitledPane>
