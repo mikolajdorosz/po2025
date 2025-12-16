@@ -24,6 +24,12 @@ public class Gearbox extends Component {
         this.gearsNumber = gearsNumber;
         this.currentRatio = 2;
     }
+    public Gearbox(int gearsNumber, String name, double weight, double price, String type) {
+        super(name, weight, price);
+        this.gearsNumber = gearsNumber;
+        this.type = type;
+        this.currentRatio = 2;
+    }
 
     public void gearUp() {
         clutch.press();
@@ -53,6 +59,9 @@ public class Gearbox extends Component {
         this.clutch = clutch;
     }
 
+    public String getType() {
+        return type;
+    }
     public void setType(String type) {
         this.type = type;
     }

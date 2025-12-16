@@ -11,48 +11,63 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.simulatorgui.dialog.CarWizardDialog;
 import simulator.Car;
 
 import java.io.IOException;
 
 public class MenuController {
 
-    // UI
-    @FXML private ComboBox<Car> availableCarsComboBox;
-    @FXML private ListView<Car> raceCarsListView;
     @FXML private VBox emptyStateBox;
     @FXML private VBox mainBox;
 
-    // DATA
-    private final ObservableList<Car> allCars = FXCollections.observableArrayList();
-    private final ObservableList<Car> raceCars = FXCollections.observableArrayList();
+    @FXML private ComboBox<Car> storedCarsComboBox;
+    @FXML private ListView<Car> raceCarsListView;
 
-    private FilteredList<Car> availableCars;
+    private final ObservableList<Car> storedCars = FXCollections.observableArrayList();     // Change in ObservableList automatically updates GUI
+    private final ObservableList<Car> raceCars = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
-
-        // ComboBox = wszystkie - te już w wyścigu
-        availableCars = new FilteredList<>(allCars);
-        availableCars.setPredicate(car -> !raceCars.contains(car));
-
-        availableCarsComboBox.setItems(availableCars);
+        FilteredList<Car> availableCars = new FilteredList<>(storedCars);       // Filter for ObservableList
+        availableCars.setPredicate(car -> !raceCars.contains(car));     // If there is no car in race, then set it as available
+        storedCarsComboBox.setItems(availableCars);
         raceCarsListView.setItems(raceCars);
 
-        // Widoczność UI zależna od stanu
-        mainBox.visibleProperty().bind(Bindings.isNotEmpty(allCars));
-        emptyStateBox.visibleProperty().bind(Bindings.isEmpty(allCars));
+        mainBox.visibleProperty().bind(Bindings.isNotEmpty(storedCars));    // Visibility of mainBox and emptyStateBox is only dependent from storedCars content
+        emptyStateBox.visibleProperty().bind(Bindings.isEmpty(storedCars));
     }
 
     // ===================== ACTIONS =====================
+    @FXML
+    private void onCreateCar() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/add_car.fxml"));
+            Stage stage = new Stage();  // Window
+            stage.setScene(new Scene(loader.load()));   // Window content
+            stage.setTitle("Add new car");
+            stage.setMinWidth(1200);
+            stage.setMinHeight(600);
+//            AddCarController controller = loader.getController();
+//            controller.setOnCarCreated(storedCars::add);    // Add new car to storedCars
+            stage.show();   // Creating window
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
 
     @FXML
     private void onCarSelected() {
-        Car selected = availableCarsComboBox.getValue();
+        Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
             raceCars.add(selected);
-            availableCarsComboBox.getSelectionModel().clearSelection();
+            storedCarsComboBox.getSelectionModel().clearSelection();
         }
     }
 
@@ -66,30 +81,13 @@ public class MenuController {
 
     private AddCarController addCarController;
 
-    @FXML
-    private void onCreateCar() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/add_car.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(loader.load()));
-            stage.setTitle("Dodaj nowy samochód");
 
-            AddCarController controller = loader.getController();
-            controller.setOnCarCreated(car -> {
-                allCars.add(car); // automatyczne dodanie do listy w MenuController
-            });
-
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     private void onDeleteCar() {
-        Car selected = availableCarsComboBox.getValue();
+        Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
-            allCars.remove(selected);
+            storedCars.remove(selected);
             raceCars.remove(selected);
         }
     }

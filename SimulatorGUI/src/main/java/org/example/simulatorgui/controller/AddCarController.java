@@ -3,11 +3,7 @@ package org.example.simulatorgui.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.example.simulatorgui.controller.form.CarController;
 import org.example.simulatorgui.controller.form.ClutchController;
 import org.example.simulatorgui.controller.form.EngineController;
@@ -19,19 +15,91 @@ import java.util.function.Consumer;
 
 public class AddCarController {
 
-    // === FXML ===
     @FXML private VBox carFormContainer;
-    @FXML private VBox engineFormContainer;
-    @FXML private VBox gearboxFormContainer;
-    @FXML private VBox carFormRoot;
-    @FXML private StackPane sideFormContainer;
-    @FXML private StackPane clutchFormContainer;
+    public VBox getCarFormContainer() {
+        return carFormContainer;
+    }
 
-    // === Controllers ===
+    @FXML private VBox engineFormContainer;
+    public VBox getEngineFormContainer() {
+        return engineFormContainer;
+    }
+
+    @FXML private VBox gearboxFormContainer;
+    public VBox getGearboxFormContainer() {
+        return gearboxFormContainer;
+    }
+
+    @FXML private VBox clutchFormContainer;
+    public VBox getClutchFormContainer() {
+        return clutchFormContainer;
+    }
+
+//    @FXML private VBox carForm;
+//    public VBox getCarForm() {
+//        return carForm;
+//    }
+//
+//    @FXML private VBox engineForm;
+//    public VBox getEngineForm() {
+//        return engineForm;
+//    }
+//
+//    @FXML private VBox gearboxForm;
+//    public VBox getGearboxForm() {
+//        return gearboxForm;
+//    }
+//
+//    @FXML private VBox clutchForm;
+//    public VBox getClutchForm() {
+//        return clutchForm;
+//    }
+
     private CarController carController;
     private EngineController engineController;
     private GearboxController gearboxController;
     private ClutchController clutchController;
+
+    @FXML
+    private void initialize() {
+        try {
+            showForm("car_form.fxml", carFormContainer, controller -> {
+                carController = (CarController) controller;
+                carController.setAddCarController(this);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ===================== ACTIONS =====================
+    public <T> T showForm(String view, VBox toShow, Consumer<T> controllerConsumer) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/form/" + view));
+        Node form = loader.load();
+        T controller = loader.getController();
+        if (controllerConsumer != null)  controllerConsumer.accept(controller);
+        toShow.getChildren().setAll(form); // Placing form in add_car view
+        return controller;
+    }
+    public <T> T showForm(String view, VBox toShow, VBox toDisable, Consumer<T> controllerConsumer) throws IOException {
+        T controller = showForm(view, toShow, controllerConsumer);
+        toShow.setVisible(true);
+        toShow.setManaged(true);
+        if (toDisable != null) toDisable.setDisable(true);
+        return controller;
+    }
+
+    public void closeForm(VBox toClose) {
+        toClose.getChildren().clear();
+    }
+    public void closeForm(VBox toClose, VBox toEnable) {
+        closeForm(toClose);
+        toClose.setVisible(false);
+        toClose.setManaged(false);
+        toEnable.setDisable(false);
+    }
+
+
 
     // === Callback ===
     private Consumer<Car> onCarCreated;
@@ -39,62 +107,13 @@ public class AddCarController {
         this.onCarCreated = callback;
     }
 
-    public void showSideForm(String fxmlPath, String type) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Parent form = loader.load();
 
-        switch (type) {
-            case "engine" -> {
-                engineController = loader.getController();
-                engineController.setParentController(this);
-                sideFormContainer.getChildren().setAll(form);
-                sideFormContainer.setVisible(true);
-                sideFormContainer.setManaged(true);
-            }
-            case "gearbox" -> {
-                gearboxController = loader.getController();
-                gearboxController.setParentController(this);
-                sideFormContainer.getChildren().setAll(form);
-                sideFormContainer.setVisible(true);
-                sideFormContainer.setManaged(true);
-            }
-            case "clutch" -> {
-                clutchController = loader.getController();
-                clutchController.setParentController(this);
-                clutchFormContainer.getChildren().setAll(form);
-                clutchFormContainer.setVisible(true);
-                clutchFormContainer.setManaged(true);
-            }
-        }
-
-        // dezaktywacja paneli - poprawione
-        carFormRoot.setDisable(!"clutch".equals(type));
-        sideFormContainer.setDisable("clutch".equals(type));
-        clutchFormContainer.setDisable(false); // zawsze aktywny, gdy otwierany
-    }
-
-
-    public void closeSideForm(String type) {
-        if ("engine".equals(type) || "gearbox".equals(type)) {
-            sideFormContainer.getChildren().clear();
-            sideFormContainer.setVisible(false);
-            sideFormContainer.setManaged(false);
-            carFormRoot.setDisable(false);
-        } else if ("clutch".equals(type)) {
-            clutchFormContainer.getChildren().clear();
-            clutchFormContainer.setVisible(false);
-            clutchFormContainer.setManaged(false);
-            sideFormContainer.setDisable(false);
-            carFormRoot.setDisable(false);
-        }
-    }
     // ================= CALLBACKS =================
     public void onEngineCreated(Engine engine) {
         if (carController != null) {
             carController.getEngineComboBox().getItems().add(engine);
             carController.getEngineComboBox().getSelectionModel().select(engine);
         }
-        closeSideForm("engine");
     }
 
     public void onGearboxCreated(Gearbox gearbox) {
@@ -102,42 +121,13 @@ public class AddCarController {
             carController.getGearboxComboBox().getItems().add(gearbox);
             carController.getGearboxComboBox().getSelectionModel().select(gearbox);
         }
-        closeSideForm("gearbox");
     }
 
     public void onClutchCreated(Clutch clutch) {
         if (gearboxController != null) {
-            gearboxController.addClutchToGearbox(clutch);
-        }
-        closeSideForm("clutch");
-    }
+            gearboxController.getClutchComboBox().getItems().add(clutch);
+            gearboxController.getClutchComboBox().getSelectionModel().select(clutch);
 
-    // ================= BUTTON ACTIONS =================
-    @FXML
-    private void onAddEngine() throws IOException {
-        showSideForm("/org/example/simulatorgui/view/form/engine_form.fxml", "engine");
-    }
-
-    @FXML
-    private void onAddGearbox() throws IOException {
-        showSideForm("/org/example/simulatorgui/view/form/gearbox_form.fxml", "gearbox");
-    }
-
-    public void onAddClutch() throws IOException {
-        showSideForm("/org/example/simulatorgui/view/form/clutch_form.fxml", "clutch");
-    }
-
-
-    @FXML
-    private void initialize() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/form/car_form.fxml"));
-            Node carPane = loader.load();
-            carController = loader.getController();
-            carController.setParentController(this);
-            carFormContainer.getChildren().add(carPane);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

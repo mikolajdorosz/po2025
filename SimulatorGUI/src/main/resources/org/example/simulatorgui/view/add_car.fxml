@@ -1,46 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.simulatorgui.controller.AddCarController"
             prefHeight="500" prefWidth="900"
             style="-fx-background-color: #f5f6fa;">
-
-    <HBox fx:id="mainContainer"
-          spacing="10"
-          AnchorPane.topAnchor="0"
-          AnchorPane.leftAnchor="0"
-          AnchorPane.rightAnchor="0"
-          AnchorPane.bottomAnchor="0">
-
-        <!-- ================= PANEL SAMOCHODU ================= -->
-        <VBox fx:id="carFormRoot"
+    <top>
+        <VBox spacing="15"
+              alignment="CENTER"
+              style="-fx-padding: 20; -fx-background-color: #ffffff;"
+              HBox.hgrow="ALWAYS">
+            <Label text="Build your dream vehicle!"
+                   style="
+                   -fx-font-size: 24px;
+                   -fx-font-weight: bold;
+                   -fx-text-fill: #2c3e50;
+               "/>
+        </VBox>
+    </top>
+    <left>
+        <VBox fx:id="carFormContainer"
               spacing="15"
               alignment="CENTER"
+              style="-fx-padding: 20; -fx-background-color: #ffffff;"
+              HBox.hgrow="ALWAYS">
+            <VBox fx:id="carForm" spacing="10"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="15"
+              alignment="CENTER"
+              style="-fx-padding: 20; -fx-background-color: #ffffff;"
+              HBox.hgrow="ALWAYS">
+            <VBox fx:id="engineFormContainer">
+                <VBox fx:id="engineForm" spacing="10"/>
+            </VBox>
+            <VBox fx:id="gearboxFormContainer">
+                <VBox fx:id="gearboxForm" spacing="10"/>
+            </VBox>
+        </VBox>
+    </center>
+    <right>
+        <VBox fx:id="clutchFormContainer"
+              spacing="15"
+              alignment="CENTER"
+              visible="false"
+              managed="false"
               style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8;"
               HBox.hgrow="ALWAYS">
-
-            <VBox fx:id="carFormContainer" spacing="10"/>
+            <VBox fx:id="clutchForm" spacing="10"/>
         </VBox>
+    </right>
 
-        <!-- ================= PANEL DYNAMICZNY: silnik / skrzynia ================= -->
-        <StackPane fx:id="sideFormContainer"
-                   prefWidth="300"
-                   visible="false"
-                   managed="false"
-                   style="-fx-background-color: #ffffff; -fx-border-color: #dcdfe6; -fx-border-width: 1; -fx-padding: 15;"
-                   HBox.hgrow="ALWAYS"/>
-
-        <!-- ================= PANEL DYNAMICZNY: sprzęgło ================= -->
-        <StackPane fx:id="clutchFormContainer"
-                   prefWidth="300"
-                   visible="false"
-                   managed="false"
-                   style="-fx-background-color: #ffffff; -fx-border-color: #dcdfe6; -fx-border-width: 1; -fx-padding: 15;"
-                   HBox.hgrow="ALWAYS"/>
-
-    </HBox>
-</AnchorPane>
+</BorderPane>

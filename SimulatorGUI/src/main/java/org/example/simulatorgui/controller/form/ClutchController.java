@@ -2,28 +2,69 @@ package org.example.simulatorgui.controller.form;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.layout.VBox;
 import org.example.simulatorgui.controller.AddCarController;
 import simulator.*;
 
-public class ClutchController {
-    @FXML
-    private TextField clutchNameTextField;
-    @FXML
-    private TextField clutchPriceTextField;
-    @FXML
-    private TextField clutchWeightTextField;
-    @FXML
-    private TextField clutchStateTextField;
-    @FXML private Button confirmButton;
-    @FXML private Button cancelButton;
+import java.util.function.Consumer;
 
+public class ClutchController {
+    @FXML private TextField clutchNameTextField;
+    @FXML private TextField clutchPriceTextField;
+    @FXML private TextField clutchWeightTextField;
+
+    private Consumer<Clutch> onCreated;
+    private Runnable onClose;
+
+    public void setOnCreated(Consumer<Clutch> callback) { this.onCreated = callback; }
+    public void setOnClose(Runnable callback) { this.onClose = callback; }
+
+    public Clutch getClutchFromInput() {
+        String name = clutchNameTextField.getText();
+        double weight, price;
+        try {
+            weight = Double.parseDouble(clutchWeightTextField.getText());
+            price = Double.parseDouble(clutchPriceTextField.getText());
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException("Input value is incorrect!");
+        }
+        return new Clutch(name, weight, price);
+    }
+
+    // ===================== ACTIONS =====================
     @FXML
-    private Button pressClutchButton;
+    private void onConfirm() {
+        Clutch clutch = getClutchFromInput();
+        if (onCreated != null) onCreated.accept(clutch);
+
+        VBox container = (VBox) clutchNameTextField.getScene().lookup("#clutchFormContainer");
+        if (container != null) {
+            container.getChildren().clear();
+            container.setVisible(false);
+            container.setManaged(false);
+        }
+
+        if (onClose != null) onClose.run(); // e.g., re-enable gearbox form
+    }
     @FXML
-    private Button releaseClutchButton;
+    private void onCancel() {
+        VBox container = (VBox) clutchNameTextField.getScene().lookup("#clutchFormContainer");
+        if (container != null) {
+            container.getChildren().clear();
+            container.setVisible(false);
+            container.setManaged(false);
+        }
+        if (onClose != null) onClose.run(); // enable carForm
+    }
+
+
+
+
+
+
+
+
 
     @FXML
     public void onPressClutch(ActionEvent actionEvent) {
@@ -32,34 +73,5 @@ public class ClutchController {
     @FXML
     public void onReleaseClutch(ActionEvent actionEvent) {
         System.out.println("Clutch released!");
-    }
-
-    private AddCarController parentController;
-    public void setParentController(AddCarController controller) {
-        this.parentController = controller;
-    }
-
-    public Clutch getClutchFromInput() {
-        String name = clutchNameTextField.getText();
-        double weight = Double.parseDouble(clutchWeightTextField.getText());
-        double price = Double.parseDouble(clutchPriceTextField.getText());
-        return new Clutch(name, weight, price);
-    }
-
-    @FXML
-    private void onConfirm() {
-        Clutch clutch = new Clutch();
-        clutch.setName(clutchNameTextField.getText());
-        clutch.setPrice(Double.parseDouble(clutchPriceTextField.getText()));
-
-        if (parentController != null) {
-            parentController.onClutchCreated(clutch);
-        }
-    }
-    @FXML
-    private void onCancel() {
-        if (parentController != null) {
-            parentController.closeSideForm("clutch");
-        }
     }
 }
