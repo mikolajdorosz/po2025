@@ -1,17 +1,14 @@
-package org.example.simulatorgui.controller;
+package org.example.simulatorgui.controller.form;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import org.example.simulatorgui.controller.AddCarController;
 import simulator.*;
 
-import java.util.Locale;
-
 public class ClutchController {
-    @FXML
-    private TitledPane clutchPane;
     @FXML
     private TextField clutchNameTextField;
     @FXML
@@ -20,6 +17,9 @@ public class ClutchController {
     private TextField clutchWeightTextField;
     @FXML
     private TextField clutchStateTextField;
+    @FXML private Button confirmButton;
+    @FXML private Button cancelButton;
+
     @FXML
     private Button pressClutchButton;
     @FXML
@@ -34,12 +34,32 @@ public class ClutchController {
         System.out.println("Clutch released!");
     }
 
+    private AddCarController parentController;
+    public void setParentController(AddCarController controller) {
+        this.parentController = controller;
+    }
+
     public Clutch getClutchFromInput() {
         String name = clutchNameTextField.getText();
         double weight = Double.parseDouble(clutchWeightTextField.getText());
         double price = Double.parseDouble(clutchPriceTextField.getText());
-        boolean state = clutchStateTextField.getText().toLowerCase().trim().equals("pressed") ? true : false;
+        return new Clutch(name, weight, price);
+    }
 
-        return new Clutch(name, weight, price, state);
+    @FXML
+    private void onConfirm() {
+        Clutch clutch = new Clutch();
+        clutch.setName(clutchNameTextField.getText());
+        clutch.setPrice(Double.parseDouble(clutchPriceTextField.getText()));
+
+        if (parentController != null) {
+            parentController.onClutchCreated(clutch);
+        }
+    }
+    @FXML
+    private void onCancel() {
+        if (parentController != null) {
+            parentController.closeSideForm("clutch");
+        }
     }
 }

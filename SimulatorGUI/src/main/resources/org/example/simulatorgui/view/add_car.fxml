@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.simulatorgui.controller.AddCarController"
+            prefHeight="500" prefWidth="900"
+            style="-fx-background-color: #f5f6fa;">
+
+    <HBox fx:id="mainContainer"
+          spacing="10"
+          AnchorPane.topAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          AnchorPane.bottomAnchor="0">
+
+        <!-- ================= PANEL SAMOCHODU ================= -->
+        <VBox fx:id="carFormRoot"
+              spacing="15"
+              alignment="CENTER"
+              style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8;"
+              HBox.hgrow="ALWAYS">
+
+            <VBox fx:id="carFormContainer" spacing="10"/>
+        </VBox>
+
+        <!-- ================= PANEL DYNAMICZNY: silnik / skrzynia ================= -->
+        <StackPane fx:id="sideFormContainer"
+                   prefWidth="300"
+                   visible="false"
+                   managed="false"
+                   style="-fx-background-color: #ffffff; -fx-border-color: #dcdfe6; -fx-border-width: 1; -fx-padding: 15;"
+                   HBox.hgrow="ALWAYS"/>
+
+        <!-- ================= PANEL DYNAMICZNY: sprzęgło ================= -->
+        <StackPane fx:id="clutchFormContainer"
+                   prefWidth="300"
+                   visible="false"
+                   managed="false"
+                   style="-fx-background-color: #ffffff; -fx-border-color: #dcdfe6; -fx-border-width: 1; -fx-padding: 15;"
+                   HBox.hgrow="ALWAYS"/>
+
+    </HBox>
+</AnchorPane>

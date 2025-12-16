@@ -3,6 +3,9 @@ package simulator;
 public class Clutch extends Component {
     private boolean isPressed;
 
+    public Clutch() {
+        super("", 0, 0);
+    }
     public Clutch(String name, double weight, double price) {
         super(name, weight, price);
         this.isPressed = false;
@@ -18,4 +21,7 @@ public class Clutch extends Component {
     public void release() {
         isPressed = false;
     }
+
+
+
 }

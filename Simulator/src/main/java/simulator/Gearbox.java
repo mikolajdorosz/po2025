@@ -5,7 +5,11 @@ public class Gearbox extends Component {
     private int currentGear;
     private int gearsNumber;
     private int currentRatio;
+    private String type;
 
+    public Gearbox() {
+        super("", 0, 0);
+    }
     public Gearbox(int gearsNumber, String name, double weight, double price, Clutch clutch) {
         super(name, weight, price);
         this.clutch = clutch;
@@ -44,4 +48,12 @@ public class Gearbox extends Component {
     public double getWeight() { return super.getWeight() + clutch.getWeight(); }
     public int getCurrentGear() { return currentGear; }
     public int getCurrentRatio() { return currentRatio; }
+
+    public void setClutch(Clutch clutch) {
+        this.clutch = clutch;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

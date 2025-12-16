@@ -34,6 +34,12 @@ public class Car {
     }
     public void goTo(Position destination) {}
 
+    public String getModel() {
+        return model;
+    }
+    public String getPlateNumber() {
+        return plateNumber;
+    }
     public double getWeight() { return weight + engine.getWeight() + gearbox.getWeight(); }
     public int getCurrentV() {
         return 1;

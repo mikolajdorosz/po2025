@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.simulatorgui.controller.form.EngineController"
+            style="
+                -fx-background-color: #ffffff;
+                -fx-background-radius: 12;
+                -fx-border-radius: 12;
+                -fx-border-color: #e5e9f0;
+                -fx-border-width: 1;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 2);
+            ">
+    <VBox spacing="14"
+          AnchorPane.topAnchor="0"
+          AnchorPane.rightAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          style="-fx-padding: 20;">
+        <!-- TITLE -->
+        <Label text="Engine configuration"
+               style="
+                   -fx-font-size: 18px;
+                   -fx-font-weight: bold;
+                   -fx-text-fill: #2c3e50;
+               "/>
+        <Separator/>
+        <!-- NAME -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Name"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;"/>
+            <TextField fx:id="engineNameTextField"
+                       promptText="Enter name"
+                       text="Engine"
+                       HBox.hgrow="ALWAYS"
+                       style="
+               -fx-background-radius: 8;
+               -fx-border-radius: 8;
+               -fx-border-color: #dcdfe6;
+               -fx-padding: 10;
+           "/>
+        </HBox>
+        <!-- PRICE -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Price"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;"/>
+            <TextField fx:id="enginePriceTextField"
+                       promptText="Enter price [PLN]"
+                       text="200000"
+                       HBox.hgrow="ALWAYS"
+                       style="
+                           -fx-background-radius: 8;
+                           -fx-border-radius: 8;
+                           -fx-border-color: #dcdfe6;
+                           -fx-padding: 10;
+                       "/>
+        </HBox>
+        <!-- WEIGHT -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Weight"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;"/>
+            <TextField fx:id="engineWeightTextField"
+                       promptText="Enter weight [kg]"
+                       text="300"
+                       HBox.hgrow="ALWAYS"
+                       style="
+                           -fx-background-radius: 8;
+                           -fx-border-radius: 8;
+                           -fx-border-color: #dcdfe6;
+                           -fx-padding: 10;
+                       "/>
+        </HBox>
+        <!-- RPM -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="RPM"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;"/>
+            <TextField fx:id="engineRPMTextField"
+                       promptText="Enter RPM"
+                       text="10000"
+                       HBox.hgrow="ALWAYS"
+                       style="
+                           -fx-background-radius: 8;
+                           -fx-border-radius: 8;
+                           -fx-border-color: #dcdfe6;
+                           -fx-padding: 10;
+                       "/>
+        </HBox>
+        <!-- ACTIONS -->
+        <Separator/>
+        <HBox spacing="12"
+              alignment="CENTER_RIGHT"
+              style="-fx-padding: 10 0 0 0;">
+            <Button text="❌ Anuluj"
+                    onAction="#onCancel"
+                    style="
+                -fx-background-color: #ecf0f1;
+                -fx-text-fill: #2c3e50;
+                -fx-background-radius: 8;
+                -fx-padding: 10 18;
+                -fx-font-weight: bold;
+            "/>
+            <Button text="✅ Zatwierdź"
+                    onAction="#onConfirm"
+                    style="
+                -fx-background-color: linear-gradient(#27ae60, #1e8449);
+                -fx-text-fill: white;
+                -fx-background-radius: 8;
+                -fx-padding: 10 22;
+                -fx-font-weight: bold;
+                -fx-cursor: hand;
+            "/>
+        </HBox>
+    </VBox>
+</AnchorPane>

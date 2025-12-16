@@ -11,10 +11,10 @@
         <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #ffffff; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 3);">
             <Accordion style="-fx-background-color: transparent;">
                 <panes>
-                    <fx:include fx:id="carPane" source="panes/car_pane.fxml"/>
-                    <fx:include fx:id="gearboxPane" source="panes/gearbox_pane.fxml"/>
-                    <fx:include fx:id="enginePane" source="panes/engine_pane.fxml"/>
-                    <fx:include fx:id="clutchPane" source="panes/clutch_pane.fxml"/>
+                    <fx:include fx:id="carPane" source="form/car_form.fxml"/>
+                    <fx:include fx:id="gearboxPane" source="form/gearbox_form.fxml"/>
+                    <fx:include fx:id="enginePane" source="form/engine_form.fxml"/>
+                    <fx:include fx:id="clutchPane" source="form/clutch_form.fxml"/>
                 </panes>
             </Accordion>
         </VBox>
@@ -33,7 +33,7 @@
     </top>
 
     <center>
-        <ImageView fitHeight="150.0" fitWidth="300.0" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-padding: 10;">
+        <ImageView fx:id="carImageView" fitHeight="150.0" fitWidth="300.0" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 5); -fx-padding: 10;">
             <Image url="@../images/car.png" />
         </ImageView>
     </center>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.simulatorgui.controller.MenuController"
+            style="-fx-background-color: #f9f9f9;">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    <top>
+        <HBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER"
+              style="-fx-background-color: #ffffff; -fx-padding: 10 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 2);">
+            <Label text="Create your cars and test them in the race!"
+                   style="-fx-font-size: 32px;
+                      -fx-font-weight: bold;
+                      -fx-text-fill: #2c3e50;" />
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="15" alignment="CENTER" BorderPane.alignment="CENTER">
+            <VBox fx:id="emptyStateBox" spacing="10" alignment="CENTER"
+                  style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 10, 0, 0, 2);">
+                <Button text="Create new car"
+                        onAction="#onCreateCar"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+            </VBox>
+
+
+            <!-- Gdy SĄ samochody -->
+            <VBox fx:id="mainBox" spacing="10" alignment="CENTER"
+                  style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 10, 0, 0, 2);">
+                <Button text="Start race!"
+                        fx:id="startRaceButton"
+                        onAction="#onStartRace"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 20; -fx-cursor: hand;"/>
+
+                <ComboBox fx:id="availableCarsComboBox"
+                          promptText="Wybierz samochód do wyścigu"
+                          onAction="#onCarSelected"
+                          style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-padding: 6; -fx-border-color: #d1d8e0; -fx-background-color: #f8f9fa;"/>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="➕ Nowy samochód"
+                            onAction="#onCreateCar"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+                    <Button text="🗑 Usuń samochód z programu"
+                            onAction="#onDeleteCar"
+                            style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+                </HBox>
+
+                <Label text="Lista startowa:" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;"/>
+
+                <ListView fx:id="raceCarsListView" prefHeight="150"
+                          style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #d1d8e0; -fx-background-color: #f8f9fa;"/>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="⬅ Usuń z wyścigu"
+                            onAction="#onRemoveFromRace"
+                            style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+                </HBox>
+
+            </VBox>
+        </VBox>
+    </center>
+
+
+</BorderPane>
