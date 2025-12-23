@@ -9,6 +9,10 @@ public class Car {
     private String model;
     private double weight;
     private int vMax;
+    private boolean playerControlled;
+
+    public boolean getPlayerControlled() { return this.playerControlled; }
+    public void setPlayerControlled(boolean playerControlled) { this.playerControlled = playerControlled; }
 
     public Car(String plateNumber, String model, double weight, int vMax, Position position, Engine engine, Gearbox gearbox) {
         this.isRunning = false;
@@ -19,6 +23,7 @@ public class Car {
         this.currentPosition = position;
         this.engine = engine;
         this.gearbox = gearbox;
+        this.playerControlled = false;
     }
 
     public void start() {

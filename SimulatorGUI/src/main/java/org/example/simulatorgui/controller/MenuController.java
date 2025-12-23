@@ -1,87 +1,123 @@
 package org.example.simulatorgui.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.example.simulatorgui.controller.form.CarController;
+import org.example.simulatorgui.controller.form.EngineController;
 import simulator.Car;
 
 import java.io.IOException;
 
 public class MenuController {
-
-    @FXML private VBox emptyStateBox;
-    @FXML private VBox mainBox;
-
+    @FXML private Button startRaceButton;
+    @FXML private VBox raceCarsContainer;
+    @FXML private Separator raceSeparator;
     @FXML private ComboBox<Car> storedCarsComboBox;
     @FXML private ListView<Car> raceCarsListView;
-
     private final ObservableList<Car> storedCars = FXCollections.observableArrayList();     // Change in ObservableList automatically updates GUI
     private final ObservableList<Car> raceCars = FXCollections.observableArrayList();
+    private Stage stage;
+
+    public ComboBox<Car> getStoredCarsComboBox() {
+        return storedCarsComboBox;
+    }
+    public ObservableList<Car> getStoredCarsList() {
+        return storedCars;
+    }
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
     @FXML
     private void initialize() {
-        FilteredList<Car> availableCars = new FilteredList<>(storedCars);       // Filter for ObservableList
-        availableCars.setPredicate(car -> !raceCars.contains(car));     // If there is no car in race, then set it as available
-        storedCarsComboBox.setItems(availableCars);
+        storedCarsComboBox.setItems(storedCars);
         raceCarsListView.setItems(raceCars);
+        raceListHandler();
+        windowSizeHandler();
+        updatePlayersCar();
+        startButtonHandler();
+    }
 
-        mainBox.visibleProperty().bind(Bindings.isNotEmpty(storedCars));    // Visibility of mainBox and emptyStateBox is only dependent from storedCars content
-        emptyStateBox.visibleProperty().bind(Bindings.isEmpty(storedCars));
+    private void updatePlayersCar() {
+        raceCarsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        raceCarsListView.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Car item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item.getModel());
+                    if (item.getPlayerControlled()) setStyle("-fx-font-weight: bold; -fx-text-fill: #10b981;");
+                    else setStyle("");
+                }
+            }
+        });
+    }
+    private void startButtonHandler() {
+        startRaceButton.disableProperty().bind(     // disable/enable start button
+                Bindings.size(raceCarsListView.getItems()).lessThan(2)
+        );
+    }
+    private void raceListHandler() {
+
+        BooleanBinding raceNotEmpty = Bindings.isNotEmpty(raceCarsListView.getItems());     // show/hide race car list
+        raceCarsContainer.visibleProperty().bind(raceNotEmpty);
+        raceCarsContainer.managedProperty().bind(raceNotEmpty);
+        raceSeparator.visibleProperty().bind(raceNotEmpty);
+        raceSeparator.managedProperty().bind(raceNotEmpty);
+    }
+    private void windowSizeHandler() {
+        raceCarsListView.getItems().addListener(       // adjust window size
+                (ListChangeListener<Car>) change -> {
+                    if (stage != null) {
+                        stage.sizeToScene();
+                    }
+                }
+        );
     }
 
     // ===================== ACTIONS =====================
     @FXML
-    private void onCreateCar() {
+    private void onNewCar() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/add_car.fxml"));
-            Stage stage = new Stage();  // Window
-            stage.setScene(new Scene(loader.load()));   // Window content
-            stage.setTitle("Add new car");
+            Parent root = loader.load();  // loads AddCarController
+            AddCarController addCarController = loader.getController();
+            addCarController.setMenuController(this);  // set menuController BEFORE loading CarController
+            addCarController.showCarForm();             // now CarController sees menuController
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("CarSimulator");
             stage.setMinWidth(1200);
             stage.setMinHeight(600);
-//            AddCarController controller = loader.getController();
-//            controller.setOnCarCreated(storedCars::add);    // Add new car to storedCars
-            stage.show();   // Creating window
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-
-
-    @FXML
-    private void onCarSelected() {
-        Car selected = storedCarsComboBox.getValue();
-        if (selected != null) {
-            raceCars.add(selected);
-            storedCarsComboBox.getSelectionModel().clearSelection();
-        }
-    }
-
-    @FXML
-    private void onRemoveFromRace() {
-        Car selected = raceCarsListView.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            raceCars.remove(selected);
-        }
-    }
-
-    private AddCarController addCarController;
-
-
 
     @FXML
     private void onDeleteCar() {
@@ -91,36 +127,48 @@ public class MenuController {
             raceCars.remove(selected);
         }
     }
-
     @FXML
-    private void onStartRace(ActionEvent event) {
-        if (raceCars.size() < 2) {
-            showAlert("Wyścig wymaga minimum 2 samochodów");
-            return;
+    private void onAddToRace(ActionEvent actionEvent) {
+        Car selected = storedCarsComboBox.getValue();
+        if (selected != null) {
+            raceCars.add(selected);
+            storedCars.remove(selected);
         }
 
-        System.out.println("START WYŚCIGU: " + raceCars);
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/simulatorgui/view/main.fxml")
-            );
-
-            Scene scene = new Scene(loader.load(), 1200, 600);
-
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource())
-                    .getScene()
-                    .getWindow();
-
-            stage.setScene(scene);
-            stage.setTitle("Car Simulator – Race");
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        storedCarsComboBox.setButtonCell(new ListCell<>() {     // default value for empty ComboBox
+            @Override
+            protected void updateItem(Car item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) setText("Select a car");
+                else setText(item.toString());
+            }
+        });
+    }
+    @FXML
+    private void onSetPlayerCar() {
+        Car selected = raceCarsListView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            for (Car c : raceCarsListView.getItems()) {
+                if (c.getPlayerControlled()) c.setPlayerControlled(false);
+            }
+            selected.setPlayerControlled(true);
+            raceCarsListView.refresh();
         }
     }
-
-    private void showAlert(String msg) {
-        new Alert(Alert.AlertType.WARNING, msg).showAndWait();
+    @FXML
+    private void onRemoveFromRace() {
+        Car selected = raceCarsListView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            raceCars.remove(selected);
+            storedCars.add(selected);
+        }
+    }
+    @FXML
+    private void onClearList() {
+        raceCars.clear();
+    }
+    @FXML
+    private void onStartRace() {
+        System.out.println("Start!");
     }
 }

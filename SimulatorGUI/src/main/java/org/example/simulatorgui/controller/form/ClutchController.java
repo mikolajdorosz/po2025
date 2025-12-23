@@ -14,12 +14,17 @@ public class ClutchController {
     @FXML private TextField clutchPriceTextField;
     @FXML private TextField clutchWeightTextField;
 
-    private Consumer<Clutch> onCreated;
-    private Runnable onClose;
 
-    public void setOnCreated(Consumer<Clutch> callback) { this.onCreated = callback; }
-    public void setOnClose(Runnable callback) { this.onClose = callback; }
+    private AddCarController addCarController;
+    public void setAddCarController(AddCarController addCarController) {
+        this.addCarController = addCarController;
+    }
+    private GearboxController gearboxController;
+    public void setGearboxController(GearboxController gearboxController) {
+        this.gearboxController = gearboxController;
+    }
 
+    // ===================== getClutch =====================
     public Clutch getClutchFromInput() {
         String name = clutchNameTextField.getText();
         double weight, price;
@@ -36,26 +41,13 @@ public class ClutchController {
     @FXML
     private void onConfirm() {
         Clutch clutch = getClutchFromInput();
-        if (onCreated != null) onCreated.accept(clutch);
-
-        VBox container = (VBox) clutchNameTextField.getScene().lookup("#clutchFormContainer");
-        if (container != null) {
-            container.getChildren().clear();
-            container.setVisible(false);
-            container.setManaged(false);
-        }
-
-        if (onClose != null) onClose.run(); // e.g., re-enable gearbox form
+        gearboxController.getClutchComboBox().getItems().add(clutch);
+        gearboxController.getClutchComboBox().getSelectionModel().select(clutch);
+        addCarController.closeForm(addCarController.getClutchFormContainer() ,addCarController.getGearboxFormContainer());
     }
     @FXML
     private void onCancel() {
-        VBox container = (VBox) clutchNameTextField.getScene().lookup("#clutchFormContainer");
-        if (container != null) {
-            container.getChildren().clear();
-            container.setVisible(false);
-            container.setManaged(false);
-        }
-        if (onClose != null) onClose.run(); // enable carForm
+        addCarController.closeForm(addCarController.getClutchFormContainer() ,addCarController.getGearboxFormContainer());
     }
 
 

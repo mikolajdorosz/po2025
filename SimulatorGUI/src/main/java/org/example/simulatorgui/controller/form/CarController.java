@@ -1,44 +1,41 @@
 package org.example.simulatorgui.controller.form;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.simulatorgui.controller.AddCarController;
+import org.example.simulatorgui.controller.MenuController;
 import simulator.*;
 
 import java.io.IOException;
 import java.util.function.Consumer;
 
 public class CarController {
-
     @FXML private TextField carModelTextField;
     @FXML private TextField carPlateNumberTextField;
     @FXML private TextField carWeightTextField;
     @FXML private TextField carVMAXTextField;
     @FXML private ComboBox<Engine> engineComboBox;
-    @FXML private ComboBox<Gearbox> gearboxComboBox;
-
     public ComboBox<Engine> getEngineComboBox() {
         return engineComboBox;
     }
+    @FXML private ComboBox<Gearbox> gearboxComboBox;
     public ComboBox<Gearbox> getGearboxComboBox() {
         return gearboxComboBox;
     }
 
-    private AddCarController addCarController;
-    private EngineController engineController;
-    private GearboxController gearboxController;
 
+    private MenuController menuController;
+    public void setMenuController(MenuController menuController) {
+        this.menuController = menuController;
+    }
+    private AddCarController addCarController;
     public void setAddCarController(AddCarController addCarController) {
         this.addCarController = addCarController;
     }
-    public void setEngineController(EngineController engineController) {
-        this.engineController = engineController;
-    }
-    public void setGearboxController(GearboxController gearboxController) {
-        this.gearboxController = gearboxController;
-    }
+
 
     @FXML
     private void initialize() {
@@ -49,7 +46,16 @@ public class CarController {
         }
     }
 
-    public Car getCarFromInput(Engine engine, Gearbox gearbox) {
+    // ===================== getCar =====================
+    public Car getCarFromInput() {
+        Engine engine = engineComboBox.getValue();
+        engineComboBox.getItems().add(engine);
+        engineComboBox.getSelectionModel().select(engine);
+
+        Gearbox gearbox = gearboxComboBox.getValue();
+        gearboxComboBox.getItems().add(gearbox);
+        gearboxComboBox.getSelectionModel().select(gearbox);
+
         String model = carModelTextField.getText().trim();
         String plateNumber = carPlateNumberTextField.getText().trim();
         Position position = new Position(0, 0);
@@ -66,67 +72,54 @@ public class CarController {
 
     // ===================== ACTIONS =====================
     @FXML
-    private void onCreateEngine() throws IOException {
+    private void onNewEngine() throws IOException {
         EngineController controller = addCarController.showForm(
                 "engine_form.fxml",
                 addCarController.getEngineFormContainer(),
-                addCarController.getCarFormContainer(),
-                c -> {
-                    c.setOnCreated(engine -> {
-                        engineComboBox.getItems().add(engine);
-                        engineComboBox.getSelectionModel().select(engine);
-                    });
-                    c.setOnClose(() -> addCarController.getCarFormContainer().setDisable(false));
-                }
+                addCarController.getCarFormContainer()
         );
+        controller.setAddCarController(addCarController);
+        controller.setCarController(this);
     }
     @FXML
-    private void onCreateGearbox() throws IOException {
+    private void onDeleteEngine() {
+        Engine selected = engineComboBox.getValue();
+        if (selected != null) {
+            engineComboBox.getItems().remove(selected);
+        }
+    }
+    @FXML
+    private void onNewGearbox() throws IOException {
         GearboxController controller = addCarController.showForm(
                 "gearbox_form.fxml",
                 addCarController.getGearboxFormContainer(),
-                addCarController.getCarFormContainer(),
-                c -> {
-                    c.setOnCreated(gearbox -> {
-                        gearboxComboBox.getItems().add(gearbox);
-                        gearboxComboBox.getSelectionModel().select(gearbox);
-                    });
-                    c.setOnClose(() -> addCarController.getCarFormContainer().setDisable(false));
-                }
+                addCarController.getCarFormContainer()
         );
+        controller.setAddCarController(addCarController);
+        controller.setCarController(this);
+    }
+    @FXML
+    private void onDeleteGearbox() {
+        Gearbox selected = gearboxComboBox.getValue();
+        if (selected != null) {
+            gearboxComboBox.getItems().remove(selected);
+        }
     }
 
     @FXML
     private void onConfirm() {
-        Engine engine = engineComboBox.getValue();
-        if (engine == null && engineController != null) {
-            engine = engineController.getEngineFromInput();
-            engineComboBox.getItems().add(engine);
-            engineComboBox.getSelectionModel().select(engine);
-        }
-
-        Gearbox gearbox = gearboxComboBox.getValue();
-        if (gearbox == null && gearboxController != null) {
-            gearbox = gearboxController.getGearboxFromInput();
-            gearboxComboBox.getItems().add(gearbox);
-            gearboxComboBox.getSelectionModel().select(gearbox);
-        }
-
-        Car car = getCarFromInput(engine, gearbox);
-        if (onCarCreated != null) onCarCreated.accept(car);
-
-        closeWindow();
+        Car car = getCarFromInput();
+        menuController.getStoredCarsList().add(car);
+        menuController.getStoredCarsComboBox().getSelectionModel().select(car);
+        addCarController.closeWindow();
     }
     @FXML
     private void onCancel() {
         addCarController.closeForm(addCarController.getCarFormContainer());
-        closeWindow();
+        addCarController.closeWindow();
     }
 
-    private void closeWindow() {
-        Stage stage = (Stage) addCarController.getCarFormContainer().getScene().getWindow();
-        stage.close();
-    }
+
 
 
 
@@ -167,10 +160,6 @@ public class CarController {
         refresh();
     }
 
-
-
-
-
     private void refresh() {
         carModelTextField.setText(activeCar.getModel());
         carPlateNumberTextField.setText(activeCar.getPlateNumber());
@@ -179,12 +168,4 @@ public class CarController {
     }
 
 
-
-
-    // === Callback ===
-    private Consumer<Car> onCarCreated;
-
-    public void setOnCarCreated(Consumer<Car> callback) {
-        this.onCarCreated = callback;
-    }
 }

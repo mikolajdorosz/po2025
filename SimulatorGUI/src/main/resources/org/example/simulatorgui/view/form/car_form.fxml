@@ -6,124 +6,75 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.simulatorgui.controller.form.CarController"
-            style="
-                -fx-background-color: #ffffff;
-                -fx-background-radius: 12;
-                -fx-border-radius: 12;
-                -fx-border-color: #e5e9f0;
-                -fx-border-width: 1;
-                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 2);
-            ">
-    <VBox spacing="14"
-          AnchorPane.topAnchor="0"
-          AnchorPane.rightAnchor="0"
-          AnchorPane.bottomAnchor="0"
+            style="-fx-background-color: #ffffff; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e0e4e8; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0.2, 0, 4);">
+
+    <VBox spacing="16" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
           AnchorPane.leftAnchor="0"
-          style="-fx-padding: 20;">
-        <!-- TITLE -->
-        <Label text="Car: "
-               style="
-                   -fx-font-size: 18px;
-                   -fx-font-weight: bold;
-                   -fx-text-fill: #2c3e50;
-               "/>
+          style="-fx-padding: 28;">
+        <Label text="Car details" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
         <Separator/>
-        <!-- MODEL -->
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label text="Model"
-                   style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
-            <TextField fx:id="carModelTextField"
-                       promptText="Enter model"
-                       text="Model"
-                       HBox.hgrow="ALWAYS"
-                       style="
-               -fx-background-radius: 8;
-               -fx-border-radius: 8;
-               -fx-border-color: #dcdfe6;
-               -fx-padding: 10;
-           "/>
-        </HBox>
-        <!-- PLATE -->
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label text="License plate"
-                   style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
-            <TextField fx:id="carPlateNumberTextField"
-                       promptText="Enter plate number"
-                       text="ABC1234"
-                       HBox.hgrow="ALWAYS"
-                       style="
-                           -fx-background-radius: 8;
-                           -fx-border-radius: 8;
-                           -fx-border-color: #dcdfe6;
-                           -fx-padding: 10;
-                       "/>
-        </HBox>
-        <!-- WEIGHT -->
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label text="Weight"
-                   style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
-            <TextField fx:id="carWeightTextField"
-                       promptText="Enter weight [kg]"
-                       text="1250"
-                       HBox.hgrow="ALWAYS"
-                       style="
-                           -fx-background-radius: 8;
-                           -fx-border-radius: 8;
-                           -fx-border-color: #dcdfe6;
-                           -fx-padding: 10;
-                       "/>
-        </HBox>
-        <!-- VMAX -->
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label text="VMAX"
-                   style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
-            <TextField fx:id="carVMAXTextField"
-                       promptText="Enter VMax [km/h]"
-                       text="330"
-                       HBox.hgrow="ALWAYS"
-                       style="
-                           -fx-background-radius: 8;
-                           -fx-border-radius: 8;
-                           -fx-border-color: #dcdfe6;
-                           -fx-padding: 10;
-                       "/>
-        </HBox>
-        <!-- ENGINE -->
-        <HBox spacing="10" alignment="CENTER">
-            <ComboBox fx:id="engineComboBox" promptText="Select engine"/>
-            <Button text="New engine" fx:id="addEngineButton" onAction="#onCreateEngine"
-                    style="-fx-background-radius: 6; -fx-background-color: #2980b9; -fx-text-fill: white;"/>
-        </HBox>
-        <!-- GEARBOX -->
-        <HBox spacing="10" alignment="CENTER">
-            <ComboBox fx:id="gearboxComboBox" promptText="Select gearbox"/>
-            <Button text="New gearbox" fx:id="addGearboxButton" onAction="#onCreateGearbox"
-                    style="-fx-background-radius: 6; -fx-background-color: #2980b9; -fx-text-fill: white;"/>
-        </HBox>
-        <!-- ACTIONS -->
+        <VBox spacing="14">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Model" style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
+                <TextField fx:id="carModelTextField" text="GT-R" promptText="Enter model" HBox.hgrow="ALWAYS"
+                           style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cbd5e1; -fx-padding: 12; -fx-focus-color: #3b82f6; -fx-faint-focus-color: rgba(59,130,246,0.15);"/>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="License plate" style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
+                <TextField fx:id="carPlateNumberTextField" text="XYZ-1234" promptText="Enter plate number" HBox.hgrow="ALWAYS"
+                           style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cbd5e1; -fx-padding: 12; -fx-focus-color: #3b82f6; -fx-faint-focus-color: rgba(59,130,246,0.15);"/>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Weight" style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
+                <TextField fx:id="carWeightTextField" text="1500" promptText="Enter weight [kg]" HBox.hgrow="ALWAYS"
+                           style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cbd5e1; -fx-padding: 12; -fx-focus-color: #3b82f6; -fx-faint-focus-color: rgba(59,130,246,0.15);"/>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="VMAX" style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
+                <TextField fx:id="carVMAXTextField" text="320" promptText="Enter VMax [km/h]" HBox.hgrow="ALWAYS"
+                           style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cbd5e1; -fx-padding: 12; -fx-focus-color: #3b82f6; -fx-faint-focus-color: rgba(59,130,246,0.15);"/>
+            </HBox>
+        </VBox>
+        <VBox spacing="12">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Engine" style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
+                <ComboBox fx:id="engineComboBox" promptText="Select" HBox.hgrow="ALWAYS"
+                          style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cbd5e1; -fx-padding: 10;"/>
+                <Button text="New engine" fx:id="newEngineButton" onAction="#onNewEngine"
+                        style="-fx-background-radius: 10; -fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 18; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 8, 0.1, 0, 2);"/>
+                <Button text="Delete"
+                        fx:id="deleteEngineButton"
+                        onAction="#onDeleteEngine"
+                        style="-fx-background-color: transparent;
+                            -fx-text-fill: #e74c3c;
+                            -fx-font-weight: 600;
+                            -fx-padding: 10 18;
+                            -fx-cursor: hand;"
+                />
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Gearbox" style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
+                <ComboBox fx:id="gearboxComboBox" promptText="Select" HBox.hgrow="ALWAYS"
+                          style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cbd5e1; -fx-padding: 10;"/>
+                <Button text="New gearbox" fx:id="newGearboxButton" onAction="#onNewGearbox"
+                        style="-fx-background-radius: 10; -fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 18; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 8, 0.1, 0, 2);"/>
+                <Button text="Delete"
+                        fx:id="deleteGearboxButton"
+                        onAction="#onDeleteGearbox"
+                        style="-fx-background-color: transparent;
+                            -fx-text-fill: #e74c3c;
+                            -fx-font-weight: 600;
+                            -fx-padding: 10 18;
+                            -fx-cursor: hand;"
+                />
+            </HBox>
+        </VBox>
         <Separator/>
-        <HBox spacing="12"
-              alignment="CENTER_RIGHT"
-              style="-fx-padding: 10 0 0 0;">
-            <Button text="Cancel"
-                    onAction="#onCancel"
-                    style="
-                -fx-background-color: #ecf0f1;
-                -fx-text-fill: #2c3e50;
-                -fx-background-radius: 8;
-                -fx-padding: 10 18;
-                -fx-font-weight: bold;
-            "/>
-            <Button text="Confirm"
-                    onAction="#onConfirm"
-                    style="
-                -fx-background-color: linear-gradient(#27ae60, #1e8449);
-                -fx-text-fill: white;
-                -fx-background-radius: 8;
-                -fx-padding: 10 22;
-                -fx-font-weight: bold;
-                -fx-cursor: hand;
-            "/>
+        <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 12 0 0 0;">
+            <Button text="Cancel" onAction="#onCancel"
+                    style="-fx-background-color: #f3f4f6; -fx-text-fill: #1f2937; -fx-background-radius: 10; -fx-padding: 10 20; -fx-font-weight: 600; -fx-cursor: hand;"/>
+            <Button text="Confirm" onAction="#onConfirm"
+                    style="-fx-background-color: linear-gradient(to right, #10b981, #047857); -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 10 22; -fx-font-weight: 600; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3), 8, 0.1, 0, 2);"/>
         </HBox>
     </VBox>
 </AnchorPane>

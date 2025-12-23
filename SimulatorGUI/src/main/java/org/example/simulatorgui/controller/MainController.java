@@ -74,9 +74,9 @@ public class MainController {
 //        carImageView.setTranslateX(0);
 //        carImageView.setTranslateY(0);
 
-        gearboxPaneController.setClutchController(clutchPaneController);
-        carPaneController.setEngineController(enginePaneController);
-        carPaneController.setGearboxController(gearboxPaneController);
+       // gearboxPaneController.setClutchController(clutchPaneController);
+//        carPaneController.setEngineController(enginePaneController);
+//        carPaneController.setGearboxController(gearboxPaneController);
 
         carComboBox.setItems(cars);
         carComboBox.valueProperty().addListener((obs, oldCar, newCar) -> {

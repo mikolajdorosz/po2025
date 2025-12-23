@@ -1,33 +1,25 @@
 package simulator;
 
 public class Gearbox extends Component {
+    private int gearsNumber;
+    private String type;
     private Clutch clutch;
     private int currentGear;
-    private int gearsNumber;
     private int currentRatio;
-    private String type;
 
-    public Gearbox() {
-        super("", 0, 0);
-    }
-    public Gearbox(int gearsNumber, String name, double weight, double price, Clutch clutch) {
-        super(name, weight, price);
-        this.clutch = clutch;
-        this.currentGear = 0;
-        this.gearsNumber = gearsNumber;
-        this.currentRatio = 2;
-    }
-    public Gearbox(int gearsNumber, String name, double weight, double price, Clutch clutch, int currentGear) {
-        super(name, weight, price);
-        this.clutch = clutch;
-        this.currentGear = currentGear;
-        this.gearsNumber = gearsNumber;
-        this.currentRatio = 2;
-    }
-    public Gearbox(int gearsNumber, String name, double weight, double price, String type) {
+    public Gearbox(int gearsNumber, String type, String name, double weight, double price, Clutch clutch) {
         super(name, weight, price);
         this.gearsNumber = gearsNumber;
         this.type = type;
+        this.clutch = clutch;
+        this.currentGear = 0;
+        this.currentRatio = 2;
+    }
+    public Gearbox(int gearsNumber, String type, String name, double weight, double price) {
+        super(name, weight, price);
+        this.gearsNumber = gearsNumber;
+        this.type = type;
+        this.currentGear = 0;
         this.currentRatio = 2;
     }
 

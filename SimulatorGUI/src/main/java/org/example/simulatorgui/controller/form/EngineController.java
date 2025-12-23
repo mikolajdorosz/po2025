@@ -15,14 +15,17 @@ public class EngineController {
     @FXML private TextField engineWeightTextField;
     @FXML private TextField engineRPMTextField;
 
-    private Consumer<Engine> onCreated;
-    private Runnable onClose;
 
-    public void setOnCreated(Consumer<Engine> callback) {
-        this.onCreated = callback;
+    private AddCarController addCarController;
+    public void setAddCarController(AddCarController addCarController) {
+        this.addCarController = addCarController;
     }
-    public void setOnClose(Runnable callback) { this.onClose = callback; }
+    private CarController carController;
+    public void setCarController(CarController carController) {
+        this.carController = carController;
+    }
 
+    // ===================== getEngine =====================
     public Engine getEngineFromInput() {
         String name = engineNameTextField.getText();
         double weight, price;
@@ -41,28 +44,13 @@ public class EngineController {
     @FXML
     private void onConfirm() {
         Engine engine = getEngineFromInput();
-        if (onCreated != null) onCreated.accept(engine);
-
-        // close this form
-        VBox container = (VBox) engineNameTextField.getScene().lookup("#engineFormContainer");
-        if (container != null) {
-            container.getChildren().clear();
-            container.setVisible(false);
-            container.setManaged(false);
-        }
-
-        if (onClose != null) onClose.run(); // enable carForm
+        carController.getEngineComboBox().getItems().add(engine);
+        carController.getEngineComboBox().getSelectionModel().select(engine);
+        addCarController.closeForm(addCarController.getEngineFormContainer(), addCarController.getCarFormContainer());
     }
     @FXML
     private void onCancel() {
-        VBox container = (VBox) engineNameTextField.getScene().lookup("#engineFormContainer");
-        if (container != null) {
-            container.getChildren().clear();
-            container.setVisible(false);
-            container.setManaged(false);
-        }
-
-        if (onClose != null) onClose.run(); // enable carForm
+        addCarController.closeForm(addCarController.getEngineFormContainer(), addCarController.getCarFormContainer());
     }
 
 

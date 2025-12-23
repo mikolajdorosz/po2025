@@ -3,56 +3,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
+<AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.simulatorgui.controller.AddCarController"
             prefHeight="500" prefWidth="900"
-            style="-fx-background-color: #f5f6fa;">
-    <top>
-        <VBox spacing="15"
-              alignment="CENTER"
-              style="-fx-padding: 20; -fx-background-color: #ffffff;"
+            style="-fx-background-color: linear-gradient(to bottom, #f7f8fa, #eef1f5);">
+    <VBox AnchorPane.topAnchor="18" AnchorPane.leftAnchor="18" AnchorPane.rightAnchor="18"
+          spacing="15" alignment="CENTER"
+          style="-fx-padding: 24;">
+        <Label text="Build your dream vehicle!"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    </VBox>
+    <HBox AnchorPane.topAnchor="100" AnchorPane.bottomAnchor="24" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="24" spacing="16">
+        <VBox fx:id="carFormContainer" spacing="18" alignment="TOP_CENTER"
+              style="-fx-padding: 24; -fx-background-color: #ffffff; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 14, 0.2, 0, 4);"
               HBox.hgrow="ALWAYS">
-            <Label text="Build your dream vehicle!"
-                   style="
-                   -fx-font-size: 24px;
-                   -fx-font-weight: bold;
-                   -fx-text-fill: #2c3e50;
-               "/>
+            <Label text="Vehicle Data"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+            <VBox fx:id="carForm" spacing="12"/>
         </VBox>
-    </top>
-    <left>
-        <VBox fx:id="carFormContainer"
-              spacing="15"
-              alignment="CENTER"
-              style="-fx-padding: 20; -fx-background-color: #ffffff;"
+        <VBox spacing="18" alignment="TOP_CENTER"
+              style="-fx-padding: 24; -fx-background-color: #ffffff; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 14, 0.2, 0, 4);"
               HBox.hgrow="ALWAYS">
-            <VBox fx:id="carForm" spacing="10"/>
-        </VBox>
-    </left>
-    <center>
-        <VBox spacing="15"
-              alignment="CENTER"
-              style="-fx-padding: 20; -fx-background-color: #ffffff;"
-              HBox.hgrow="ALWAYS">
-            <VBox fx:id="engineFormContainer">
-                <VBox fx:id="engineForm" spacing="10"/>
+            <VBox fx:id="engineFormContainer" spacing="16">
+                <VBox fx:id="engineForm" spacing="12"/>
             </VBox>
-            <VBox fx:id="gearboxFormContainer">
-                <VBox fx:id="gearboxForm" spacing="10"/>
+            <VBox fx:id="gearboxFormContainer" spacing="16">
+                <VBox fx:id="gearboxForm" spacing="12"/>
             </VBox>
         </VBox>
-    </center>
-    <right>
-        <VBox fx:id="clutchFormContainer"
-              spacing="15"
-              alignment="CENTER"
-              visible="false"
-              managed="false"
-              style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8;"
+        <VBox fx:id="clutchFormContainer" spacing="18" alignment="TOP_CENTER"
+              visible="false" managed="false"
+              style="-fx-padding: 24; -fx-background-color: #ffffff; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 14, 0.2, 0, 4);"
               HBox.hgrow="ALWAYS">
-            <VBox fx:id="clutchForm" spacing="10"/>
+            <Label text="Clutch"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+            <VBox fx:id="clutchForm" spacing="12"/>
         </VBox>
-    </right>
-
-</BorderPane>
+    </HBox>
+</AnchorPane>

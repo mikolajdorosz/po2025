@@ -12,91 +12,94 @@
                 -fx-border-radius: 12;
                 -fx-border-color: #e5e9f0;
                 -fx-border-width: 1;
-                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 2);
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0.2, 0, 4);
             ">
-    <VBox spacing="14"
+    <VBox spacing="16"
           AnchorPane.topAnchor="0"
           AnchorPane.rightAnchor="0"
           AnchorPane.bottomAnchor="0"
           AnchorPane.leftAnchor="0"
-          style="-fx-padding: 20;">
-        <!-- TITLE -->
-        <Label text="Clutch: "
+          style="-fx-padding: 24;">
+        <Label text="Clutch details"
                style="
-                   -fx-font-size: 18px;
+                   -fx-font-size: 20px;
                    -fx-font-weight: bold;
-                   -fx-text-fill: #2c3e50;
+                   -fx-text-fill: #1f2937;
                "/>
         <Separator/>
-        <!-- NAME -->
         <HBox spacing="12" alignment="CENTER_LEFT">
             <Label text="Name"
-                   style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;"/>
+                   style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
             <TextField fx:id="clutchNameTextField"
                        promptText="Enter name"
                        text="Clutch"
                        HBox.hgrow="ALWAYS"
                        style="
-               -fx-background-radius: 8;
-               -fx-border-radius: 8;
-               -fx-border-color: #dcdfe6;
-               -fx-padding: 10;
-           "/>
+                           -fx-background-radius: 10;
+                           -fx-border-radius: 10;
+                           -fx-border-color: #cbd5e1;
+                           -fx-padding: 12;
+                           -fx-focus-color: #3b82f6;
+                           -fx-faint-focus-color: rgba(59,130,246,0.15);
+                       "/>
         </HBox>
-        <!-- PRICE -->
         <HBox spacing="12" alignment="CENTER_LEFT">
             <Label text="Price"
-                   style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;"/>
+                   style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
             <TextField fx:id="clutchPriceTextField"
                        promptText="Enter price [PLN]"
                        text="10000"
                        HBox.hgrow="ALWAYS"
                        style="
-                           -fx-background-radius: 8;
-                           -fx-border-radius: 8;
-                           -fx-border-color: #dcdfe6;
-                           -fx-padding: 10;
+                           -fx-background-radius: 10;
+                           -fx-border-radius: 10;
+                           -fx-border-color: #cbd5e1;
+                           -fx-padding: 12;
+                           -fx-focus-color: #3b82f6;
+                           -fx-faint-focus-color: rgba(59,130,246,0.15);
                        "/>
         </HBox>
-        <!-- WEIGHT -->
         <HBox spacing="12" alignment="CENTER_LEFT">
             <Label text="Weight"
-                   style="-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-min-width: 120;"/>
+                   style="-fx-font-weight: 600; -fx-text-fill: #334155; -fx-min-width: 120;"/>
             <TextField fx:id="clutchWeightTextField"
                        promptText="Enter weight [kg]"
                        text="50"
                        HBox.hgrow="ALWAYS"
                        style="
-                           -fx-background-radius: 8;
-                           -fx-border-radius: 8;
-                           -fx-border-color: #dcdfe6;
-                           -fx-padding: 10;
+                           -fx-background-radius: 10;
+                           -fx-border-radius: 10;
+                           -fx-border-color: #cbd5e1;
+                           -fx-padding: 12;
+                           -fx-focus-color: #3b82f6;
+                           -fx-faint-focus-color: rgba(59,130,246,0.15);
                        "/>
         </HBox>
-        <!-- ACTIONS -->
         <Separator/>
         <HBox spacing="12"
               alignment="CENTER_RIGHT"
-              style="-fx-padding: 10 0 0 0;">
+              style="-fx-padding: 12 0 0 0;">
             <Button text="Cancel"
                     onAction="#onCancel"
                     style="
-                -fx-background-color: #ecf0f1;
-                -fx-text-fill: #2c3e50;
-                -fx-background-radius: 8;
-                -fx-padding: 10 18;
-                -fx-font-weight: bold;
-            "/>
+                        -fx-background-color: #f3f4f6;
+                        -fx-text-fill: #1f2937;
+                        -fx-background-radius: 10;
+                        -fx-padding: 10 20;
+                        -fx-font-weight: 600;
+                        -fx-cursor: hand;
+                    "/>
             <Button text="Confirm"
                     onAction="#onConfirm"
                     style="
-                -fx-background-color: linear-gradient(#27ae60, #1e8449);
-                -fx-text-fill: white;
-                -fx-background-radius: 8;
-                -fx-padding: 10 22;
-                -fx-font-weight: bold;
-                -fx-cursor: hand;
-            "/>
+                        -fx-background-color: linear-gradient(to right, #10b981, #047857);
+                        -fx-text-fill: white;
+                        -fx-background-radius: 10;
+                        -fx-padding: 10 22;
+                        -fx-font-weight: 600;
+                        -fx-cursor: hand;
+                        -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3), 8, 0.1, 0, 2);
+                    "/>
         </HBox>
     </VBox>
 </AnchorPane>
