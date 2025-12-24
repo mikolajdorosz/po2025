@@ -1,0 +1,40 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.simulatorgui.controller.competition.TrackController"
+      spacing="12" VBox.vgrow="ALWAYS"
+      style="-fx-padding: 14; -fx-background-color: #1f1f1f; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 3);">
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Place start" fx:id="placeStartButton" onAction="#onPlaceStart"
+                style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+        <Button text="Place finish" fx:id="placeFinnishButton" onAction="#onPlaceFinish"
+                style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <VBox alignment="CENTER">
+            <Label text="1:00:00" fx:id="timeLabel"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #e0e0e0;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="Pause" fx:id="pauseButton" onAction="#onPause"
+                style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+        <Button text="Restart" fx:id="restartButton" onAction="#onRestart"
+                style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+        <Button text="Exit" fx:id="exitButton" onAction="#onExit"
+                style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+    </HBox>
+    <Pane fx:id="trackPane" VBox.vgrow="ALWAYS"
+          style="-fx-background-color: #2b2b2b;
+                 -fx-background-radius: 10;
+                 -fx-border-color: #3c3c3c;
+                 -fx-border-radius: 10;
+                 -fx-border-width: 2;"/>
+    <Button text="Race" fx:id="raceButton" onAction="#onRace" maxWidth="Infinity"
+            style="-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16; -fx-cursor: hand;"/>
+</VBox>

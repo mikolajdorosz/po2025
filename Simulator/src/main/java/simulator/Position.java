@@ -16,14 +16,22 @@ public class Position {
         this.y = y;
     }
 
+    public Position getPosition() { return this; }
+    public double getX() { return x; }
+    public void setX(double x) {
+        this.x = x;
+    }
+    public double getY() { return y; }
+    public void setY(double y) {
+        this.y = y;
+    }
+
+
     public void updatePosition(double dX, double dY) {
         x += dX;
         y += dY;
     }
-    public String getPosition() { return "X: " + x + ", Y: " + y; }
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public void replace(Position destination, double v, double dT) {
+    public void moveTowards(Position destination, double v, double dT) {
         double step = v * dT;
         double dX = destination.getX() - this.getX();
         double dY = destination.getY() - this.getY();

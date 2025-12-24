@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.simulatorgui.controller.competition.CarHUDController" spacing="16"
+      style="-fx-padding: 14; -fx-background-color: #1e1e1e; -fx-background-radius: 14; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 14, 0, 0, 6);">
+    <HBox spacing="16" alignment="CENTER" VBox.vgrow="ALWAYS">
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="RPM" style="-fx-font-weight: bold; -fx-text-fill: #cbd5e1;"/>
+            <StackPane prefWidth="80" prefHeight="80"
+                       style="-fx-background-color: #2a2a2a; -fx-background-radius: 50%; -fx-border-radius: 50%; -fx-border-color: #4b5563; -fx-border-width: 3;">
+                <Label fx:id="rpmLabel" text="6500"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ffffff;"/>
+            </StackPane>
+        </VBox>
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Speed" style="-fx-font-weight: bold; -fx-text-fill: #cbd5e1;"/>
+            <StackPane prefWidth="100" prefHeight="100"
+                       style="-fx-background-color: #2a2a2a; -fx-background-radius: 50%; -fx-border-radius: 50%; -fx-border-color: #4b5563; -fx-border-width: 3;">
+                <Label fx:id="speedLabel" text="100"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ffffff;"/>
+            </StackPane>
+        </VBox>
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Gear" style="-fx-font-weight: bold; -fx-text-fill: #cbd5e1;"/>
+            <StackPane prefWidth="70" prefHeight="70"
+                       style="-fx-background-color: #2a2a2a; -fx-background-radius: 50%; -fx-border-radius: 50%; -fx-border-color: #4b5563; -fx-border-width: 3;">
+                <Label fx:id="gearLabel" text="4"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ffffff;"/>
+            </StackPane>
+        </VBox>
+    </HBox>
+    <HBox spacing="10" alignment="CENTER" VBox.vgrow="NEVER">
+        <Button text="ON/OFF" fx:id="carIgnitionButton" onAction="#onCarIgnition"
+                style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;"
+                />
+        <Button text="Gear Down" fx:id="gearDownButton" onAction="#onGearDown"
+                style="-fx-background-color: #1e3a8a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;"
+                />
+        <Button text="Clutch" fx:id="clutchButton" onAction="#onClutch"
+                style="-fx-background-color: #4b5563; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;"
+                HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <Button text="Brake" fx:id="brakeButton" onAction="#onBrake"
+                style="-fx-background-color: #1e3a8a; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;"
+                HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <Button text="Gas" fx:id="gasButton" onAction="#onGas"
+                style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;"
+                HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <Button text="Gear Up" fx:id="gearUpButton" onAction="#onGearUp"
+                style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;"
+                />
+    </HBox>
+</VBox>

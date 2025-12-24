@@ -14,6 +14,14 @@ public class Engine extends Component {
         this.minRPM = 1000;
     }
 
+    public int getMaxRPM() {
+        return maxRPM;
+    }
+    public int getRPM() {
+        return RPM;
+    }
+
+
     public void start() {
         RPM = minRPM;
         System.out.println("Engine fired off...");

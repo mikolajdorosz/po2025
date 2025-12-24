@@ -1,18 +1,16 @@
 package simulator;
 
 public class Car {
-    private Position currentPosition;
-    private Engine engine;
-    private Gearbox gearbox;
     private boolean isRunning;
     private String plateNumber;
     private String model;
     private double weight;
     private int vMax;
+    private Position position;
+    private Engine engine;
+    private Gearbox gearbox;
     private boolean playerControlled;
-
-    public boolean getPlayerControlled() { return this.playerControlled; }
-    public void setPlayerControlled(boolean playerControlled) { this.playerControlled = playerControlled; }
+    private double speed;
 
     public Car(String plateNumber, String model, double weight, int vMax, Position position, Engine engine, Gearbox gearbox) {
         this.isRunning = false;
@@ -20,15 +18,35 @@ public class Car {
         this.model = model;
         this.weight = weight;
         this.vMax = vMax;
-        this.currentPosition = position;
+        this.position = position;
         this.engine = engine;
         this.gearbox = gearbox;
         this.playerControlled = false;
     }
 
+    public Boolean getIsRunning() {
+        return isRunning;
+    }
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+    public String getModel() {
+        return model;
+    }
+    public double getWeight() { return weight + engine.getWeight() + gearbox.getWeight(); }
+    public int getCurrentSpeed() {
+        return 1;
+    }
+    public Position getPosition() { return position; }
+    public Engine getEngine() { return engine; }
+    public Gearbox getGearbox() { return gearbox; }
+    public Boolean getPlayerControlled() { return playerControlled; }
+    public void setPlayerControlled(boolean playerControlled) { this.playerControlled = playerControlled; }
+
+
     public void start() {
-        engine.start();
         isRunning = true;
+        engine.start();
         System.out.println("Car is running...");
     }
     public void turnOff() {
@@ -37,21 +55,17 @@ public class Car {
         isRunning = false;
         System.out.println("Car turned off.");
     }
-    public void goTo(Position destination) {}
+    public void goTo(double deltaTime, Position destination) {
+        if (!isRunning) return;
+        speed = computeSpeed();
+        position.moveTowards(destination, speed, deltaTime);
+    }
 
-    public String getModel() {
-        return model;
+    private double computeSpeed() {
+        double rpmFactor = engine.getRPM() / (double) engine.getMaxRPM();
+        double gearFactor = gearbox.getCurrentGear();
+        return Math.min(vMax, rpmFactor * gearFactor * 50);
     }
-    public String getPlateNumber() {
-        return plateNumber;
-    }
-    public double getWeight() { return weight + engine.getWeight() + gearbox.getWeight(); }
-    public int getCurrentV() {
-        return 1;
-    }
-    public String getCurrentPosition() { return currentPosition.getPosition(); }
-    public Gearbox getGearbox() { return gearbox; }
-
     @Override
     public String toString() {
         return model + " [" + plateNumber + "]";

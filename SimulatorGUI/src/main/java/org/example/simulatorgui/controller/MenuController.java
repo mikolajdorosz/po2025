@@ -36,6 +36,7 @@ public class MenuController {
     private final ObservableList<Car> storedCars = FXCollections.observableArrayList();     // Change in ObservableList automatically updates GUI
     private final ObservableList<Car> raceCars = FXCollections.observableArrayList();
     private Stage stage;
+    //private MainController mainController;
 
     public ComboBox<Car> getStoredCarsComboBox() {
         return storedCarsComboBox;
@@ -46,6 +47,9 @@ public class MenuController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+//    public void setMainController(MainController mainController) {
+//        this.mainController = mainController;
+//    }
 
     @FXML
     private void initialize() {
@@ -169,6 +173,8 @@ public class MenuController {
     }
     @FXML
     private void onStartRace() {
-        System.out.println("Start!");
+//        if (mainController != null) {
+//            mainController.setRaceCars(raceCars);
+//        }
     }
 }

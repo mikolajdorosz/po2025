@@ -8,13 +8,15 @@ public class Clutch extends Component {
         this.isPressed = false;
     }
 
+    public Boolean getIsPressed() {
+        return isPressed;
+    }
+
+
     public void press() {
         isPressed = true;
     }
     public void release() {
         isPressed = false;
     }
-
-
-
 }

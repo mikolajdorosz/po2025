@@ -1,16 +1,13 @@
 package org.example.simulatorgui.controller.form;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.example.simulatorgui.controller.AddCarController;
 import org.example.simulatorgui.controller.MenuController;
 import simulator.*;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 public class CarController {
     @FXML private TextField carModelTextField;
@@ -164,7 +161,7 @@ public class CarController {
         carModelTextField.setText(activeCar.getModel());
         carPlateNumberTextField.setText(activeCar.getPlateNumber());
         carWeightTextField.setText(String.valueOf(activeCar.getWeight()));
-        carVMAXTextField.setText(String.valueOf(activeCar.getCurrentV()));
+        carVMAXTextField.setText(String.valueOf(activeCar.getCurrentSpeed()));
     }
 
 

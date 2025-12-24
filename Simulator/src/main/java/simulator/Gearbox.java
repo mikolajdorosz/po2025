@@ -23,6 +23,24 @@ public class Gearbox extends Component {
         this.currentRatio = 2;
     }
 
+    @Override
+    public double getWeight() { return super.getWeight() + clutch.getWeight(); }
+    public String getType() {
+        return type;
+    }
+    public Clutch getClutch() {
+        return clutch == null ? null : clutch;
+    }
+    public int getCurrentGear() { return currentGear; }
+    public int getCurrentRatio() { return currentRatio; }
+    public void setType(String type) {
+        this.type = type;
+    }
+    public void setClutch(Clutch clutch) {
+        this.clutch = clutch;
+    }
+
+
     public void gearUp() {
         clutch.press();
         if (currentGear < gearsNumber) {
@@ -33,28 +51,12 @@ public class Gearbox extends Component {
         System.out.println("Current gear: " + getCurrentGear());
     }
     public void gearDown() {
-        clutch.press();
+        //clutch.press();
         if (currentGear > 0) {
             currentGear -= 1;
             currentRatio += 0.25;
         }
-        clutch.release();
+        //clutch.release();
         System.out.println("Current gear: " + getCurrentGear());
-    }
-
-    @Override
-    public double getWeight() { return super.getWeight() + clutch.getWeight(); }
-    public int getCurrentGear() { return currentGear; }
-    public int getCurrentRatio() { return currentRatio; }
-
-    public void setClutch(Clutch clutch) {
-        this.clutch = clutch;
-    }
-
-    public String getType() {
-        return type;
-    }
-    public void setType(String type) {
-        this.type = type;
     }
 }

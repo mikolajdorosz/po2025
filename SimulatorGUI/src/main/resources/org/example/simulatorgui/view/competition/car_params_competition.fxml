@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.Region?>
+<HBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.simulatorgui.controller.competition.CarParamsController"
+      spacing="18"
+      prefHeight="64"
+      style="
+        -fx-padding: 8 14 8 14;
+        -fx-background-radius: 12;
+        -fx-background-color: linear-gradient(to right, #1e1e1e, #2a2a2a);
+        -fx-border-radius: 12;
+        -fx-border-color: #3a3a3a;
+      ">
+    <VBox spacing="1">
+        <Label text="PLATE"
+               style="-fx-text-fill: #9a9a9a; -fx-font-size: 9px;"/>
+        <Label fx:id="plateNumberLabel"
+               text="KR-1234"
+               style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+        <Label fx:id="modelLabel"
+               text="GT-R"
+               style="-fx-text-fill: #bdbdbd; -fx-font-size: 11px;"/>
+    </VBox>
+    <VBox style="-fx-border-color: #3a3a3a; -fx-border-width: 0 1 0 0;"/>
+    <VBox spacing="1" alignment="TOP_CENTER">
+        <Label text="POS"
+               style="-fx-text-fill: #9a9a9a; -fx-font-size: 9px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Label fx:id="positionLabel"
+               text="1"
+               style="-fx-text-fill: #4fd1c5; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+    <VBox spacing="1" alignment="TOP_CENTER">
+        <Label text="TIME"
+               style="-fx-text-fill: #9a9a9a; -fx-font-size: 9px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Label fx:id="timeLabel"
+               text="1:00:00"
+               style="-fx-text-fill: #eaeaea; -fx-font-size: 13px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+    <VBox style="-fx-border-color: #3a3a3a; -fx-border-width: 0 1 0 0;"/>
+    <VBox spacing="1" alignment="TOP_CENTER">
+        <Label text="SPEED"
+               style="-fx-text-fill: #9a9a9a; -fx-font-size: 9px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Label fx:id="speedLabel"
+               text="245"
+               style="-fx-text-fill: #eaeaea; -fx-font-size: 13px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+    <VBox spacing="1" alignment="TOP_CENTER">
+        <Label text="RPM"
+               style="-fx-text-fill: #9a9a9a; -fx-font-size: 9px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Label fx:id="rpmLabel"
+               text="8200"
+               style="-fx-text-fill: #eaeaea; -fx-font-size: 13px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+    <VBox spacing="1"
+          alignment="TOP_CENTER">
+        <Label text="GEAR"
+               style="-fx-text-fill: #9a9a9a; -fx-font-size: 9px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Label fx:id="gearLabel"
+               text="4"
+               style="-fx-text-fill: #eaeaea; -fx-font-size: 13px;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+    <VBox style="-fx-border-color: #3a3a3a; -fx-border-width: 0 1 0 0;"/>
+    <VBox spacing="1" alignment="TOP_CENTER">
+        <Region VBox.vgrow="ALWAYS"/>
+        <Label fx:id="playerControlledLabel"
+               text="P1"
+               style="-fx-text-fill: #4fd1c5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+</HBox>
