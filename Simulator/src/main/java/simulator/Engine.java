@@ -17,30 +17,36 @@ public class Engine extends Component {
     public int getMaxRPM() {
         return maxRPM;
     }
+    public int getMinRPM() {
+        return minRPM;
+    }
+    public double getNormalizedRPM() {
+        return (double)(RPM - minRPM) / (maxRPM - minRPM);
+    }
     public int getRPM() {
         return RPM;
     }
-
+    public void setRPM(int rpm) {
+        RPM = Math.max(minRPM, Math.min(rpm, maxRPM));
+    }
 
     public void start() {
         RPM = minRPM;
-        System.out.println("Engine fired off...");
     }
     public void stop() {
         RPM = 0;
-        System.out.println("Engine stopped.");
     }
     public void increaseRPM() {
         RPM += dRPM;
-        if (RPM > maxRPM) {
-            RPM = maxRPM;
-        }
+        RPM = Math.min(RPM, maxRPM);
     }
     public void decreaseRPM() {
         RPM -= dRPM;
-        if (RPM < minRPM) {
-            RPM = minRPM;
-        }
+        RPM = Math.max(minRPM, RPM);
     }
-
+    public void update(double dt, boolean gasPressed) {
+        if (gasPressed) RPM += dRPM * dt;
+        else RPM -= dRPM * 1.5 * dt;
+        RPM = Math.max(minRPM, Math.min(RPM, maxRPM));
+    }
 }

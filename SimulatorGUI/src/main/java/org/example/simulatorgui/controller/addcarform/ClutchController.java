@@ -1,30 +1,25 @@
-package org.example.simulatorgui.controller.form;
+package org.example.simulatorgui.controller.addcarform;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import org.example.simulatorgui.controller.AddCarController;
 import simulator.*;
-
-import java.util.function.Consumer;
 
 public class ClutchController {
     @FXML private TextField clutchNameTextField;
     @FXML private TextField clutchPriceTextField;
     @FXML private TextField clutchWeightTextField;
-
-
     private AddCarController addCarController;
+    private GearboxController gearboxController;
+
     public void setAddCarController(AddCarController addCarController) {
         this.addCarController = addCarController;
     }
-    private GearboxController gearboxController;
     public void setGearboxController(GearboxController gearboxController) {
         this.gearboxController = gearboxController;
     }
 
-    // ===================== getClutch =====================
     public Clutch getClutchFromInput() {
         String name = clutchNameTextField.getText();
         double weight, price;
@@ -43,27 +38,10 @@ public class ClutchController {
         Clutch clutch = getClutchFromInput();
         gearboxController.getClutchComboBox().getItems().add(clutch);
         gearboxController.getClutchComboBox().getSelectionModel().select(clutch);
-        addCarController.closeForm(addCarController.getClutchFormContainer() ,addCarController.getGearboxFormContainer());
+        addCarController.closeForm(addCarController.getClutchForm(), addCarController.getEngineGearboxForm());
     }
     @FXML
     private void onCancel() {
-        addCarController.closeForm(addCarController.getClutchFormContainer() ,addCarController.getGearboxFormContainer());
-    }
-
-
-
-
-
-
-
-
-
-    @FXML
-    public void onPressClutch(ActionEvent actionEvent) {
-        System.out.println("Clutch pressed!");
-    }
-    @FXML
-    public void onReleaseClutch(ActionEvent actionEvent) {
-        System.out.println("Clutch released!");
+        addCarController.closeForm(addCarController.getClutchForm(), addCarController.getEngineGearboxForm());
     }
 }

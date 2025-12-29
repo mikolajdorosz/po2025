@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.simulatorgui.controller.RaceSetupController" style="-fx-background-color: linear-gradient(to bottom, #f7f8fa, #eef1f5);">
+    <padding>
+        <Insets top="32" right="32" bottom="32" left="32"/>
+    </padding>
+    <center>
+        <VBox spacing="32" alignment="TOP_CENTER" style="-fx-padding: 32 40;">
+            <Label text="Car Race Manager" styleClass="title-label"/>
+            <VBox spacing="14" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 24; -fx-background-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 14, 0, 0, 6);">
+                <Label text="Available cars" styleClass="title-grey-label"/>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <ComboBox fx:id="storedCarsComboBox" promptText="Select a car" prefWidth="240" styleClass="combobox"/>
+                    <Button text="Add to race" onAction="#onAddToRace" styleClass="btn, btn-blue"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="New car" onAction="#onNewCar" styleClass="btn, btn-blue-reverse"/>
+                    <Button text="Delete" onAction="#onDeleteCar" styleClass="btn, btn-red-reverse"/>
+                </HBox>
+            </VBox>
+            <HBox spacing="24" alignment="TOP_CENTER">
+                <VBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff;-fx-padding: 24;-fx-background-radius: 16;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 14, 0, 0, 6);">
+                    <Label text="Race lineup" styleClass="title-grey-label"/>
+                    <Label text="Minimum 2 cars required to start the race" styleClass="description-grey-label"/>
+                    <ListView fx:id="raceCarsListView" VBox.vgrow="ALWAYS" prefHeight="180" style="-fx-background-radius: 10;-fx-border-radius: 10;-fx-border-color: #dcdfe6;-fx-background-color: #fafafa;"/>
+                    <HBox spacing="12">
+                        <Button text="Set player's car" onAction="#onSetPlayerCar" styleClass="btn, btn-blue"/>
+                        <Button text="Remove selected" onAction="#onRemoveFromRace" styleClass="btn, btn-red-reverse"/>
+                        <Button text="Clear list" onAction="#onClearList" styleClass="btn, btn-grey-reverse"/>
+                    </HBox>
+                </VBox>
+                <VBox spacing="12" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" style="-fx-background-color: #ffffff; -fx-padding: 24; -fx-background-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 14, 0, 0, 6);">
+                    <Label text="Race track" styleClass="title-grey-label"/>
+                    <Label text="Choose start and finish position. Optionally, add checkpoints in between." wrapText="true" styleClass="description-grey-label"/>
+                    <Pane fx:id="raceTrackPane" VBox.vgrow="ALWAYS" prefHeight="220" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #dcdfe6; -fx-background-color: #fafafa; "/>
+                    <HBox spacing="12">
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Place start" onAction="#onPlaceStart" styleClass="btn, btn-blue"/>
+                        <Button text="Place checkpoint" onAction="#onPlaceCheckpoint" styleClass="btn, btn-orange"/>
+                        <Button text="Place finish" onAction="#onPlaceFinish" styleClass="btn, btn-red"/>
+                        <Button text="Clear" onAction="#onClearTrack" styleClass="btn, btn-grey-reverse"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+            <Separator opacity="0.3" />
+            <Button fx:id="startRaceButton" text="Start race" onAction="#onStartRace" prefWidth="Infinity" styleClass="btn, race-btn"/>
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -27,17 +27,17 @@ public class MainController {
                 320,
                 new Position(0, 0),
                 new Engine(8000, "V6", 220, 5000),
-                new Gearbox(6, "Manual", "manual", 120, 3000)
+                new Gearbox(6, "automatic", "gearbox", 120, 3000)
         ));
-        raceCars.add(new Car(
-                "KR456",
-                "Supra",
-                1480,
-                310,
-                new Position(0, 0),
-                new Engine(7800, "V6", 210, 4800),
-                new Gearbox(6, "Manual", "manual", 120, 3000)
-        ));
+//        raceCars.add(new Car(
+//                "KR456",
+//                "Supra",
+//                1480,
+//                310,
+//                new Position(0, 0),
+//                new Engine(7800, "V6", 210, 4800),
+//                new Gearbox(6, "Manual", "manual", 120, 3000)
+//        ));
         raceCars.get(0).setPlayerControlled(true);
 
         showRaceCars();
@@ -45,10 +45,7 @@ public class MainController {
     }
 
     private void showRaceCars() {
-        competitorsContainer.getChildren().clear();
-        for (Car car : raceCars) {
-            competitorsContainer.getChildren().add(createCarParamsView(car));
-        }
+        for (Car car : raceCars) competitorsContainer.getChildren().add(createCarParamsView(car));
     }
     private Node createCarParamsView(Car car) {
         try {
@@ -59,14 +56,12 @@ public class MainController {
             CarParamsController controller = loader.getController();
             controller.setCar(car);
             return node;
-
         } catch (IOException e) {
             throw new RuntimeException("Failed to load car params view", e);
         }
     }
 
     private void loadTrackAndHUD() {
-        trackHUDContainer.getChildren().clear();
         Node trackView = loadTrack();
         Node hudView = loadPlayerHUD();
         trackHUDContainer.getChildren().add(trackView);
@@ -78,16 +73,15 @@ public class MainController {
                     getClass().getResource("/org/example/simulatorgui/view/competition/track_competition.fxml")
             );
             Node track = loader.load();
-            TrackController trackController = loader.getController();
-            trackController.setRaceCars(raceCars);
+            TrackController controller = loader.getController();
+            controller.setRaceCars(raceCars);
             return track;
-
         } catch (IOException e) {
             throw new RuntimeException("Failed to load Track", e);
         }
     }
     private Node loadPlayerHUD() {
-        Car playerCar = raceCars.stream()
+        Car playersCar = raceCars.stream()
                 .filter(Car::getPlayerControlled)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No player controlled car"));
@@ -97,9 +91,10 @@ public class MainController {
             );
             Node hud = loader.load();
             CarHUDController controller = loader.getController();
-            controller.setCar(playerCar);
+            controller.setCar(playersCar);
+//            Platform.runLater(() -> controller.registerInput(hud.getScene()));
+//            controller.startHUDLoop();
             return hud;
-
         } catch (IOException e) {
             throw new RuntimeException("Failed to load Car HUD", e);
         }

@@ -3,86 +3,111 @@ package org.example.simulatorgui.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.simulatorgui.controller.form.CarController;
-import org.example.simulatorgui.controller.form.ClutchController;
-import org.example.simulatorgui.controller.form.EngineController;
-import org.example.simulatorgui.controller.form.GearboxController;
-import simulator.*;
+import org.example.simulatorgui.controller.addcarform.CarComponentsController;
+import simulator.Car;
+import simulator.Engine;
+import simulator.Gearbox;
+import simulator.Position;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 public class AddCarController {
-    @FXML private VBox carFormContainer;
-    @FXML private VBox engineFormContainer;
-    @FXML private VBox gearboxFormContainer;
-    @FXML private VBox clutchFormContainer;
-    private MenuController menuController;
-    private CarController carController;
+    @FXML private VBox carBasicInfoForm;
+    @FXML private TextField carModelTextField;
+    @FXML private TextField carPlateNumberTextField;
+    @FXML private TextField carWeightTextField;
+    @FXML private TextField carVMAXTextField;
+    @FXML private VBox carComponentsForm;
+    @FXML private VBox engineGearboxForm;
+    @FXML private VBox clutchForm;
+    private RaceSetupController raceSetupController;
+    private CarComponentsController carComponentsController;
 
-    public VBox getCarFormContainer() {
-        return carFormContainer;
+    public VBox getCarBasicInfoForm() {
+        return carBasicInfoForm;
     }
-    public VBox getEngineFormContainer() {
-        return engineFormContainer;
+    public VBox getCarComponentsForm() {
+        return carComponentsForm;
     }
-    public VBox getGearboxFormContainer() {
-        return gearboxFormContainer;
+    public VBox getEngineGearboxForm() {
+        return engineGearboxForm;
     }
-    public VBox getClutchFormContainer() {
-        return clutchFormContainer;
+    public VBox getClutchForm() {
+        return clutchForm;
     }
-    public void setMenuController(MenuController menuController) { this.menuController = menuController; }
+    public void setRaceSetupController(RaceSetupController raceSetupController) { this.raceSetupController = raceSetupController; }
+    public void setCarComponentsController(CarComponentsController carComponentsController) {
+        this.carComponentsController = carComponentsController;
+    }
 
-    @FXML
-    private void initialize() {
+    public Car getCarFromInput() {
+        Engine engine = carComponentsController.getEngineFromInput();
+        Gearbox gearbox = carComponentsController.getGearboxFromInput();
+        String model = carModelTextField.getText().trim();
+        String plateNumber = carPlateNumberTextField.getText().trim();
+        Position position = new Position(0, 0);
+        double weight;
+        int vMax;
         try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            weight = Double.parseDouble(carWeightTextField.getText());
+            vMax = Integer.parseInt(carVMAXTextField.getText());
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException("Input value is incorrect!");
         }
+        return new Car(plateNumber, model, weight, vMax, position, engine, gearbox);
     }
 
     // ===================== ACTIONS =====================
-    public CarController showCarForm() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/form/car_form.fxml"));
-        Node form = loader.load();
-
-        carController = loader.getController();
-        carController.setMenuController(menuController);   // NOW menuController is guaranteed to exist
-        carController.setAddCarController(this);
-
-        carFormContainer.getChildren().setAll(form);
-        return carController;
-    }
     public <T> T showForm(String view, VBox toShow) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/form/" + view));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/addcarform/" + view));
         Node form = loader.load();
         T controller = loader.getController();
         toShow.getChildren().setAll(form); // Placing form in add_car view
         return controller;
     }
-    public <T> T showForm(String view, VBox toShow, VBox toDisable) throws IOException {
+    public <T> T showForm(String view, VBox toShow, VBox fToDisable) throws IOException {
         T controller = showForm(view, toShow);
         toShow.setVisible(true);
         toShow.setManaged(true);
-        if (toDisable != null) toDisable.setDisable(true);
+        if (fToDisable != null) fToDisable.setDisable(true);
+        return controller;
+    }
+    public <T> T showForm(String view, VBox toShow, VBox fToDisable, VBox sToDisable) throws IOException {
+        T controller = showForm(view, toShow, fToDisable);
+        if (sToDisable != null) sToDisable.setDisable(true);
         return controller;
     }
     public void closeForm(VBox toClose) {
         toClose.getChildren().clear();
     }
-    public void closeForm(VBox toClose, VBox toEnable) {
+    public void closeForm(VBox toClose, VBox fToEnable) {
         closeForm(toClose);
         toClose.setVisible(false);
         toClose.setManaged(false);
-        toEnable.setDisable(false);
+        fToEnable.setDisable(false);
+    }
+    public void closeForm(VBox toClose, VBox fToEnable, VBox sToEnable) {
+        closeForm(toClose, fToEnable);
+        sToEnable.setDisable(false);
     }
     public void closeWindow() {
-        Stage stage = (Stage) carFormContainer.getScene().getWindow();
+        Stage stage = (Stage) carComponentsForm.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void onCancel() {
+        closeForm(carComponentsForm);
+        closeWindow();
+    }
+    @FXML
+    private void onConfirm() {
+        Car car = getCarFromInput();
+        raceSetupController.getStoredCarsList().add(car);
+        raceSetupController.getStoredCarsComboBox().getSelectionModel().select(car);
+        closeWindow();
     }
 }

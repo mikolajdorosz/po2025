@@ -6,6 +6,6 @@ module org.example.simulatorgui {
     opens org.example.simulatorgui.controller to javafx.fxml;
     opens org.example.simulatorgui to javafx.fxml;
     exports org.example.simulatorgui;
-    opens org.example.simulatorgui.controller.form to javafx.fxml;
+    opens org.example.simulatorgui.controller.addcarform to javafx.fxml;
     opens org.example.simulatorgui.controller.competition to javafx.fxml;
 }

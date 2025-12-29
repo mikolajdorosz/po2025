@@ -20,7 +20,7 @@ public class CarParamsController {
         positionLabel.setText("1");
         timeLabel.setText("--:--:--");
         rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
-        speedLabel.setText(String.valueOf(car.getCurrentSpeed()));
+        speedLabel.setText(String.valueOf(car.getSpeed()));
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
         if (car.getPlayerControlled()) {
             playerControlledLabel.setText("P1");

@@ -1,0 +1,6 @@
+.combobox {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #dcdfe6;
+    -fx-background-color: #ffffff;
+}

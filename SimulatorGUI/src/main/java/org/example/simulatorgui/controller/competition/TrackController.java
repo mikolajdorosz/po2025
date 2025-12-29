@@ -16,77 +16,28 @@ import java.util.Map;
 public class TrackController {
     @FXML private Label timeLabel;
     @FXML private Pane trackPane;
+
     private Position startPosition;
     private Position finishPosition;
-    private final Map<Car, ImageView> carViews = new HashMap<>();
-    private AnimationTimer gameLoop;
     private ImageView startFlag;
     private ImageView finishFlag;
-    private enum SelectionMode { NONE, START, FINISH }
-    private SelectionMode selectionMode = SelectionMode.NONE;
+    private AnimationTimer gameLoop;
+    private final Map<Car, ImageView> carViews = new HashMap<>();
     private ObservableList<Car> raceCars;
+
 
     public void setRaceCars(ObservableList<Car> raceCars) {
         this.raceCars = raceCars;
     }
 
-    @FXML
-    public void initialize() {
-        trackPane.setOnMouseClicked(e -> {
-            if (selectionMode == SelectionMode.START) {
-                startPosition = new Position(e.getX(), e.getY());
-                placeStartFlag();
-            }
-            if (selectionMode == SelectionMode.FINISH) {
-                finishPosition = new Position(e.getX(), e.getY());
-                placeFinishFlag();
-            }
-            selectionMode = SelectionMode.NONE;
-        });
-    }
-
-    private void placeStartFlag() {
-        if (startFlag == null) {
-            startFlag = createFlag("/org/example/simulatorgui/images/start.png");
-            trackPane.getChildren().add(startFlag);
-        }
-        startFlag.setLayoutX(startPosition.getX());
-        startFlag.setLayoutY(startPosition.getY());
-    }
-    private void placeFinishFlag() {
-        if (finishFlag == null) {
-            finishFlag = createFlag("/org/example/simulatorgui/images/finish.png");
-            trackPane.getChildren().add(finishFlag);
-        }
-        finishFlag.setLayoutX(finishPosition.getX());
-        finishFlag.setLayoutY(finishPosition.getY());
-    }
-    private ImageView createFlag(String path) {
-        ImageView flag = new ImageView(
-                new Image(getClass().getResource(path).toExternalForm())
-        );
-        flag.setFitWidth(40);
-        flag.setFitHeight(40);
-        return flag;
-    }
 
     // ===================== ACTIONS =====================
-    @FXML
-    private void onPlaceStart(ActionEvent actionEvent) {
-        selectionMode = SelectionMode.START;
-    }
-    @FXML
-    private void onPlaceFinish(ActionEvent actionEvent) {
-        selectionMode = SelectionMode.FINISH;
-
-    }
     @FXML
     private void onRace() {
         if (startPosition == null || finishPosition == null) {
             System.out.println("Set start and finish first!");
             return;
         }
-
         spawnCars();
         startRace();
     }
@@ -119,20 +70,20 @@ public class TrackController {
                 }
                 double delta = (now - last) / 1e9;
                 last = now;
-                updateCars(delta);
+                //updateCars(delta);
                 renderCars();
             }
         };
         gameLoop.start();
     }
-    private void updateCars(double delta) {
-        for (Car car : raceCars) {
-            if (!car.getPlayerControlled()) {
-                car.getEngine().increaseRPM(); // AI
-            }
-            car.goTo(delta, finishPosition);
-        }
-    }
+//    private void updateCars(double delta) {
+//        for (Car car : raceCars) {
+//            if (!car.getPlayerControlled()) {
+//                car.getEngine().increaseRPM(); // AI
+//            }
+//            car.goTo(delta, finishPosition);
+//        }
+//    }
     private void renderCars() {
         for (Car car : raceCars) {
             ImageView view = carViews.get(car);

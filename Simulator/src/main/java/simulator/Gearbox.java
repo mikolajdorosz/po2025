@@ -5,7 +5,9 @@ public class Gearbox extends Component {
     private String type;
     private Clutch clutch;
     private int currentGear;
-    private int currentRatio;
+    private final double[] gearRatios = {
+            0.0, 3.6, 2.19, 1.41, 1.12, 0.93, 0.81
+    };
 
     public Gearbox(int gearsNumber, String type, String name, double weight, double price, Clutch clutch) {
         super(name, weight, price);
@@ -13,14 +15,12 @@ public class Gearbox extends Component {
         this.type = type;
         this.clutch = clutch;
         this.currentGear = 0;
-        this.currentRatio = 2;
     }
     public Gearbox(int gearsNumber, String type, String name, double weight, double price) {
         super(name, weight, price);
         this.gearsNumber = gearsNumber;
         this.type = type;
         this.currentGear = 0;
-        this.currentRatio = 2;
     }
 
     @Override
@@ -28,35 +28,52 @@ public class Gearbox extends Component {
     public String getType() {
         return type;
     }
-    public Clutch getClutch() {
-        return clutch == null ? null : clutch;
-    }
-    public int getCurrentGear() { return currentGear; }
-    public int getCurrentRatio() { return currentRatio; }
     public void setType(String type) {
         this.type = type;
+    }
+    public Clutch getClutch() {
+        return clutch == null ? null : clutch;
     }
     public void setClutch(Clutch clutch) {
         this.clutch = clutch;
     }
-
-
-    public void gearUp() {
-        clutch.press();
-        if (currentGear < gearsNumber) {
-            currentGear += 1;
-            currentRatio -= 0.25;
-        }
-        clutch.release();
-        System.out.println("Current gear: " + getCurrentGear());
+    public int getCurrentGear() { return currentGear; }
+    public void setCurrentGear(int currentGear) {
+        this.currentGear = currentGear;
     }
-    public void gearDown() {
-        //clutch.press();
-        if (currentGear > 0) {
-            currentGear -= 1;
-            currentRatio += 0.25;
+    public double getCurrentRatio() {
+        return gearRatios[currentGear];
+    }
+
+    public void gearUp(Engine engine) {
+        if (currentGear >= gearRatios.length - 1) return;
+        if (type.equals("manual") && clutch.getIsPressed()) {
+            double oldRatio = gearRatios[currentGear];
+            currentGear++;
+            double newRatio = gearRatios[currentGear];
+            if (!clutch.getIsPressed()) {
+                if (currentGear == 1) engine.setRPM((int)engine.getMinRPM());
+                else engine.setRPM((int)(engine.getRPM() * newRatio / oldRatio));
+            }
+        } else if (type.equals("automatic")) {
+            double oldRatio = gearRatios[currentGear];
+            currentGear++;
+            double newRatio = gearRatios[currentGear];
+            engine.setRPM((int)(engine.getRPM() * newRatio / oldRatio));
         }
-        //clutch.release();
-        System.out.println("Current gear: " + getCurrentGear());
+    }
+    public void gearDown(Engine engine) {
+        if (currentGear <= 1) return;
+        if (type.equals("manual") && clutch.getIsPressed()) {
+            double oldRatio = gearRatios[currentGear];
+            currentGear--;
+            double newRatio = gearRatios[currentGear];
+            if (!clutch.getIsPressed()) engine.setRPM((int)(engine.getRPM() * newRatio / oldRatio));
+        } else if (type.equals("automatic")) {
+            double oldRatio = gearRatios[currentGear];
+            currentGear--;
+            double newRatio = gearRatios[currentGear];
+            engine.setRPM((int)(engine.getRPM() * newRatio / oldRatio));
+        }
     }
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<?import java.net.URL?><?import java.lang.String?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="org.example.simulatorgui.controller.AddCarController"
+        style="-fx-background-color: linear-gradient(to bottom, #f7f8fa, #eef1f5);">
+
+    <!-- ScrollPane fills the entire window -->
+    <ScrollPane fitToWidth="true" fitToHeight="true"
+            style="-fx-background-color: transparent; -fx-border-width: 0;"
+            AnchorPane.topAnchor="0"
+            AnchorPane.bottomAnchor="0"
+            AnchorPane.leftAnchor="0"
+            AnchorPane.rightAnchor="0">
+
+        <!-- Main content VBox -->
+        <VBox spacing="24" alignment="TOP_CENTER" style="-fx-padding: 32 40;">
+
+            <!-- Header -->
+            <Label text="Car Builder" styleClass="title-label"/>
+
+            <!-- Basic Information Card -->
+            <VBox fx:id="carBasicInfoForm" spacing="16" style="-fx-background-color: #ffffff; -fx-padding: 24; -fx-background-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 14, 0, 0, 6);">
+                <Label text="Basic information" styleClass="title-grey-label"/>
+                <Separator opacity="0.3"/>
+                <HBox spacing="64">
+                    <VBox spacing="12" HBox.hgrow="ALWAYS">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="Model" styleClass="input-label" />
+                            <TextField fx:id="carModelTextField" text="model" promptText="Enter model" HBox.hgrow="ALWAYS" styleClass="textfield" />
+                        </HBox>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="License plate" styleClass="input-label" />
+                            <TextField fx:id="carPlateNumberTextField" text="KR123" promptText="Enter plate number" HBox.hgrow="ALWAYS" styleClass="textfield" />
+                        </HBox>
+                    </VBox>
+                    <VBox spacing="14" HBox.hgrow="ALWAYS">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="Weight [kg]" styleClass="input-label" />
+                            <TextField fx:id="carWeightTextField" text="123" promptText="1500" HBox.hgrow="ALWAYS" styleClass="textfield" />
+                        </HBox>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="VMax [km/h]" styleClass="input-label" />
+                            <TextField fx:id="carVMAXTextField" text="123" promptText="320" HBox.hgrow="ALWAYS" styleClass="textfield" />
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Components Section -->
+            <HBox spacing="16">
+                <VBox fx:id="carComponentsForm" HBox.hgrow="ALWAYS" spacing="16"/>
+                <VBox fx:id="engineGearboxForm" HBox.hgrow="ALWAYS" spacing="16" visible="false" managed="false"/>
+                <VBox fx:id="clutchForm" HBox.hgrow="ALWAYS" spacing="16" visible="false" managed="false"/>
+            </HBox>
+
+            <!-- Footer -->
+            <Separator opacity="0.3"/>
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button text="Cancel" onAction="#onCancel" styleClass="btn, btn-cancel" />
+                <Button text="Confirm" onAction="#onConfirm" styleClass="btn, btn-confirm" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

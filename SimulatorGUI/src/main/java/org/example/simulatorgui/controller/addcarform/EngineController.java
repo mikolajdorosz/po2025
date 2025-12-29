@@ -1,31 +1,25 @@
-package org.example.simulatorgui.controller.form;
+package org.example.simulatorgui.controller.addcarform;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import org.example.simulatorgui.controller.AddCarController;
 import simulator.*;
-
-import java.util.function.Consumer;
 
 public class EngineController {
     @FXML private TextField engineNameTextField;
     @FXML private TextField enginePriceTextField;
     @FXML private TextField engineWeightTextField;
     @FXML private TextField engineRPMTextField;
-
-
     private AddCarController addCarController;
+    private CarComponentsController carComponentsController;
+
     public void setAddCarController(AddCarController addCarController) {
         this.addCarController = addCarController;
     }
-    private CarController carController;
-    public void setCarController(CarController carController) {
-        this.carController = carController;
+    public void setCarComponentsController(CarComponentsController carComponentsController) {
+        this.carComponentsController = carComponentsController;
     }
 
-    // ===================== getEngine =====================
     public Engine getEngineFromInput() {
         String name = engineNameTextField.getText();
         double weight, price;
@@ -44,31 +38,12 @@ public class EngineController {
     @FXML
     private void onConfirm() {
         Engine engine = getEngineFromInput();
-        carController.getEngineComboBox().getItems().add(engine);
-        carController.getEngineComboBox().getSelectionModel().select(engine);
-        addCarController.closeForm(addCarController.getEngineFormContainer(), addCarController.getCarFormContainer());
+        carComponentsController.getEngineComboBox().getItems().add(engine);
+        carComponentsController.getEngineComboBox().getSelectionModel().select(engine);
+        addCarController.closeForm(addCarController.getEngineGearboxForm(), addCarController.getCarComponentsForm(), addCarController.getCarBasicInfoForm());
     }
     @FXML
     private void onCancel() {
-        addCarController.closeForm(addCarController.getEngineFormContainer(), addCarController.getCarFormContainer());
-    }
-
-
-
-
-
-
-
-
-
-
-
-    @FXML
-    public void onSpeedUp(ActionEvent actionEvent) {
-        System.out.println("Car is accelerating!");
-    }
-    @FXML
-    public void onSlowDown(ActionEvent actionEvent) {
-        System.out.println("Car is slowing down!");
+        addCarController.closeForm(addCarController.getEngineGearboxForm(), addCarController.getCarComponentsForm(), addCarController.getCarBasicInfoForm());
     }
 }

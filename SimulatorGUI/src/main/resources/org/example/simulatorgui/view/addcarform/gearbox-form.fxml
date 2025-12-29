@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.simulatorgui.controller.addcarform.GearboxController" spacing="16" style="
+        -fx-background-color: #ffffff;
+        -fx-padding: 24;
+        -fx-background-radius: 16;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 14, 0.2, 0, 4);
+    ">
+    <Label text="Gearbox" styleClass="title-grey-label"/>
+    <Separator opacity="0.3" prefWidth="320"/>
+    <VBox spacing="12">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Name" styleClass="input-label"/>
+            <TextField fx:id="gearboxNameTextField" promptText="Enter name" text="Gearbox" HBox.hgrow="ALWAYS" styleClass="textfield"/>
+        </HBox>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Price" styleClass="input-label"/>
+            <TextField fx:id="gearboxPriceTextField" promptText="Enter price [PLN]" text="50000" HBox.hgrow="ALWAYS" styleClass="textfield"/>
+        </HBox>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Weight" styleClass="input-label"/>
+            <TextField fx:id="gearboxWeightTextField" promptText="Enter weight [kg]" text="150" HBox.hgrow="ALWAYS" styleClass="textfield"/>
+        </HBox>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Gears number" styleClass="input-label"/>
+            <TextField fx:id="gearsTextField" promptText="Enter number" text="7" HBox.hgrow="ALWAYS" styleClass="textfield"/>
+        </HBox>
+        <HBox spacing="12" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" >
+            <Label text="Type" styleClass="input-label"/>
+            <ToggleButton fx:id="typeAutoToggleButton" text="Automatic" toggleGroup="$gearboxTypeToggleGroup" HBox.hgrow="ALWAYS" maxWidth="Infinity" selected="true" styleClass="btn, toggle-btn, toggle-btn-selected">
+                <userData>automatic</userData>
+            </ToggleButton>
+            <ToggleButton fx:id="typeManualToggleButton" text="Manual" toggleGroup="$gearboxTypeToggleGroup" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="btn, toggle-btn">
+                <userData>manual</userData>
+            </ToggleButton>
+        </HBox>
+        <HBox fx:id="clutchComboBoxContainer" spacing="12" alignment="CENTER_LEFT" disable="true">
+            <Label text="Clutch" styleClass="input-label"/>
+            <ComboBox fx:id="clutchComboBox" promptText="Select clutch" HBox.hgrow="ALWAYS" styleClass="combobox"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="New" fx:id="addClutchButton" onAction="#onCreateClutch" styleClass="btn, btn-blue"/>
+            <Button text="Delete" fx:id="deleteClutchButton" onAction="#onDeleteClutch" styleClass="btn, btn-red-reverse"/>
+        </HBox>
+    </VBox>
+    <Separator opacity="0.3" prefWidth="320"/>
+    <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 12 0 0 0;">
+        <Button text="Cancel" onAction="#onCancel" styleClass="btn, btn-cancel"/>
+        <Button text="Confirm" onAction="#onConfirm" styleClass="btn, btn-confirm"/>
+    </HBox>
+</VBox>
