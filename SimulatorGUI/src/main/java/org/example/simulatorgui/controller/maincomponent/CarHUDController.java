@@ -1,6 +1,7 @@
-package org.example.simulatorgui.controller.competition;
+package org.example.simulatorgui.controller.maincomponent;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,26 +14,32 @@ public class CarHUDController {
     @FXML private Label gearLabel;
     @FXML private Button carIgnitionButton;
     @FXML private Button clutchButton;
+    @FXML private Button gearDownButton;
+    @FXML private Button gearUpButton;
+    @FXML private Button brakeButton;
+    @FXML private Button gasButton;
 
     private Car car;
-    private boolean isGasPressed = false;
-    private boolean isBrakePressed = false;
     private AnimationTimer hudLoop;
+
+    public Car getCar() {
+        return car;
+    }
+    public void setCar(Car car) {
+        this.car = car;
+        disableClutch();
+    }
+
+    @FXML
+    private void initialize() {
+        Platform.runLater(() -> updateHUD());
+    }
 
     public void startHUDLoop() {
         hudLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (!car.getIsRunning()) return;
-
-                if (isGasPressed) {
-                    car.getEngine().increaseRPM();
-                }
-
-                if (isBrakePressed) {
-                    car.getEngine().decreaseRPM();
-                }
-
+                //if (!car.getIsRunning()) return;
                 updateHUD();
             }
         };
@@ -44,37 +51,6 @@ public class CarHUDController {
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
     }
 
-    public void setCar(Car car) {
-        this.car = car;
-        rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
-        speedLabel.setText(String.valueOf(car.getSpeed()));
-        gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
-    }
-
-    public void registerInput(Scene scene) {
-        scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case W -> {
-                    isGasPressed = true;
-                    isBrakePressed = false;
-                }
-                case S -> {
-                    isBrakePressed = true;
-                    isGasPressed = false;
-                }
-                case E -> car.getGearbox().gearUp(car.getEngine());
-                case Q -> car.getGearbox().gearDown(car.getEngine());
-            }
-        });
-        scene.setOnKeyReleased(e -> {
-            switch (e.getCode()) {
-                case W -> isGasPressed = false;
-                case S -> isBrakePressed = false;
-            }
-        });
-    }
-
-
     // ===================== ACTIONS =====================
     @FXML
     private void onCarIgnition() {
@@ -84,46 +60,97 @@ public class CarHUDController {
     }
     @FXML
     private void onGearDown() {
+        int oldGear = car.getGearbox().getCurrentGear();
         car.getGearbox().gearDown(car.getEngine());
+        car.onGearChanged(oldGear, car.getGearbox().getCurrentGear());
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
         rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
+        gearDownButton.getStyleClass().setAll("btn", "btn-grey");
+    }
+    @FXML
+    private void onGearDownRelease() {
+        gearDownButton.getStyleClass().setAll("btn", "btn-orange");
     }
     @FXML
     private void onClutch() {
-        if (car.getGearbox().getType().equals("manual")) {
-            if (car.getGearbox().getClutch().getIsPressed()) car.getGearbox().getClutch().release();
-            else car.getGearbox().getClutch().press();
-            clutchButton = setButtonStyle(clutchButton, car.getGearbox().getClutch().getIsPressed());
-        }
-        else clutchButton.setDisable(true);
+        if (!car.getGearbox().getType().equals("manual")) return;
+        if (car.getGearbox().getClutch().getIsPressed()) car.getGearbox().getClutch().release();
+        else car.getGearbox().getClutch().press();
+        clutchButton = setButtonStyle(clutchButton, car.getGearbox().getClutch().getIsPressed());
     }
     @FXML
     private void onGas() {
+        if (!car.getIsRunning()) return;
         car.setIsGasPressed(true);
-        car.getEngine().increaseRPM();
-        rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
-        speedLabel.setText(String.valueOf(car.getSpeed()));
+        gasButton.getStyleClass().setAll("btn", "btn-grey");
+    }
+    @FXML
+    private void onGasRelease() {
+        if (!car.getIsRunning()) return;
+        car.setIsGasPressed(false);
+        gasButton.getStyleClass().setAll("btn", "btn-blue");
     }
     @FXML
     private void onBrake() {
-        car.setIsGasPressed(false);
-        car.getEngine().decreaseRPM();
-        rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
-        speedLabel.setText(String.valueOf(car.getSpeed()));
+        if (!car.getIsRunning()) return;
+        car.setIsBrakePressed(true);
+        brakeButton.getStyleClass().setAll("btn", "btn-grey");
+    }
+    @FXML
+    private void onBrakeRelease() {
+        if (!car.getIsRunning()) return;
+        car.setIsBrakePressed(false);
+        brakeButton.getStyleClass().setAll("btn", "btn-orange");
     }
     @FXML
     private void onGearUp() {
+        int oldGear = car.getGearbox().getCurrentGear();
         car.getGearbox().gearUp(car.getEngine());
+        car.onGearChanged(oldGear, car.getGearbox().getCurrentGear());
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
         rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
+        gearUpButton.getStyleClass().setAll("btn", "btn-grey");
+    }
+    @FXML
+    private void onGearUpRelease() {
+        gearUpButton.getStyleClass().setAll("btn", "btn-blue");
     }
 
     private Button setButtonStyle(Button btn, boolean isActive) {
-        if (isActive) {
-            btn.setStyle("-fx-background-color: #4b5563; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;");
-        } else {
-            btn.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 12; -fx-cursor: hand;");
-        }
+        if (isActive) btn.getStyleClass().setAll("btn", "btn-grey");
+        else btn.getStyleClass().setAll("btn", "btn-blue");
         return btn;
+    }
+    private void disableClutch() {
+        clutchButton.setDisable(car.getGearbox().getType().equals("automatic"));
+    }
+    public void registerInput(Scene scene) {
+        scene.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case W -> onGas();
+                case S -> onBrake();
+                case L -> onGearUp();
+                case K -> onGearDown();
+                case E -> onCarIgnition();
+                case SHIFT -> {
+                    if (car.getGearbox().getType().equals("automatic")) return;
+                    car.getGearbox().getClutch().press();
+                    clutchButton.getStyleClass().setAll("btn", "btn-grey");
+                }
+            }
+        });
+        scene.setOnKeyReleased(e -> {
+            switch (e.getCode()) {
+                case W -> onGasRelease();
+                case S -> onBrakeRelease();
+                case L -> onGearUpRelease();
+                case K -> onGearDownRelease();
+                case SHIFT -> {
+                    if (car.getGearbox().getType().equals("automatic")) return;
+                    car.getGearbox().getClutch().release();
+                    clutchButton.getStyleClass().setAll("btn", "btn-blue");
+                }
+            }
+        });
     }
 }

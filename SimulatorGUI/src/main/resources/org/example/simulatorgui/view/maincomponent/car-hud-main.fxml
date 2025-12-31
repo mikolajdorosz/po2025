@@ -2,13 +2,13 @@
 
 <?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.simulatorgui.controller.competition.CarHUDController" spacing="18" style=" -fx-padding: 16;-fx-background-color: rgba(248, 249, 251, 0.85);-fx-background-radius: 16;-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 16, 0, 0, 6);">
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.simulatorgui.controller.maincomponent.CarHUDController" spacing="18" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 16, 0, 0, 6);">
     <HBox spacing="18" alignment="CENTER">
         <VBox alignment="BOTTOM_RIGHT" spacing="10" style="-fx-padding: 0 16">
-            <Button text="Gear Down" fx:id="gearDownButton" onAction="#onGearDown" styleClass="btn, btn-orange"/>
+            <Button text="Gear Down [K]" fx:id="gearDownButton" onMousePressed="#onGearDown" onMouseReleased="#onGearDownRelease" styleClass="btn, btn-orange"/>
             <HBox spacing="10">
-                <Button text="ON / OFF" fx:id="carIgnitionButton" onAction="#onCarIgnition" styleClass="btn, btn-blue" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <Button text="Clutch" fx:id="clutchButton" onAction="#onClutch" styleClass="btn, btn-grey" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="ON / OFF [E]" fx:id="carIgnitionButton" onMousePressed="#onCarIgnition" styleClass="btn, btn-blue" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="Clutch [SHIFT]" fx:id="clutchButton" onMousePressed="#onClutch" styleClass="btn, btn-blue" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
             </HBox>
         </VBox>
         <VBox alignment="CENTER" spacing="6">
@@ -30,10 +30,10 @@
             </StackPane>
         </VBox>
         <VBox alignment="BOTTOM_LEFT" spacing="10" style="-fx-padding: 0 16">
-            <Button text="Gear Up" fx:id="gearUpButton" onAction="#onGearUp" styleClass="btn, btn-blue"/>
+            <Button text="Gear Up [L]" fx:id="gearUpButton" onMousePressed="#onGearUp" onMouseReleased="#onGearUpRelease" styleClass="btn, btn-blue"/>
             <HBox spacing="10">
-                <Button text="Brake" fx:id="brakeButton" onAction="#onBrake" styleClass="btn, btn-orange" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <Button text="Gas" fx:id="gasButton" onAction="#onGas" styleClass="btn, btn-blue" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="Brake [S]" fx:id="brakeButton" onMousePressed="#onBrake" onMouseReleased="#onBrakeRelease" styleClass="btn, btn-orange" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="Gas [W]" fx:id="gasButton" onMousePressed="#onGas" onMouseReleased="#onGasRelease" styleClass="btn, btn-blue" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
             </HBox>
         </VBox>
     </HBox>

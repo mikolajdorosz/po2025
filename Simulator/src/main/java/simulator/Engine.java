@@ -45,8 +45,9 @@ public class Engine extends Component {
         RPM = Math.max(minRPM, RPM);
     }
     public void update(double dt, boolean gasPressed) {
-        if (gasPressed) RPM += dRPM * dt;
-        else RPM -= dRPM * 1.5 * dt;
-        RPM = Math.max(minRPM, Math.min(RPM, maxRPM));
+        double rpmChange;
+        if (gasPressed) rpmChange = 1000 * dt;
+        else rpmChange = -200 * dt;
+        setRPM((int)Math.min(getMaxRPM(), Math.max(getMinRPM(), getRPM() + rpmChange)));
     }
 }

@@ -7,14 +7,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.simulatorgui.controller.addcarform.CarComponentsController;
-import simulator.Car;
-import simulator.Engine;
-import simulator.Gearbox;
-import simulator.Position;
+import simulator.*;
 
 import java.io.IOException;
 
-public class AddCarController {
+public class AddCarController implements Listener {
     @FXML private VBox carBasicInfoForm;
     @FXML private TextField carModelTextField;
     @FXML private TextField carPlateNumberTextField;
@@ -109,5 +106,9 @@ public class AddCarController {
         raceSetupController.getStoredCarsList().add(car);
         raceSetupController.getStoredCarsComboBox().getSelectionModel().select(car);
         closeWindow();
+    }
+
+    @Override
+    public void update() {
     }
 }

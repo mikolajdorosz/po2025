@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.simulatorgui.controller.MainController"
-            style="-fx-background-color: linear-gradient(to bottom, #f7f8fa, #eef1f5); -fx-padding: 20;">
-    <left>
-        <VBox style="-fx-padding: 14 7 14 0;">
-            <VBox spacing="10" VBox.vgrow="ALWAYS"
-                  style="-fx-padding: 14; -fx-background-color: #ffffff; -fx-background-radius: 14; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 14, 0, 0, 6);">
-                <Label text="Competitors" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                <VBox fx:id="competitorsContainer" spacing="10" />
-            </VBox>
-        </VBox>
-    </left>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.simulatorgui.controller.MainController">
     <center>
-        <VBox fx:id="trackHUDContainer" style="-fx-padding: 14 0 14 7;" spacing="10" />
+        <StackPane>
+            <Pane fx:id="raceTrackPane" style="-fx-background-color: #3ad662;-fx-background-repeat: no-repeat;-fx-background-position: center;-fx-background-size: cover;"/>
+            <VBox spacing="14" style="-fx-padding: 20;">
+                <VBox fx:id="topbarContainer" spacing="12"/>
+                <HBox spacing="12">
+                    <VBox fx:id="competitorsContainer" spacing="10"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Region VBox.vgrow="ALWAYS"/>
+                <VBox fx:id="hudContainer" spacing="12"/>
+            </VBox>
+        </StackPane>
     </center>
 </BorderPane>

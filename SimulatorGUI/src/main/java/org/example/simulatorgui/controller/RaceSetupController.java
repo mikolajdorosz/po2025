@@ -1,6 +1,5 @@
 package org.example.simulatorgui.controller;
 
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,8 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.example.simulatorgui.Main;
 import org.example.simulatorgui.controller.addcarform.CarComponentsController;
-import org.example.simulatorgui.controller.competition.TrackController;
 import simulator.Car;
 import simulator.Position;
 
@@ -27,19 +26,31 @@ public class RaceSetupController {
     @FXML private ListView<Car> raceCarsListView;
     @FXML private Pane raceTrackPane;
     @FXML private Button startRaceButton;
-
     private final ObservableList<Car> storedCars = FXCollections.observableArrayList();     // Change in ObservableList automatically updates GUI
     private final ObservableList<Car> raceCars = FXCollections.observableArrayList();
-
     private enum SelectionMode { NONE, START, CHECKPOINT, FINISH }
     private SelectionMode selectionMode = SelectionMode.NONE;
-    private final List<Position> checkpointPositions = new ArrayList<>();
+    private final ArrayList<Position> checkpointPositions = new ArrayList<>();
+    private Position startPosition;
+    private Position finishPosition;
 
+    public Pane getRaceTrackPane() {
+        return raceTrackPane;
+    }
     public ComboBox<Car> getStoredCarsComboBox() {
         return storedCarsComboBox;
     }
     public ObservableList<Car> getStoredCarsList() {
         return storedCars;
+    }
+    public Position getStartPosition() {
+        return startPosition;
+    }
+    public ArrayList<Position> getCheckpointPositions() {
+        return checkpointPositions;
+    }
+    public Position getFinishPosition() {
+        return finishPosition;
     }
 
     @FXML
@@ -72,7 +83,7 @@ public class RaceSetupController {
     private void enableMouseClicks() {
         raceTrackPane.setOnMouseClicked(e -> {
             if (selectionMode == SelectionMode.START) {
-                Position startPosition = new Position(e.getX(), e.getY());
+                startPosition = new Position(e.getX(), e.getY());
                 placeStartFlag(startPosition);
             }
             if (selectionMode == SelectionMode.CHECKPOINT) {
@@ -80,7 +91,7 @@ public class RaceSetupController {
                 placeCheckpoints();
             }
             if (selectionMode == SelectionMode.FINISH) {
-                Position finishPosition = new Position(e.getX(), e.getY());
+                finishPosition = new Position(e.getX(), e.getY());
                 placeFinishFlag(finishPosition);
             }
             selectionMode = SelectionMode.NONE;
@@ -210,6 +221,11 @@ public class RaceSetupController {
     private void onStartRace() throws IOException {
         closeWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/main.fxml"));
+        loader.setControllerFactory(param -> {
+            MainController controller = new MainController();
+            controller.setRaceSetupController(this); // inject BEFORE initialize() is called
+            return controller;
+        });
         Parent root = loader.load();
         Stage stage = new Stage();
         Scene scene = new Scene(root);

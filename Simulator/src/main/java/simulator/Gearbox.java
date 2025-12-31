@@ -25,6 +25,9 @@ public class Gearbox extends Component {
 
     @Override
     public double getWeight() { return super.getWeight() + clutch.getWeight(); }
+    public int getGearsNumber() {
+        return gearsNumber;
+    }
     public String getType() {
         return type;
     }
@@ -63,7 +66,7 @@ public class Gearbox extends Component {
         }
     }
     public void gearDown(Engine engine) {
-        if (currentGear <= 1) return;
+        if (currentGear <= 0) return;
         if (type.equals("manual") && clutch.getIsPressed()) {
             double oldRatio = gearRatios[currentGear];
             currentGear--;
