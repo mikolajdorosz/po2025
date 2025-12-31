@@ -1,22 +1,15 @@
 package simulator;
 
 public class Clutch extends Component {
-    private boolean isPressed;
+    private boolean pressed;
 
     public Clutch(String name, double weight, double price) {
         super(name, weight, price);
-        this.isPressed = false;
+        this.pressed = false;
     }
 
-    public Boolean getIsPressed() {
-        return isPressed;
-    }
+    public Boolean getPressed() { return pressed; }
 
-
-    public void press() {
-        isPressed = true;
-    }
-    public void release() {
-        isPressed = false;
-    }
+    public void press() { pressed = true; }
+    public void release() { pressed = false; }
 }

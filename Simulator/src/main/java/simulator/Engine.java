@@ -1,53 +1,35 @@
 package simulator;
 
 public class Engine extends Component {
-    private int maxRPM;
     private int RPM;
-    private int dRPM;
     private int minRPM;
+    private int maxRPM;
 
     public Engine(int maxRPM, String name, double weight, double price) {
         super(name, weight, price);
-        this.maxRPM = maxRPM;
         this.RPM = 0;
-        this.dRPM = 250;
         this.minRPM = 1000;
+        this.maxRPM = maxRPM;
     }
 
-    public int getMaxRPM() {
-        return maxRPM;
-    }
-    public int getMinRPM() {
-        return minRPM;
-    }
-    public double getNormalizedRPM() {
-        return (double)(RPM - minRPM) / (maxRPM - minRPM);
-    }
-    public int getRPM() {
-        return RPM;
-    }
-    public void setRPM(int rpm) {
-        RPM = Math.max(minRPM, Math.min(rpm, maxRPM));
-    }
+    public int getRPM() { return RPM; }
+    public int getMinRPM() { return minRPM; }
+    public int getMaxRPM() { return maxRPM; }
+    public double getNormalizedRPM() { return (double) (RPM - minRPM) / (maxRPM - minRPM); }
 
-    public void start() {
-        RPM = minRPM;
-    }
-    public void stop() {
-        RPM = 0;
-    }
-    public void increaseRPM() {
-        RPM += dRPM;
-        RPM = Math.min(RPM, maxRPM);
-    }
-    public void decreaseRPM() {
-        RPM -= dRPM;
-        RPM = Math.max(minRPM, RPM);
-    }
-    public void update(double dt, boolean gasPressed) {
+    public void setRPM(int RPM) { this.RPM = Math.max(minRPM, Math.min(RPM, maxRPM)); }
+
+    public void start() { RPM = minRPM; }
+    public void stop() { RPM = 0; }
+    public void manipulateGas(double deltaTime, boolean gasPressed) {
         double rpmChange;
-        if (gasPressed) rpmChange = 1000 * dt;
-        else rpmChange = -200 * dt;
-        setRPM((int)Math.min(getMaxRPM(), Math.max(getMinRPM(), getRPM() + rpmChange)));
+        if (gasPressed) rpmChange = 1500 * deltaTime;       // RPM increase factor
+        else rpmChange = -500 * deltaTime;                  // RPM decrease factor
+        setRPM((int)(RPM + rpmChange));
+    }
+    public void manipulateBrake(double deltaTime, boolean brakePressed) {
+        if (!brakePressed) return;
+        double rpmChange = -1200 * deltaTime;        // RPM decrease factor
+        setRPM((int)(RPM + rpmChange));
     }
 }
