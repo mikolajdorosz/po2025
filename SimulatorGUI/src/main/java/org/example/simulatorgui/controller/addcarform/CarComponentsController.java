@@ -14,15 +14,9 @@ public class CarComponentsController {
     @FXML private ComboBox<Gearbox> gearboxComboBox;
     private AddCarController addCarController;
 
-    public ComboBox<Engine> getEngineComboBox() {
-        return engineComboBox;
-    }
-    public ComboBox<Gearbox> getGearboxComboBox() {
-        return gearboxComboBox;
-    }
-    public void setAddCarController(AddCarController addCarController) {
-        this.addCarController = addCarController;
-    }
+    public ComboBox<Engine> getEngineComboBox() { return engineComboBox; }
+    public ComboBox<Gearbox> getGearboxComboBox() { return gearboxComboBox; }
+    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
 
     public Engine getEngineFromInput() {
         Engine engine = engineComboBox.getValue();
@@ -36,7 +30,6 @@ public class CarComponentsController {
         gearboxComboBox.getSelectionModel().select(gearbox);
         return gearbox;
     }
-
     // ===================== ACTIONS =====================
     @FXML
     private void onNewEngine() throws IOException {
@@ -52,17 +45,8 @@ public class CarComponentsController {
     @FXML
     private void onDeleteEngine() {
         Engine selected = engineComboBox.getValue();
-        if (selected != null) {
-            engineComboBox.getItems().remove(selected);
-        }
-        engineComboBox.setButtonCell(new ListCell<Engine>() {     // default value for empty ComboBox
-            @Override
-            protected void updateItem(Engine item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) setText("Select engine");
-                else setText(item.toString());
-            }
-        });
+        if (selected != null) engineComboBox.getItems().remove(selected);
+        setDefaultEngineComboBoxValue();
     }
     @FXML
     private void onNewGearbox() throws IOException {
@@ -78,10 +62,21 @@ public class CarComponentsController {
     @FXML
     private void onDeleteGearbox() {
         Gearbox selected = gearboxComboBox.getValue();
-        if (selected != null) {
-            gearboxComboBox.getItems().remove(selected);
-        }
-        gearboxComboBox.setButtonCell(new ListCell<Gearbox>() {     // default value for empty ComboBox
+        if (selected != null) gearboxComboBox.getItems().remove(selected);
+        setDefaultGearboxComboBoxValue();
+    }
+    private void setDefaultEngineComboBoxValue() {
+        engineComboBox.setButtonCell(new ListCell<>() {     // default value for empty ComboBox
+            @Override
+            protected void updateItem(Engine item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) setText("Select engine");
+                else setText(item.toString());
+            }
+        });
+    }
+    private void setDefaultGearboxComboBoxValue() {
+        gearboxComboBox.setButtonCell(new ListCell<>() {     // default value for empty ComboBox
             @Override
             protected void updateItem(Gearbox item, boolean empty) {
                 super.updateItem(item, empty);

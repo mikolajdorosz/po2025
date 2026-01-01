@@ -41,12 +41,12 @@
                     </VBox>
                     <VBox spacing="14" HBox.hgrow="ALWAYS">
                         <HBox spacing="12" alignment="CENTER_LEFT">
-                            <Label text="Weight [kg]" styleClass="input-label" />
-                            <TextField fx:id="carWeightTextField" text="123" promptText="1500" HBox.hgrow="ALWAYS" styleClass="textfield" />
+                            <Label text="Weight" styleClass="input-label" />
+                            <TextField fx:id="carWeightTextField" text="123" promptText="Enter weight [kg]" HBox.hgrow="ALWAYS" styleClass="textfield" />
                         </HBox>
                         <HBox spacing="12" alignment="CENTER_LEFT">
-                            <Label text="VMax [km/h]" styleClass="input-label" />
-                            <TextField fx:id="carVMAXTextField" text="123" promptText="320" HBox.hgrow="ALWAYS" styleClass="textfield" />
+                            <Label text="Max speed" styleClass="input-label" />
+                            <TextField fx:id="carMaxSpeedTextField" text="123" promptText="Enter speed [km/h]" HBox.hgrow="ALWAYS" styleClass="textfield" />
                         </HBox>
                     </VBox>
                 </HBox>
@@ -63,7 +63,7 @@
             <Separator opacity="0.3"/>
             <HBox spacing="12" alignment="CENTER_RIGHT">
                 <Button text="Cancel" onAction="#onCancel" styleClass="btn, btn-cancel" />
-                <Button text="Confirm" onAction="#onConfirm" styleClass="btn, btn-confirm" />
+                <Button fx:id="confirmCarButton" text="Confirm" onAction="#onConfirm" styleClass="btn, btn-confirm" />
             </HBox>
         </VBox>
     </ScrollPane>

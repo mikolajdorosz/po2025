@@ -92,12 +92,14 @@ public class Car extends Thread {
         if (speed < 1) speed = 0;
     }
     private void applyAcceleration(double deltaTime) {
-        if (gearbox.getCurrentGear() > 0 && (!gearbox.getClutch().getPressed() || gearbox.getType().equals("automatic"))) {
-            double targetSpeed = computeSpeed();        // gear limited speed
-            double acceleration = 100 * deltaTime;      // acceleration factor
+        boolean clutchPressed = gearbox.getClutch() != null && gearbox.getClutch().getPressed();
+        if (gearbox.getCurrentGear() > 0 && (!clutchPressed || gearbox.getType().equals("automatic"))) {
+            double targetSpeed = computeSpeed();        // gear-limited speed
+            double acceleration = 100 * deltaTime;     // acceleration factor
             speed = Math.min(speed + acceleration, targetSpeed);
-        } else speed *= 1.0 - 0.01 * deltaTime;         // clutch pressed deceleration factor
+        } else speed *= 1.0 - 0.01 * deltaTime;            // deceleration factor
     }
+
     private double computeSpeed() {
         double targetSpeed = engine.getNormalizedRPM() * gearbox.getCurrentGear() / (double)gearbox.getGearsNumber() * maxSpeed;
         return Math.min(targetSpeed, maxSpeed);

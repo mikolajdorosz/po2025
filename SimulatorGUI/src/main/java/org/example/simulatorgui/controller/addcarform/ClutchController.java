@@ -1,7 +1,9 @@
 package org.example.simulatorgui.controller.addcarform;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.example.simulatorgui.controller.AddCarController;
 import simulator.*;
@@ -10,14 +12,23 @@ public class ClutchController {
     @FXML private TextField clutchNameTextField;
     @FXML private TextField clutchPriceTextField;
     @FXML private TextField clutchWeightTextField;
+    @FXML private Button confirmClutchButton;
     private AddCarController addCarController;
     private GearboxController gearboxController;
 
-    public void setAddCarController(AddCarController addCarController) {
-        this.addCarController = addCarController;
-    }
-    public void setGearboxController(GearboxController gearboxController) {
-        this.gearboxController = gearboxController;
+    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
+    public void setGearboxController(GearboxController gearboxController) { this.gearboxController = gearboxController; }
+
+    @FXML
+    private void initialize() { Platform.runLater(() -> validateInput()); }
+    private void validateInput() {
+        clutchPriceTextField.setTextFormatter(Utils.createDecimalTextFormatter());
+        clutchWeightTextField.setTextFormatter(Utils.createDecimalTextFormatter());
+        confirmClutchButton.disableProperty().bind(
+            clutchNameTextField.textProperty().isEmpty()
+                .or(clutchPriceTextField.textProperty().isEmpty())
+                .or(clutchWeightTextField.textProperty().isEmpty())
+        );
     }
 
     public Clutch getClutchFromInput() {
@@ -31,7 +42,6 @@ public class ClutchController {
         }
         return new Clutch(name, weight, price);
     }
-
     // ===================== ACTIONS =====================
     @FXML
     private void onConfirm() {

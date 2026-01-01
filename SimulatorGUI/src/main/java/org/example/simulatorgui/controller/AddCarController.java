@@ -1,9 +1,12 @@
 package org.example.simulatorgui.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.simulatorgui.controller.addcarform.CarComponentsController;
@@ -11,33 +14,39 @@ import simulator.*;
 
 import java.io.IOException;
 
-public class AddCarController implements Listener {
-    @FXML private VBox carBasicInfoForm;
+public class AddCarController {
     @FXML private TextField carModelTextField;
     @FXML private TextField carPlateNumberTextField;
     @FXML private TextField carWeightTextField;
-    @FXML private TextField carVMAXTextField;
+    @FXML private TextField carMaxSpeedTextField;
+    @FXML private Button confirmCarButton;
+    @FXML private VBox carBasicInfoForm;
     @FXML private VBox carComponentsForm;
     @FXML private VBox engineGearboxForm;
     @FXML private VBox clutchForm;
     private RaceSetupController raceSetupController;
     private CarComponentsController carComponentsController;
 
-    public VBox getCarBasicInfoForm() {
-        return carBasicInfoForm;
-    }
-    public VBox getCarComponentsForm() {
-        return carComponentsForm;
-    }
-    public VBox getEngineGearboxForm() {
-        return engineGearboxForm;
-    }
-    public VBox getClutchForm() {
-        return clutchForm;
-    }
+    public VBox getCarBasicInfoForm() { return carBasicInfoForm; }
+    public VBox getCarComponentsForm() { return carComponentsForm; }
+    public VBox getEngineGearboxForm() { return engineGearboxForm; }
+    public VBox getClutchForm() { return clutchForm; }
     public void setRaceSetupController(RaceSetupController raceSetupController) { this.raceSetupController = raceSetupController; }
-    public void setCarComponentsController(CarComponentsController carComponentsController) {
-        this.carComponentsController = carComponentsController;
+    public void setCarComponentsController(CarComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
+
+    @FXML
+    private void initialize() { Platform.runLater(() -> validateInput()); }
+    private void validateInput() {
+        carWeightTextField.setTextFormatter(Utils.createDecimalTextFormatter());
+        carMaxSpeedTextField.setTextFormatter(Utils.createIntegerTextFormatter());
+        confirmCarButton.disableProperty().bind(
+            carModelTextField.textProperty().isEmpty()
+                .or(carPlateNumberTextField.textProperty().isEmpty())
+                .or(carWeightTextField.textProperty().isEmpty())
+                .or(carMaxSpeedTextField.textProperty().isEmpty())
+                .or(carComponentsController.getEngineComboBox().valueProperty().isNull())
+                .or(carComponentsController.getGearboxComboBox().valueProperty().isNull())
+        );
     }
 
     public Car getCarFromInput() {
@@ -50,7 +59,7 @@ public class AddCarController implements Listener {
         int vMax;
         try {
             weight = Double.parseDouble(carWeightTextField.getText());
-            vMax = Integer.parseInt(carVMAXTextField.getText());
+            vMax = Integer.parseInt(carMaxSpeedTextField.getText());
         } catch (NumberFormatException e) {
             throw new IllegalStateException("Input value is incorrect!");
         }
@@ -77,9 +86,7 @@ public class AddCarController implements Listener {
         if (sToDisable != null) sToDisable.setDisable(true);
         return controller;
     }
-    public void closeForm(VBox toClose) {
-        toClose.getChildren().clear();
-    }
+    public void closeForm(VBox toClose) { toClose.getChildren().clear(); }
     public void closeForm(VBox toClose, VBox fToEnable) {
         closeForm(toClose);
         toClose.setVisible(false);
@@ -106,9 +113,5 @@ public class AddCarController implements Listener {
         raceSetupController.getStoredCarsList().add(car);
         raceSetupController.getStoredCarsComboBox().getSelectionModel().select(car);
         closeWindow();
-    }
-
-    @Override
-    public void update() {
     }
 }

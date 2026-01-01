@@ -12,7 +12,7 @@
             <VBox spacing="14" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 24; -fx-background-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 14, 0, 0, 6);">
                 <Label text="Available cars" styleClass="title-grey-label"/>
                 <HBox spacing="12" alignment="CENTER_LEFT">
-                    <ComboBox fx:id="storedCarsComboBox" promptText="Select a car" prefWidth="240" styleClass="combobox"/>
+                    <ComboBox fx:id="storedCarsComboBox" promptText="Select car" prefWidth="240" styleClass="combobox"/>
                     <Button text="Add to race" onAction="#onAddToRace" styleClass="btn, btn-blue"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button text="New car" onAction="#onNewCar" styleClass="btn, btn-blue-reverse"/>
@@ -36,9 +36,9 @@
                     <Pane fx:id="raceTrackPane" VBox.vgrow="ALWAYS" prefHeight="220" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #dcdfe6; -fx-background-color: #fafafa; "/>
                     <HBox spacing="12">
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="Place start" onAction="#onPlaceStart" styleClass="btn, btn-blue"/>
-                        <Button text="Place checkpoint" onAction="#onPlaceCheckpoint" styleClass="btn, btn-orange"/>
-                        <Button text="Place finish" onAction="#onPlaceFinish" styleClass="btn, btn-red"/>
+                        <Button fx:id="placeStartButton" text="Place start" onAction="#onPlaceStart" styleClass="btn, btn-blue"/>
+                        <Button fx:id="placeCheckpointButton" text="Place checkpoint" onAction="#onPlaceCheckpoint" styleClass="btn, btn-orange"/>
+                        <Button fx:id="placeFinishButton" text="Place finish" onAction="#onPlaceFinish" styleClass="btn, btn-red"/>
                         <Button text="Clear" onAction="#onClearTrack" styleClass="btn, btn-grey-reverse"/>
                     </HBox>
                 </VBox>

@@ -31,6 +31,6 @@
     <Separator opacity="0.3"/>
     <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 8 0 0 0;">
         <Button text="Cancel" onAction="#onCancel" styleClass="btn, btn-cancel"/>
-        <Button text="Confirm" onAction="#onConfirm" styleClass="btn, btn-confirm"/>
+        <Button fx:id="confirmEngineButton" text="Confirm" onAction="#onConfirm" styleClass="btn, btn-confirm"/>
     </HBox>
 </VBox>

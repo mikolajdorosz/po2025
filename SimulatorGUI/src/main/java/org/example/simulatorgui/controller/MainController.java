@@ -20,13 +20,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class MainController {
     @FXML private Pane raceTrackPane;
     @FXML private VBox topbarContainer;
     @FXML private VBox competitorsContainer;
     @FXML private VBox hudContainer;
-    private final ObservableList<Car> raceCars = FXCollections.observableArrayList();
+    private ObservableList<Car> raceCars = FXCollections.observableArrayList();
     private final Map<Car, ImageView> carViews = new HashMap<>();
     private final Map<Car, CarTileController> carTileControllers = new HashMap<>();
     private RaceSetupController raceSetupController;
@@ -37,34 +38,10 @@ public class MainController {
     private double scaleY;
 
     public void setRaceSetupController(RaceSetupController raceSetupController) { this.raceSetupController = raceSetupController; }
+    public void setRaceCars(ObservableList<Car> raceCars) { this.raceCars = raceCars; }
 
     @FXML
     private void initialize() throws IOException {
-        raceCars.add(new Car(
-                "KR123",
-                "GT-R",
-                1500,
-                320,
-                new Position(0, 0),
-                new Engine(8000, "V6", 220, 5000),
-                new Gearbox(6, "manual", "gearbox", 120, 3000,
-                        new Clutch("clutch", 50, 1000))
-        ));
-        raceCars.getFirst().setPlayerControlled(true);
-
-        for (int i = 1; i <= 3; i++) {
-            Car aiCar = new Car(
-                    "AI" + i,
-                    "AI Racer " + i,
-                    1400 + i * 10,
-                    300,
-                    new Position(0, 0),
-                    new Engine(7000, "V6", 200, 4000),
-                    new Gearbox(6, "automatic", "gearbox", 100, 3000,
-                            new Clutch("clutch", 0, 0)) // automatic, no real clutch
-            );
-            raceCars.add(aiCar);
-        }
         renderComponents();
         Platform.runLater(() -> renderTrack());
         startRace();
@@ -97,7 +74,8 @@ public class MainController {
         return controller;
     }
     private void loadPlayerHUD() throws IOException {
-        Car playersCar = raceCars.stream().filter(Car::getPlayerControlled).findFirst().orElseThrow(() -> new IllegalStateException("No player controlled car"));
+        Car playersCar = raceCars.stream().filter(Car::getPlayerControlled).findFirst().orElse(null);
+        if (playersCar == null) return;
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/org/example/simulatorgui/view/maincomponent/car-hud-main.fxml")
         );

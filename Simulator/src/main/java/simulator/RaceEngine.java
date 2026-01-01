@@ -14,9 +14,11 @@ public class RaceEngine {
 
     public void start() {
         running = true;
-        Car player = race.getCars().stream().filter(Car::getPlayerControlled).findFirst().orElseThrow();
-        player.setTarget(race.getCheckpoints().isEmpty() ? race.getFinish() : race.getCheckpoints().getFirst());
-        if (!player.isAlive()) player.start();      // Thread
+        Car player = race.getCars().stream().filter(Car::getPlayerControlled).findFirst().orElse(null);
+        if (player != null) {
+            player.setTarget(race.getCheckpoints().isEmpty() ? race.getFinish() : race.getCheckpoints().getFirst());
+            if (!player.isAlive()) player.start();      // Thread
+        }
 
         for (Car car : race.getCars()) {
             if (!car.getPlayerControlled()) {

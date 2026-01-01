@@ -1,5 +1,7 @@
 package org.example.simulatorgui.controller.addcarform;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -18,36 +20,55 @@ public class GearboxController {
     @FXML private ToggleButton typeManualToggleButton;
     @FXML private ComboBox<Clutch> clutchComboBox;
     @FXML private HBox clutchComboBoxContainer;
-    private String gearboxType;
+    @FXML private Button confirmGearboxButton;
+    private StringProperty gearboxTypeProperty = new SimpleStringProperty();
     private AddCarController addCarController;
     private CarComponentsController carComponentsController;
+    private String gearboxType;
 
-    public ComboBox<Clutch> getClutchComboBox() {
-        return clutchComboBox;
-    }
-    public void setAddCarController(AddCarController addCarController) {
-        this.addCarController = addCarController;
-    }
-    public void setCarComponentsController(CarComponentsController carComponentsController) {
-        this.carComponentsController = carComponentsController;
-    }
+    public ComboBox<Clutch> getClutchComboBox() { return clutchComboBox; }
+    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
+    public void setCarComponentsController(CarComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
 
     @FXML
     private void initialize() {
         setupTypeToggling();
+        validateInput();
     }
-
     private void setupTypeToggling() {
         gearboxTypeToggleGroup = new ToggleGroup();
         typeAutoToggleButton.setToggleGroup(gearboxTypeToggleGroup);
         typeManualToggleButton.setToggleGroup(gearboxTypeToggleGroup);
         gearboxTypeToggleGroup.selectedToggleProperty().addListener(
                 (obs, oldToggle, newToggle) -> {
-                    if (newToggle == null) return;
+                    if (newToggle == null) {
+                        oldToggle.setSelected(true);
+                        return;
+                    }
                     gearboxType = newToggle.getUserData().toString();
-                    if ("automatic".equals(gearboxType)) clutchComboBoxContainer.setDisable(true);
-                    else clutchComboBoxContainer.setDisable(false);
+                    gearboxTypeProperty.set(gearboxType);
+                    clutchComboBoxContainer.setDisable("automatic".equals(gearboxType));
                 }
+        );
+        Toggle selected = gearboxTypeToggleGroup.getSelectedToggle();
+        if (selected != null) {
+            gearboxType = selected.getUserData().toString();
+            gearboxTypeProperty.set(gearboxType);
+            clutchComboBoxContainer.setDisable("automatic".equals(gearboxType));
+        }
+    }
+    private void validateInput() {
+        gearboxPriceTextField.setTextFormatter(Utils.createDecimalTextFormatter());
+        gearboxWeightTextField.setTextFormatter(Utils.createDecimalTextFormatter());
+        gearsTextField.setTextFormatter(Utils.createIntegerTextFormatter());
+        confirmGearboxButton.disableProperty().bind(
+            gearboxNameTextField.textProperty().isEmpty()
+                .or(gearboxPriceTextField.textProperty().isEmpty())
+                .or(gearboxWeightTextField.textProperty().isEmpty())
+                .or(gearsTextField.textProperty().isEmpty())
+                .or(clutchComboBox.valueProperty().isNull()
+                    .and(gearboxTypeProperty.isEqualTo("manual"))
+                )
         );
     }
 
@@ -72,7 +93,6 @@ public class GearboxController {
             return new Gearbox(gears, gearboxType, name, weight, price);
         }
     }
-
     // ===================== ACTIONS =====================
     @FXML
     private void onCreateClutch() throws IOException {
@@ -90,8 +110,8 @@ public class GearboxController {
         if (selected != null) {
             clutchComboBox.getItems().remove(selected);
         }
+        setDefaultComboBoxValue();
     }
-
     @FXML
     private void onConfirm() {
         Gearbox gearbox = getGearboxFromInput();
@@ -102,5 +122,15 @@ public class GearboxController {
     @FXML
     private void onCancel() {
         addCarController.closeForm(addCarController.getEngineGearboxForm(), addCarController.getCarComponentsForm(), addCarController.getCarBasicInfoForm());
+    }
+    private void setDefaultComboBoxValue() {
+        clutchComboBox.setButtonCell(new ListCell<>() {     // default value for empty ComboBox
+            @Override
+            protected void updateItem(Clutch item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) setText("Select clutch");
+                else setText(item.toString());
+            }
+        });
     }
 }

@@ -1,6 +1,8 @@
 package org.example.simulatorgui.controller.addcarform;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.example.simulatorgui.controller.AddCarController;
 import simulator.*;
@@ -10,14 +12,25 @@ public class EngineController {
     @FXML private TextField enginePriceTextField;
     @FXML private TextField engineWeightTextField;
     @FXML private TextField engineRPMTextField;
+    @FXML private Button confirmEngineButton;
     private AddCarController addCarController;
     private CarComponentsController carComponentsController;
 
-    public void setAddCarController(AddCarController addCarController) {
-        this.addCarController = addCarController;
-    }
-    public void setCarComponentsController(CarComponentsController carComponentsController) {
-        this.carComponentsController = carComponentsController;
+    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
+    public void setCarComponentsController(CarComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
+
+    @FXML
+    private void initialize() { Platform.runLater(() -> validateInput()); }
+    private void validateInput() {
+        enginePriceTextField.setTextFormatter(Utils.createDecimalTextFormatter());
+        engineWeightTextField.setTextFormatter(Utils.createDecimalTextFormatter());
+        engineRPMTextField.setTextFormatter(Utils.createIntegerTextFormatter());
+        confirmEngineButton.disableProperty().bind(
+            engineNameTextField.textProperty().isEmpty()
+                .or(enginePriceTextField.textProperty().isEmpty())
+                .or(engineWeightTextField.textProperty().isEmpty())
+                .or(engineRPMTextField.textProperty().isEmpty())
+        );
     }
 
     public Engine getEngineFromInput() {
@@ -33,7 +46,6 @@ public class EngineController {
         }
         return new Engine(maxRPM, name, weight, price);
     }
-
     // ===================== ACTIONS =====================
     @FXML
     private void onConfirm() {

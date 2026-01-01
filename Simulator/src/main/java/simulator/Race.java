@@ -33,7 +33,23 @@ public class Race {
             Position target = getTargetForCar(car);
             car.setTarget(target);
 
-            if (!car.getPlayerControlled()) car.setGasPressed(distance(car.getPosition(), target) > 1);
+            if (!car.getPlayerControlled()) updateAIDriving(car, target);
+        }
+    }
+    private void updateAIDriving(Car car, Position target) {
+        double dist = distance(car.getPosition(), target);
+        boolean gas = dist > 1 && Math.random() > 0.1;   // 90% gas if far enough
+        boolean brake = Math.random() < 0.05;            // 5% chance to brake randomly
+        car.setGasPressed(gas);
+        car.setBrakePressed(brake);
+
+        Gearbox gearbox = car.getGearbox();
+        Engine engine = car.getEngine();
+        if (gearbox.getClutch() != null) gearbox.getClutch().release();
+        if (engine.getRPM() > engine.getMaxRPM() * 0.8 && gearbox.getCurrentGear() < gearbox.getGearsNumber()) {
+            gearbox.gearUp(engine);
+        } else if (engine.getRPM() < engine.getMaxRPM() * 0.3 && gearbox.getCurrentGear() > 1) {
+            gearbox.gearDown(engine);
         }
     }
     private boolean hasReached(Position a, Position b) { return Math.abs(a.getX() - b.getX()) < 0.05 && Math.abs(a.getY() - b.getY()) < 0.05; }
