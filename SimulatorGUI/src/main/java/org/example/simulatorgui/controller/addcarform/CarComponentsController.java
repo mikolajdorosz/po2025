@@ -1,5 +1,7 @@
 package org.example.simulatorgui.controller.addcarform;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
@@ -12,21 +14,34 @@ import java.io.IOException;
 public class CarComponentsController {
     @FXML private ComboBox<Engine> engineComboBox;
     @FXML private ComboBox<Gearbox> gearboxComboBox;
+    private ObservableList<Engine> engines = FXCollections.observableArrayList();
+    private ObservableList<Gearbox> gearboxes = FXCollections.observableArrayList();
     private AddCarController addCarController;
 
     public ComboBox<Engine> getEngineComboBox() { return engineComboBox; }
     public ComboBox<Gearbox> getGearboxComboBox() { return gearboxComboBox; }
+    public ObservableList<Engine> getEngines() { return engines; }
+    public ObservableList<Gearbox> getGearboxes() { return gearboxes; }
+
     public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
+
+    @FXML
+    private void initialize() {
+        engines = CarComponentsStorage.getEngines();
+        gearboxes = CarComponentsStorage.getGearboxes();
+        engineComboBox.setItems(engines);
+        gearboxComboBox.setItems(gearboxes);
+    }
 
     public Engine getEngineFromInput() {
         Engine engine = engineComboBox.getValue();
-        engineComboBox.getItems().add(engine);
+        if (!engines.contains(engine)) CarComponentsStorage.addEngine(engine);
         engineComboBox.getSelectionModel().select(engine);
         return engine;
     }
     public Gearbox getGearboxFromInput() {
         Gearbox gearbox = gearboxComboBox.getValue();
-        gearboxComboBox.getItems().add(gearbox);
+        if (!gearboxes.contains(gearbox)) CarComponentsStorage.addGearbox(gearbox);
         gearboxComboBox.getSelectionModel().select(gearbox);
         return gearbox;
     }
@@ -45,7 +60,7 @@ public class CarComponentsController {
     @FXML
     private void onDeleteEngine() {
         Engine selected = engineComboBox.getValue();
-        if (selected != null) engineComboBox.getItems().remove(selected);
+        if (selected != null) engines.remove(selected);
         setDefaultEngineComboBoxValue();
     }
     @FXML
@@ -62,7 +77,7 @@ public class CarComponentsController {
     @FXML
     private void onDeleteGearbox() {
         Gearbox selected = gearboxComboBox.getValue();
-        if (selected != null) gearboxComboBox.getItems().remove(selected);
+        if (selected != null) gearboxes.remove(selected);
         setDefaultGearboxComboBoxValue();
     }
     private void setDefaultEngineComboBoxValue() {

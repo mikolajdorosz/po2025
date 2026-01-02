@@ -35,6 +35,11 @@ public class EngineController {
 
     public Engine getEngineFromInput() {
         String name = engineNameTextField.getText();
+        boolean duplicate = carComponentsController.getEngines().stream().anyMatch(c -> c.getName().equalsIgnoreCase(name));
+        if (duplicate) {
+            Utils.showDuplicateAlert("engine name", name);
+            return null;
+        }
         double weight, price;
         int maxRPM;
         try {
@@ -50,7 +55,8 @@ public class EngineController {
     @FXML
     private void onConfirm() {
         Engine engine = getEngineFromInput();
-        carComponentsController.getEngineComboBox().getItems().add(engine);
+        if (engine == null) return;
+        carComponentsController.getEngines().add(engine);
         carComponentsController.getEngineComboBox().getSelectionModel().select(engine);
         addCarController.closeForm(addCarController.getEngineGearboxForm(), addCarController.getCarComponentsForm(), addCarController.getCarBasicInfoForm());
     }

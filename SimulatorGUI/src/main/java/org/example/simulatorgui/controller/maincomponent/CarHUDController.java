@@ -23,7 +23,7 @@ public class CarHUDController implements Listener {
     public Car getCar() { return car; }
     public void setCar(Car car) {
         this.car = car;
-        disableClutch();
+        disableClutchGearControls();
         car.addListener(() -> Platform.runLater(this::updateHUD));
     }
 
@@ -31,25 +31,33 @@ public class CarHUDController implements Listener {
         rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
         speedLabel.setText(String.valueOf(car.getSpeed()));
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
+        if (car.getFinalScore() != 0) {
+            carIgnitionButton.setDisable(true);
+            clutchButton.setDisable(true);
+            gearDownButton.setDisable(true);
+            gearUpButton.setDisable(true);
+            brakeButton.setDisable(true);
+            gasButton.setDisable(true);
+        }
     }
     // ===================== ACTIONS =====================
     @FXML
     private void onCarIgnition() {
         if (car.getRunning()) car.turnOff();
         else car.turnOn();
+        if (car.getPlayerControlled() && car.getGearbox().getType().equals("automatic")) car.getGearbox().setCurrentGear(1);
         carIgnitionButton = setButtonStyle(carIgnitionButton, car.getRunning());
     }
     @FXML
     private void onGearDown() {
-        car.getGearbox().gearDown(car.getEngine());
+        if (!car.getGearbox().getType().equals("manual")) return;
+        car.getGearbox().gearDown();
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
         rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
         gearDownButton.getStyleClass().setAll("btn", "btn-grey");
     }
     @FXML
-    private void onGearDownRelease() {
-        gearDownButton.getStyleClass().setAll("btn", "btn-orange");
-    }
+    private void onGearDownRelease() { gearDownButton.getStyleClass().setAll("btn", "btn-orange"); }
     @FXML
     private void onClutch() {
         if (!car.getGearbox().getType().equals("manual")) return;
@@ -83,7 +91,8 @@ public class CarHUDController implements Listener {
     }
     @FXML
     private void onGearUp() {
-        car.getGearbox().gearUp(car.getEngine());
+        if (!car.getGearbox().getType().equals("manual")) return;
+        car.getGearbox().gearUp();
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
         rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
         gearUpButton.getStyleClass().setAll("btn", "btn-grey");
@@ -95,9 +104,15 @@ public class CarHUDController implements Listener {
         else btn.getStyleClass().setAll("btn", "btn-blue");
         return btn;
     }
-    private void disableClutch() { clutchButton.setDisable(car.getGearbox().getType().equals("automatic")); }
+    private void disableClutchGearControls() {
+        boolean isAutomatic = car.getGearbox().getType().equals("automatic");
+        clutchButton.setDisable(isAutomatic);
+        gearUpButton.setDisable(isAutomatic);
+        gearDownButton.setDisable(isAutomatic);
+    }
     public void registerInput(Scene scene) {
         scene.setOnKeyPressed(e -> {
+            if (car.getFinalScore() != 0) return;
             switch (e.getCode()) {
                 case W -> onGas();
                 case S -> onBrake();
@@ -112,6 +127,7 @@ public class CarHUDController implements Listener {
             }
         });
         scene.setOnKeyReleased(e -> {
+            if (car.getFinalScore() != 0) return;
             switch (e.getCode()) {
                 case W -> onGasRelease();
                 case S -> onBrakeRelease();
@@ -126,7 +142,5 @@ public class CarHUDController implements Listener {
         });
     }
     @Override
-    public void update() {
-        Platform.runLater(this::updateHUD);
-    }
+    public void update() { Platform.runLater(this::updateHUD); }
 }

@@ -26,33 +26,24 @@ public class Gearbox extends Component {
     public int getCurrentGear() { return currentGear; }
     @Override
     public double getWeight() { return super.getWeight() + clutch.getWeight(); }
+    @Override
+    public double getPrice() {
+        if (clutch == null) return super.getPrice();
+        return super.getPrice() + clutch.getPrice();
+    }
 
     public void setCurrentGear(int currentGear) { this.currentGear = currentGear; }
 
-    public void gearUp(Engine engine) {
+    public void gearUp() {
         if (currentGear >= gearsNumber) return;
         if (type.equals("manual")) {
-            if (clutch.getPressed()) {
-                currentGear++;
-                if (currentGear == 1) engine.setRPM((int) engine.getMinRPM());
-                else
-                    engine.setRPM((int) (engine.getNormalizedRPM() * engine.getMaxRPM() * 0.7));    // gear up RPM decrease
-            }
-        } else {
-            currentGear++;
-            engine.setRPM((int) (engine.getNormalizedRPM() * engine.getMaxRPM() * 0.7));            // gear up RPM decrease
-        }
+            if (clutch.getPressed()) currentGear++;
+        } else currentGear++;
     }
-    public void gearDown(Engine engine) {
-        if (currentGear <= 0) return;
+    public void gearDown() {
+        if (currentGear <= 1) return;
         if (type.equals("manual")) {
-            if (clutch.getPressed()) {
-                currentGear--;
-                engine.setRPM((int) (engine.getNormalizedRPM() * engine.getMaxRPM() * 1.25));   // gear down RPM increase
-            }
-        } else {
-            currentGear--;
-            engine.setRPM((int)(engine.getNormalizedRPM() * engine.getMaxRPM() * 1.25));        // gear down RPM increase
-        }
+            if (clutch.getPressed()) currentGear--;
+        } else currentGear--;
     }
 }

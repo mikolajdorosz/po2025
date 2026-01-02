@@ -1,5 +1,6 @@
 package simulator;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;
 
 public class Utils {
@@ -20,5 +21,15 @@ public class Utils {
             String newText = change.getControlNewText();
             return newText.matches("\\d*") ? change : null;
         });
+    }
+    public static double distance(Position a, Position b) { return Math.sqrt(Math.pow(b.getX() - a.getX(), 2) + Math.pow(b.getY() - a.getY(), 2)); }
+    public static void showDuplicateAlert(String name, String item) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Duplicate " + name);
+        alert.setHeaderText(name.substring(0, 1).toUpperCase() + name.substring(1) + " already exists");
+        alert.setContentText(
+                "The" + name + " \"" + item + "\" is already used."
+        );
+        alert.showAndWait();
     }
 }

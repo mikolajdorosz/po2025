@@ -7,20 +7,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.example.simulatorgui.controller.maincomponent.CarHUDController;
 import org.example.simulatorgui.controller.maincomponent.CarTileController;
+import org.example.simulatorgui.controller.maincomponent.TopbarController;
 import simulator.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class MainController {
     @FXML private Pane raceTrackPane;
@@ -29,37 +27,39 @@ public class MainController {
     @FXML private VBox hudContainer;
     private ObservableList<Car> raceCars = FXCollections.observableArrayList();
     private final Map<Car, ImageView> carViews = new HashMap<>();
-    private final Map<Car, CarTileController> carTileControllers = new HashMap<>();
+    private final Map<String, CarTileController> carTileControllers = new HashMap<>();
     private RaceSetupController raceSetupController;
     private AnimationTimer gameLoop;
     private RaceEngine raceEngine;
-    private Race race;
     private double scaleX;
     private double scaleY;
 
-    public void setRaceSetupController(RaceSetupController raceSetupController) { this.raceSetupController = raceSetupController; }
+    public RaceSetupController getRaceSetupController() { return raceSetupController; }
+    public AnimationTimer getGameLoop() { return gameLoop; }
+    public RaceEngine getRaceEngine() { return raceEngine; }
+
     public void setRaceCars(ObservableList<Car> raceCars) { this.raceCars = raceCars; }
+    public void setRaceSetupController(RaceSetupController raceSetupController) { this.raceSetupController = raceSetupController; }
+    public void setGameLoop(AnimationTimer gameLoop) { this.gameLoop = gameLoop; }
 
     @FXML
     private void initialize() throws IOException {
-        renderComponents();
-        Platform.runLater(() -> renderTrack());
-        startRace();
-    }
-
-    private void renderComponents() throws IOException {
         loadTopbar();
         loadPlayerHUD();
         for (Car car : raceCars) {
             CarTileController controller = loadCarTile(car);
-            carTileControllers.put(car, controller);
+            carTileControllers.put(car.getPlateNumber(), controller);
         }
+        Platform.runLater(() -> renderTrack());
+        startRace();
     }
     private void loadTopbar() throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/org/example/simulatorgui/view/maincomponent/topbar-main.fxml")
         );
         Node topbar = loader.load();
+        TopbarController controller = loader.getController();
+        controller.setMainController(this);
         topbarContainer.getChildren().setAll(topbar);
     }
     private CarTileController loadCarTile(Car car) throws IOException {
@@ -96,9 +96,11 @@ public class MainController {
         Position finish = raceSetupController.getFinishPosition();
         if (finish != null)  placeImg(finish, "finish.png");
         for (Position cp : raceSetupController.getCheckpointPositions()) placeImg(cp, "checkpoint.png");
-        for (Car car : raceCars) {
-            car.setPosition(new Position(start.getX(), start.getY()));
-            ImageView carImg = placeImg(car.getPosition(), "car.png");
+        for (int i = 1; i <= raceCars.size(); i++) {
+            Car car = raceCars.get(i-1);
+            car.setCurrentPosition(new Position(start.getX(), start.getY()));
+            ImageView carImg = placeImg(car.getCurrentPosition(), "cars/car" + i + ".png");
+            car.setCarImageView(carImg);
             carViews.put(car, carImg);
         }
     }
@@ -115,15 +117,20 @@ public class MainController {
     }
 
     private void startRace() {
-        race = new Race(raceCars, raceSetupController.getStartPosition(), raceSetupController.getFinishPosition(), raceSetupController.getCheckpointPositions());
-        raceEngine = new RaceEngine(race);
+        raceEngine = new RaceEngine();
+        raceEngine.createRace(raceCars, raceSetupController.getStartPosition(), raceSetupController.getFinishPosition(), raceSetupController.getCheckpointPositions());
         raceEngine.start();
+
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 raceEngine.update();
                 renderCars();
                 updateCarTiles();
+                if (raceEngine.getRace().ended()) {
+                    raceEngine.stop();
+                    stopRace();
+                }
             }
         };
         gameLoop.start();
@@ -132,14 +139,18 @@ public class MainController {
         for (Car car : raceCars) {
             ImageView view = carViews.get(car);
             if (view == null) continue;
-            view.setLayoutX(car.getPosition().getX() * scaleX);
-            view.setLayoutY(car.getPosition().getY() * scaleY);
+            view.setLayoutX(car.getCurrentPosition().getX() * scaleX);
+            view.setLayoutY(car.getCurrentPosition().getY() * scaleY);
         }
     }
     private void updateCarTiles() {
-        Map<Car, Integer> positions = race.computeCarPositions();
+        Map<Car, Integer> positions = raceEngine.getRace().computeCarPositions();
         for (Car car : raceCars) {
-            carTileControllers.get(car).updateCarTile(car, positions.get(car));
+            CarTileController controller = carTileControllers.get(car.getPlateNumber());
+            Integer position = positions.get(car);
+            if (controller == null || position == null) continue;
+            controller.updateCarTile(car, position);
         }
     }
+    public void stopRace() { if (gameLoop != null) gameLoop.stop(); }
 }

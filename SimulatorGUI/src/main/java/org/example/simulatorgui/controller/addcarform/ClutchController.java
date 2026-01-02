@@ -33,6 +33,14 @@ public class ClutchController {
 
     public Clutch getClutchFromInput() {
         String name = clutchNameTextField.getText();
+        boolean duplicate = gearboxController.getClutches().stream()
+                .filter(c -> c != null)
+                .anyMatch(c -> c.getName().equalsIgnoreCase(name));
+
+        if (duplicate) {
+            Utils.showDuplicateAlert("clutch name", name);
+            return null;
+        }
         double weight, price;
         try {
             weight = Double.parseDouble(clutchWeightTextField.getText());
@@ -46,7 +54,9 @@ public class ClutchController {
     @FXML
     private void onConfirm() {
         Clutch clutch = getClutchFromInput();
-        gearboxController.getClutchComboBox().getItems().add(clutch);
+        if (clutch == null) return;
+        CarComponentsStorage.addClutch(clutch);
+        gearboxController.getClutches().add(clutch);
         gearboxController.getClutchComboBox().getSelectionModel().select(clutch);
         addCarController.closeForm(addCarController.getClutchForm(), addCarController.getEngineGearboxForm());
     }

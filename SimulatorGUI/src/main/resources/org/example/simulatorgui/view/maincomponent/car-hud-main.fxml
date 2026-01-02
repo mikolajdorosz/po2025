@@ -14,19 +14,19 @@
         <VBox alignment="CENTER" spacing="6">
             <Label text="RPM" style="-fx-font-size: 10px; -fx-text-fill: #6b7280; -fx-font-weight: 600;"/>
             <StackPane prefWidth="70" prefHeight="70" styleClass="clock-wrapper">
-                <Label fx:id="rpmLabel" text="6500" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #111827;"/>
+                <Label fx:id="rpmLabel" text="0" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #111827;"/>
             </StackPane>
         </VBox>
         <VBox alignment="CENTER" spacing="6">
             <Label text="SPEED" style="-fx-font-size: 10px; -fx-text-fill: #6b7280; -fx-font-weight: 600;"/>
             <StackPane prefWidth="90" prefHeight="90" styleClass="clock-wrapper, main-clock-wrapper">
-                <Label fx:id="speedLabel" text="100" style="-fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #2563eb;"/>
+                <Label fx:id="speedLabel" text="0" style="-fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #2563eb;"/>
             </StackPane>
         </VBox>
         <VBox alignment="CENTER" spacing="6">
             <Label text="GEAR" style="-fx-font-size: 10px; -fx-text-fill: #6b7280; -fx-font-weight: 600;"/>
             <StackPane prefWidth="60" prefHeight="60" styleClass="clock-wrapper">
-                <Label fx:id="gearLabel" text="4" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #111827;"/>
+                <Label fx:id="gearLabel" text="0" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #111827;"/>
             </StackPane>
         </VBox>
         <VBox alignment="BOTTOM_LEFT" spacing="10" style="-fx-padding: 0 16">

@@ -4,9 +4,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.simulatorgui.controller.addcarform.CarComponentsController;
@@ -54,6 +54,12 @@ public class AddCarController {
         Gearbox gearbox = carComponentsController.getGearboxFromInput();
         String model = carModelTextField.getText().trim();
         String plateNumber = carPlateNumberTextField.getText().trim();
+        boolean duplicate = raceSetupController.getRaceCars().stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plateNumber))
+                        || raceSetupController.getStoredCars().stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plateNumber));
+        if (duplicate) {
+            Utils.showDuplicateAlert("license plate", plateNumber);
+            return null;
+        }
         Position position = new Position(0, 0);
         double weight;
         int vMax;
@@ -65,7 +71,6 @@ public class AddCarController {
         }
         return new Car(plateNumber, model, weight, vMax, position, engine, gearbox);
     }
-
     // ===================== ACTIONS =====================
     public <T> T showForm(String view, VBox toShow) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/addcarform/" + view));
@@ -110,7 +115,8 @@ public class AddCarController {
     @FXML
     private void onConfirm() {
         Car car = getCarFromInput();
-        raceSetupController.getStoredCarsList().add(car);
+        if (car == null) return;
+        raceSetupController.getStoredCars().add(car);
         raceSetupController.getStoredCarsComboBox().getSelectionModel().select(car);
         closeWindow();
     }

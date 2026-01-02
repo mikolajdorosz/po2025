@@ -25,7 +25,7 @@
                     <Label text="Minimum 2 cars required to start the race" styleClass="description-grey-label"/>
                     <ListView fx:id="raceCarsListView" VBox.vgrow="ALWAYS" prefHeight="180" style="-fx-background-radius: 10;-fx-border-radius: 10;-fx-border-color: #dcdfe6;-fx-background-color: #fafafa;"/>
                     <HBox spacing="12">
-                        <Button text="Set player's car" onAction="#onSetPlayerCar" styleClass="btn, btn-blue"/>
+                        <Button text="Toggle player controlled" onAction="#onTogglePlayerControlled" styleClass="btn, btn-blue"/>
                         <Button text="Remove selected" onAction="#onRemoveFromRace" styleClass="btn, btn-red-reverse"/>
                         <Button text="Clear list" onAction="#onClearList" styleClass="btn, btn-grey-reverse"/>
                     </HBox>

@@ -2,6 +2,8 @@ package org.example.simulatorgui.controller.addcarform;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -21,17 +23,26 @@ public class GearboxController {
     @FXML private ComboBox<Clutch> clutchComboBox;
     @FXML private HBox clutchComboBoxContainer;
     @FXML private Button confirmGearboxButton;
+    private ObservableList<Clutch> clutches = FXCollections.observableArrayList();
     private StringProperty gearboxTypeProperty = new SimpleStringProperty();
     private AddCarController addCarController;
     private CarComponentsController carComponentsController;
     private String gearboxType;
 
     public ComboBox<Clutch> getClutchComboBox() { return clutchComboBox; }
+    public ObservableList<Clutch> getClutches() { return clutches; }
     public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
     public void setCarComponentsController(CarComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
 
     @FXML
     private void initialize() {
+        clutches = FXCollections.observableArrayList(
+                CarComponentsStorage.getClutches().stream()
+                        .filter(c -> c != null)
+                        .toList()
+        );
+        clutchComboBox.setItems(clutches.filtered(c -> c != null));
+
         setupTypeToggling();
         validateInput();
     }
@@ -74,10 +85,15 @@ public class GearboxController {
 
     public Gearbox getGearboxFromInput() {
         Clutch clutch = clutchComboBox.getValue();
-        clutchComboBox.getItems().add(clutch);
+        if (!clutches.contains(clutch)) CarComponentsStorage.addClutch(clutch);
         clutchComboBox.getSelectionModel().select(clutch);
 
         String name = gearboxNameTextField.getText();
+        boolean duplicate = carComponentsController.getGearboxes().stream().anyMatch(c -> c.getName().equalsIgnoreCase(name));
+        if (duplicate) {
+            Utils.showDuplicateAlert("gearbox name", name);
+            return null;
+        }
         double weight, price;
         int gears;
         try {
@@ -107,15 +123,14 @@ public class GearboxController {
     @FXML
     private void onDeleteClutch() {
         Clutch selected = clutchComboBox.getValue();
-        if (selected != null) {
-            clutchComboBox.getItems().remove(selected);
-        }
+        if (selected != null) clutches.remove(selected);
         setDefaultComboBoxValue();
     }
     @FXML
     private void onConfirm() {
         Gearbox gearbox = getGearboxFromInput();
-        carComponentsController.getGearboxComboBox().getItems().add(gearbox);
+        if (gearbox == null) return;
+        carComponentsController.getGearboxes().add(gearbox);
         carComponentsController.getGearboxComboBox().getSelectionModel().select(gearbox);
         addCarController.closeForm(addCarController.getEngineGearboxForm(), addCarController.getCarComponentsForm(), addCarController.getCarBasicInfoForm());
     }

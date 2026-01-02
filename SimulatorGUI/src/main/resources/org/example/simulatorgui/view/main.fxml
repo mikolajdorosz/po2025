@@ -7,10 +7,10 @@
         <StackPane>
             <Pane fx:id="raceTrackPane" style="-fx-background-color: #3ad662;-fx-background-repeat: no-repeat;-fx-background-position: center;-fx-background-size: cover;"/>
             <VBox spacing="14" style="-fx-padding: 20;">
-                <VBox fx:id="topbarContainer" spacing="12"/>
                 <HBox spacing="12">
                     <VBox fx:id="competitorsContainer" spacing="10"/>
                     <Region HBox.hgrow="ALWAYS"/>
+                    <VBox fx:id="topbarContainer" spacing="12"/>
                 </HBox>
                 <Region VBox.vgrow="ALWAYS"/>
                 <VBox fx:id="hudContainer" spacing="12"/>

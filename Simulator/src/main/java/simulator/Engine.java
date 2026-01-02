@@ -27,9 +27,9 @@ public class Engine extends Component {
         else rpmChange = -500 * deltaTime;                  // RPM decrease factor
         setRPM((int)(RPM + rpmChange));
     }
-    public void manipulateBrake(double deltaTime, boolean brakePressed) {
-        if (!brakePressed) return;
-        double rpmChange = -1200 * deltaTime;        // RPM decrease factor
-        setRPM((int)(RPM + rpmChange));
+    public double manipulateBrake(double deltaTime, boolean brakePressed, double carWeight) {
+        if (!brakePressed) return 0;
+        return (8000 / carWeight) * deltaTime;
     }
+    public void zeroRPM() { this.RPM = 0; }
 }

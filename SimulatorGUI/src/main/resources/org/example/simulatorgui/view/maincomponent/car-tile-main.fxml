@@ -2,33 +2,41 @@
 
 <?import javafx.scene.control.Label?><?import javafx.scene.layout.HBox?><?import javafx.scene.layout.VBox?><?import javafx.scene.layout.Region?>
 
+<?import javafx.scene.image.ImageView?>
 <HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.simulatorgui.controller.maincomponent.CarTileController" spacing="12" prefHeight="34" style="-fx-padding: 8 12;-fx-background-radius: 12;-fx-background-color: rgba(248, 249, 251, 0.75) ;-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);">
     <VBox spacing="2">
         <Label text="PLATE" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px; -fx-letter-spacing: 0.8px;"/>
-        <Label fx:id="plateNumberLabel" text="KR-1234" style="-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: 600;"/>
-        <Label fx:id="modelLabel" text="GT-R" style="-fx-text-fill: #6b6b6b; -fx-font-size: 11px;"/>
+        <Label fx:id="plateNumberLabel" text="Plate" style="-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: 600;"/>
+        <Label fx:id="modelLabel" text="Model" style="-fx-text-fill: #6b6b6b; -fx-font-size: 11px;"/>
+    </VBox>
+    <VBox spacing="2" alignment="CENTER">
+        <ImageView fx:id="carImageView" fitWidth="40" fitHeight="40" />
     </VBox>
     <VBox style="-fx-border-color: rgba(0,0,0,0.08); -fx-border-width: 0 1 0 0;"/>
     <VBox spacing="2" alignment="CENTER">
         <Label text="POS" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px;"/>
-        <Label fx:id="positionLabel" text="1" style="-fx-text-fill: #2563eb; -fx-font-size: 20px; -fx-font-weight: 700;"/>
+        <Label fx:id="positionLabel" text="-" style="-fx-text-fill: #2563eb; -fx-font-size: 20px; -fx-font-weight: 700;"/>
     </VBox>
     <VBox spacing="2" alignment="CENTER">
         <Label text="TIME" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px;"/>
-        <Label fx:id="timeLabel" text="1:00:00" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
+        <Label fx:id="timeLabel" text="-:-:-" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
+    </VBox>
+    <VBox spacing="2" alignment="CENTER">
+        <Label text="SCORE" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px;"/>
+        <Label fx:id="scoreLabel" text="-" style="-fx-text-fill: #eb259c; -fx-font-size: 20px; -fx-font-weight: 700;"/>
     </VBox>
     <VBox style="-fx-border-color: rgba(0,0,0,0.08); -fx-border-width: 0 1 0 0;"/>
     <VBox spacing="2" alignment="CENTER">
         <Label text="SPEED" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px;"/>
-        <Label fx:id="speedLabel" text="245" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
+        <Label fx:id="speedLabel" text="-" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
     </VBox>
     <VBox spacing="2" alignment="CENTER">
         <Label text="RPM" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px;"/>
-        <Label fx:id="rpmLabel" text="8200" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
+        <Label fx:id="rpmLabel" text="-" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
     </VBox>
     <VBox spacing="2" alignment="CENTER">
         <Label text="GEAR" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px;"/>
-        <Label fx:id="gearLabel" text="4" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
+        <Label fx:id="gearLabel" text="-" style="-fx-text-fill: #1f2937; -fx-font-size: 13px;"/>
     </VBox>
     <VBox style="-fx-border-color: rgba(0,0,0,0.08); -fx-border-width: 0 1 0 0;"/>
     <VBox alignment="CENTER">
