@@ -1,4 +1,4 @@
-package org.example.thewitcher.model.utils;
+package org.example.thewitcher.model.map.point;
 
 public class Point {
     protected char marker;
