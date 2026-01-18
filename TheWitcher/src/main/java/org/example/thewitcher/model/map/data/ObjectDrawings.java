@@ -12,6 +12,7 @@ public final class ObjectDrawings {
     public static char wolf() { return 'w'; }
 
     public static char path() { return '.'; }
+    public static char grass() { return ' '; }
     public static char herb() { return '*'; }
     public static char loot() { return 'x'; }
 

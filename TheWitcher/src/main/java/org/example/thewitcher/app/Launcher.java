@@ -1,4 +1,4 @@
-package org.example.thewitcher;
+package org.example.thewitcher.app;
 
 import javafx.application.Application;
 

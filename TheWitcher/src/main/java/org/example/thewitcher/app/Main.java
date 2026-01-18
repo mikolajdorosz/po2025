@@ -1,10 +1,7 @@
-package org.example.thewitcher;
+package org.example.thewitcher.app;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.thewitcher.app.GameApp;
 
 import java.io.IOException;
 
