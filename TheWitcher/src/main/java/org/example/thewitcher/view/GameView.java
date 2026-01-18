@@ -2,7 +2,9 @@ package org.example.thewitcher.view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.example.thewitcher.config.GameConfig;
 import org.example.thewitcher.model.entity.Player;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.model.map.Location;
@@ -15,13 +17,14 @@ public class GameView {
     private final int viewWidth;
     private final int viewHeight;
 
-    public GameView(int windowWidth, int windowHeight) {
-        this.canvas = new Canvas(windowWidth, windowHeight);
+    public GameView(GameConfig config) {
+        this.canvas = new Canvas(config.getWindowWidth(), config.getWindowHeight());
         this.gc = canvas.getGraphicsContext2D();
-        this.pointWidth = 12;
-        this.pointHeight = 16;
-        this.viewWidth = windowWidth / this.pointWidth;
-        this.viewHeight = windowHeight / this.pointHeight;
+        this.pointWidth = config.getPointWidth();
+        this.pointHeight = config.getPointHeight();
+        this.viewWidth = config.getWindowWidth() / this.pointWidth;
+        this.viewHeight = config.getWindowHeight() / this.pointHeight;
+        gc.setFont(Font.font(config.getFontName(), config.getFontSize()));
     }
 
     public Canvas getCanvas() { return canvas;}
@@ -63,17 +66,18 @@ public class GameView {
         return Math.max(min, Math.min(value, max));
     }
     private void clearCanvas() {
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFont(Font.font("Consolas", 14));
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
     private void renderMap(Location location, Player player, int viewX, int viewY, int offsetX, int offsetY) {
+        gc.setFill(Color.LIGHTGRAY);
         for (int y = 0; y < viewHeight; y++) {
             for (int x = 0; x < viewWidth; x++) {
-                int mapX = viewX + x - offsetX;
-                int mapY = viewY + y - offsetY;
-                if (!isInBounds(location, mapX, mapY)) continue;
-                char marker = location.getPoint(mapX, mapY).getMarker();
-                if (mapX == player.getX() && mapY == player.getY()) marker = 'G';
+                int locationX = viewX + x - offsetX;
+                int locationY = viewY + y - offsetY;
+                if (!isInBounds(location, locationX, locationY)) continue;
+                char marker = location.getPoint(locationX, locationY).getMarker();
+                if (locationX == player.getX() && locationY == player.getY()) marker = 'G';
                 gc.fillText(String.valueOf(marker), x * pointWidth, (y + 1) * pointHeight);
             }
         }

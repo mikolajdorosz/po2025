@@ -16,9 +16,9 @@ public class Game {
     public Player getPlayer() { return player; }
     public Location getLocation() { return location; }
 
-    public void movePlayer(int dx, int dy) {
-        int newX = player.getX() + dx;
-        int newY = player.getY() + dy;
+    public void movePlayer(int deltaX, int deltaY) {
+        int newX = player.getX() + deltaX;
+        int newY = player.getY() + deltaY;
 
         if (newX < 0 || newY < 0 || newX >= location.getWidth() || newY >= location.getHeight()) return;
         if (!location.getPoint(newX, newY).isObstacle()) {
