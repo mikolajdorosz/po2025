@@ -5,8 +5,8 @@ public class Player {
     private int y;
 
     public Player() {
-        this.x = 5;
-        this.y = 5;
+        this.x = 3;
+        this.y = 11;
     }
 
     public int getX() { return x; }
