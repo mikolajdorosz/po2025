@@ -34,8 +34,8 @@ public final class ObjectDrawings {
                 " /__\\ __||_______\\",
                 "/|  |\\  || __    |",
                 " |__|__/||_|_|___|",
-                "..................",
-                "..|||.|_|.../\\-/\\..",
+                "... .. ... ... . .",
+                "..|||.|_|.../\\-/\\.",
         };
     }
     public static String[] wagon4x11() {
@@ -58,7 +58,7 @@ public final class ObjectDrawings {
                 "|--|--|--|--|--|--|--|--|"
         };
     }
-    public static String[] banditCamp6x14() {
+    public static String[] camp6x14() {
         return new String[] {
                 "  __          ",
                 " / /\\     __  ",
@@ -93,7 +93,7 @@ public final class ObjectDrawings {
                 "@@ @ @",
                 " @@@@ ",
                 "  ||  ",
-                "  ||  "
+                "  ||  ",
         };
     }
     public static String[] smallTree3x4() {
@@ -106,7 +106,7 @@ public final class ObjectDrawings {
     public static String[] conifer4x4() {
         return new String[] {
                 " /\\ ",
-                "//\\\\ ",
+                "//\\\\",
                 "//\\\\",
                 " || ",
         };

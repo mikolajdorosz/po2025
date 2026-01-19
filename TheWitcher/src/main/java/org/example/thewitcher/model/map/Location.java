@@ -34,18 +34,12 @@ public abstract class Location {
         width = lines.getFirst().split("\t").length;
         fileContents = setFileContents(lines);
         location = new Point[height][width];
-        boolean[][] filled = new boolean[height][width];
+        boolean[][] baseFilled = new boolean[height][width];
 
-        for (int fileY = 0; fileY < height; fileY++) {
-            for (int fileX = 0; fileX < width; fileX++) {
-                if (filled[fileY][fileX]) continue;
-                int value = fileContents[fileY][fileX];
-                MapObject object = ObjectRegistry.get(Math.abs(value));
-                if (object.isMultiPoint()) placeMultiPointObject(object, fileX, fileY, fileContents, filled);
-                else placeSinglePointObject(object, fileX, fileY, value, filled);
-            }
-        }
+        placeMultis(baseFilled);
+        placeSingles();
     }
+
     private List<String> readFile(InputStream inputStream) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             List<String> lines = new ArrayList<>();
@@ -56,28 +50,46 @@ public abstract class Location {
     }
     private int[][] setFileContents(List<String> lines) {
         int[][] contents = new int[height][width];
-        for (int y = 0; y < height; y++) {
-            String[] tokens = lines.get(y).split("\t");
-            for (int x = 0; x < width; x++) contents[y][x] = Integer.parseInt(tokens[x]);
+        for (int fileY = 0; fileY < height; fileY++) {
+            String[] tokens = lines.get(fileY).split("\t");
+            for (int fileX = 0; fileX < width; fileX++) contents[fileY][fileX] = Integer.parseInt(tokens[fileX]);
         }
         return contents;
     }
-    private void placeSinglePointObject(MapObject object, int x, int y, int value, boolean[][] filled) {
-        location[y][x] = new Point(object.getSinglePoint(), x, y, value > 0);
-        filled[y][x] = true;
+    private void placeMultis(boolean[][] baseFilled) {
+        for (int fileY = 0; fileY < height; fileY++) {
+            for (int fileX = 0; fileX < width; fileX++) {
+                MapObject object = ObjectRegistry.get(Math.abs(fileContents[fileY][fileX]));
+                if (object != null && object.isMultiPoint() && !baseFilled[fileY][fileX])
+                    placeMultiPointObject(object, fileX, fileY, baseFilled);
+            }
+        }
     }
-    private void placeMultiPointObject(MapObject object, int fileX, int fileY, int[][] fileContents, boolean[][] filled) {
+    private void placeSingles() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                MapObject object = ObjectRegistry.get(Math.abs(fileContents[y][x]));
+                if (object != null && object.isSinglePoint())
+                    placeSinglePointObject(object, x, y, fileContents[y][x]);
+            }
+        }
+    }
+    private void placeMultiPointObject(MapObject object, int fileX, int fileY, boolean[][] baseFilled) {
         String[] drawing = object.getMultiPoint();
         for (int drawingY = 0; drawingY < drawing.length; drawingY++) {
-            String row = drawing[drawingY];
-            for (int drawingX = 0; drawingX < row.length(); drawingX++) {
+            for (int drawingX = 0; drawingX < drawing[drawingY].length(); drawingX++) {
                 int locationX = fileX + drawingX;
                 int locationY = fileY + drawingY;
                 if (!(locationX >= 0 && locationY >= 0 && locationX < width && locationY < height)) continue;
-                location[locationY][locationX] = new Point(row.charAt(drawingX),
+                if (baseFilled[locationY][locationX]) continue;
+                location[locationY][locationX] = new Point(drawing[drawingY].charAt(drawingX),
                         locationX, locationY, fileContents[locationY][locationX] > 0);
-                filled[locationY][locationX] = true;
+                baseFilled[locationY][locationX] = true;
             }
         }
+    }
+    private void placeSinglePointObject(MapObject object, int x, int y, int value) {
+        if (location[y][x] == null) location[y][x] = new Point(object.getSinglePoint(), x, y, value > 0);
+        else location[y][x].setOverlay(object.getSinglePoint(), value > 0);
     }
 }
