@@ -38,5 +38,15 @@ public class AppliedEquipment {
         items.remove(name);
     }
 
+    public IWearable select(Player p, String name) {
+        if (!p.getAppliedEquipment().getItems().contains(name)) return null;
+
+        if (p.getAppliedEquipment().getSilver() != null && name.equals(p.getAppliedEquipment().getSilver().getName().toLowerCase())) return silver;
+        if (p.getAppliedEquipment().getSteel() != null && name.equals(p.getAppliedEquipment().getSteel().getName().toLowerCase())) return steel;
+        if (p.getAppliedEquipment().getDistance() != null && name.equals(p.getAppliedEquipment().getDistance().getName().toLowerCase())) return distance;
+        if (p.getAppliedEquipment().getArmor() != null && name.equals(p.getAppliedEquipment().getArmor().getName().toLowerCase())) return armor;
+
+        return null;
+    }
 
 }

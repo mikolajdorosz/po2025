@@ -61,4 +61,37 @@ public class Player {
 
     public int getBonus() { return bonus; }
     public void setBonus(int bonus) { this.bonus = bonus; }
+
+    public Equipment getEquipment() { return equipment; }
+    public AppliedEquipment getAppliedEquipment() { return appliedEquipment; }
+
+    public void equip() {}
+
+    public void takeOff(Player p, IWearable item) {
+        if (p.getAppliedEquipment().getItems().contains(item.getName().toLowerCase())) {
+            switch (item.getType()) {
+                case "silver":
+                    p.getEquipment().addItem(p.getAppliedEquipment().getSilver());
+                    p.getAppliedEquipment().removeFromList(item.getName().toLowerCase());
+                    p.getAppliedEquipment().setSilver(null);
+                    break;
+                case "steel":
+                    p.getEquipment().addItem(p.getAppliedEquipment().getSteel());
+                    p.getAppliedEquipment().removeFromList(item.getName().toLowerCase());
+                    p.getAppliedEquipment().setSteel(null);
+                    break;
+                case "distance":
+                    p.getEquipment().addItem(p.getAppliedEquipment().getDistance());
+                    p.getAppliedEquipment().removeFromList(item.getName().toLowerCase());
+                    p.getAppliedEquipment().setDistance(null);
+                    break;
+                case "armor":
+                    p.setArmor(0);
+                    p.getEquipment().addItem(p.getAppliedEquipment().getArmor());
+                    p.getAppliedEquipment().removeFromList(item.getName().toLowerCase());
+                    p.getAppliedEquipment().setArmor(null);
+                    break;
+            }
+        }
+    }
 }
