@@ -81,21 +81,21 @@ public class Player {
 
     public String use(Item item) {
         if (item.getType().equals("food")) {
-            equipment.removeItem(item);
-            weight -= item.getWeight();
-            health = health + item.getBonus() > 100 ? 100 : health + item.getBonus();
-            return "Used: " + item.getName() + " (Health: " + health + ")";
+            getEquipment().removeItem(item);
+            setWeight(getWeight() - item.getWeight());
+            setHealth(getHealth() + item.getBonus() > 100 ? 100 : getHealth() + item.getBonus());
+            return "Used: " + item.getName() + " (Health: " + getHealth() + ")";
         } else if (item.getType().equals("elixir")) {
             // Logic for elixir if needed, for now just remove
-            equipment.removeItem(item);
+            getEquipment().removeItem(item);
             return "Used: " + item.getName();
         }
         return "Cannot use " + item.getName();
     }
 
     public String drop(Item item) {
-        equipment.removeItem(item);
-        weight -= item.getWeight();
+        getEquipment().removeItem(item);
+        setWeight(getWeight() - item.getWeight());
         return "Dropped: " + item.getName();
     }
 

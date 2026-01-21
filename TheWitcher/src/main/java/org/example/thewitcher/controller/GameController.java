@@ -104,6 +104,12 @@ public class GameController {
                             }
                         }
                         case DIGIT3 -> {
+                            try {
+                                game.getPlayer().takeOff(game.getPlayer(), (org.example.thewitcher.model.items.IWearable) item);
+                            } catch (Exception ex) {
+                                // Not wearable or not applied, ignore
+                            }
+
                             String msg = game.getPlayer().drop(item);
                             game.setMessage(msg);
                             game.setState(org.example.thewitcher.model.game.GameState.INVENTORY);
