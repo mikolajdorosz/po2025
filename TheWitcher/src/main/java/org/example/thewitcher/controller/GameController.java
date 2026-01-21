@@ -4,6 +4,10 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.view.GameView;
+import org.example.thewitcher.model.game.GameState;
+import org.example.thewitcher.model.items.Item;
+import org.example.thewitcher.model.items.IWearable;
+import javafx.scene.input.KeyCode;
 
 public class GameController {
     private final Game game;
@@ -62,7 +66,10 @@ public class GameController {
 
                     switch (e.getCode()) {
                         case DIGIT0 -> game.setState(org.example.thewitcher.model.game.GameState.INVENTORY);
-                        case DIGIT1 -> game.setMessage(game.getPlayer().inspect(item));
+                        case DIGIT1 -> {
+                            game.setMessage(game.getPlayer().inspect(item));
+                            game.setState(org.example.thewitcher.model.game.GameState.INSPECT_ITEM);
+                        }
                         case DIGIT2 -> {
                             // Check if item is currently equipped (in applied)
                             boolean isApplied = false;
@@ -102,6 +109,11 @@ public class GameController {
                             game.setState(org.example.thewitcher.model.game.GameState.INVENTORY);
                         }
                     }
+                }
+                case INSPECT_ITEM -> {
+                    // Any key to close inspection
+                    game.setState(org.example.thewitcher.model.game.GameState.ITEM_ACTION_MENU);
+                    game.setMessage("");
                 }
             }
         });

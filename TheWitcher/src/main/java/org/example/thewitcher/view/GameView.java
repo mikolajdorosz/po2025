@@ -44,6 +44,10 @@ public class GameView {
                 renderMap(location, player, viewX, viewY, offsetX, offsetY);
             }
             case INVENTORY, ITEM_ACTION_MENU -> renderInventory(game);
+            case INSPECT_ITEM -> {
+                renderInventory(game);
+                renderInspectionWindow(game);
+            }
         }
     }
 
@@ -74,7 +78,7 @@ public class GameView {
         }
 
         // Draw Message
-        if (!game.getMessage().isEmpty()) {
+        if (!game.getMessage().isEmpty() && game.getState() != GameState.INSPECT_ITEM) {
             gc.setFill(Color.YELLOW);
             gc.fillText(game.getMessage(), 20, canvas.getHeight() - 50);
         }
@@ -114,6 +118,35 @@ public class GameView {
 
         gc.fillText("3 - Drop", textX, textY); textY += 20;
         gc.fillText("0 - Cancel", textX, textY);
+    }
+
+    private void renderInspectionWindow(Game game) {
+        double w = 500;
+        double h = 300;
+        double x = (canvas.getWidth() - w) / 2;
+        double y = (canvas.getHeight() - h) / 2;
+
+        gc.setFill(Color.rgb(0, 0, 0, 0.95));
+        gc.fillRect(x, y, w, h);
+        gc.setStroke(Color.WHITE);
+        gc.strokeRect(x, y, w, h);
+
+        gc.setFill(Color.WHITE);
+        int textX = (int)x + 20;
+        int textY = (int)y + 30;
+
+        gc.fillText("INSPECTION", textX, textY);
+        textY += 30;
+
+        String[] lines = game.getMessage().split("\n");
+        for (String line : lines) {
+            gc.fillText(line, textX, textY);
+            textY += 20;
+        }
+
+        textY += 20;
+        gc.setFill(Color.LIGHTGRAY);
+        gc.fillText("Press any key to close", textX, textY);
     }
 
     private int calculateViewX(Player player, Location location) {
