@@ -31,10 +31,10 @@ public abstract class Item {
     public int getBonus() { return 0; }
     public void setBonus(int bonus) {}
 
-    public void inspect() {
-        System.out.println("Name: " + name);
-        System.out.println("Type: " + type);
-        System.out.println("Weight: " + weight);
-        System.out.println("Price: " + price);
+    public String inspect() {
+        return "Name: " + name + "\n" +
+                "Type: " + type + "\n" +
+                "Weight: " + weight + "\n" +
+                "Price: " + price;
     }
 }

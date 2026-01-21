@@ -8,6 +8,7 @@ public class DistancePlayerDecorator extends PlayerDecorator {
 
     public DistancePlayerDecorator(Player player, Item distance) {
         super(player);
+        getEquipment().removeItem(distance);
         this.distance = new Distance(distance.getName());
         this.distance = Distance.parse(distance);
         equip();
@@ -19,7 +20,6 @@ public class DistancePlayerDecorator extends PlayerDecorator {
             takeOff(player, getAppliedEquipment().getDistance());
         }
         getAppliedEquipment().setDistance(distance);
-        getEquipment().removeItem(distance);
         getAppliedEquipment().addToList(distance.getName().toLowerCase());
     }
 }

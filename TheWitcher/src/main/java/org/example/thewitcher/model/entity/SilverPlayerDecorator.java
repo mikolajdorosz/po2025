@@ -8,6 +8,7 @@ public class SilverPlayerDecorator extends PlayerDecorator {
 
     public SilverPlayerDecorator(Player player, Item silver) {
         super(player);
+        getEquipment().removeItem(silver);
         this.silver = new Silver(silver.getName());
         this.silver = Silver.parse(silver);
         equip();
@@ -19,7 +20,6 @@ public class SilverPlayerDecorator extends PlayerDecorator {
             takeOff(player, getAppliedEquipment().getSilver());
         }
         getAppliedEquipment().setSilver(silver);
-        getEquipment().removeItem(silver);
         getAppliedEquipment().addToList(silver.getName().toLowerCase());
     }
 }

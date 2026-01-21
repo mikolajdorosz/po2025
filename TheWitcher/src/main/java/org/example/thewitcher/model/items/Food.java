@@ -17,8 +17,7 @@ public class Food extends Item {
     public void setBonus(int bonus) { this.healthIncrease = bonus; }
 
     @Override
-    public void inspect() {
-        super.inspect();
-        System.out.println("Health increase: " + healthIncrease);
+    public String inspect() {
+        return super.inspect() + "\n" + "Health increase: " + healthIncrease;
     }
 }

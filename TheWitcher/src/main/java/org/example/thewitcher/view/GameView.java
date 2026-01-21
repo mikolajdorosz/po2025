@@ -7,6 +7,7 @@ import javafx.scene.text.Font;
 import org.example.thewitcher.config.GameConfig;
 import org.example.thewitcher.model.entity.Player;
 import org.example.thewitcher.model.game.Game;
+import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.model.map.Location;
 
 public class GameView {
@@ -31,15 +32,88 @@ public class GameView {
     public GraphicsContext getGraphicsContext() { return gc;}
 
     public void render(Game game) {
-        Player player = game.getPlayer();
-        Location location = game.getLocation();
-        int viewX = calculateViewX(player, location);
-        int viewY = calculateViewY(player, location);
-        int offsetX = calculateOffsetX(location);
-        int offsetY = calculateOffsetY(location);
-
         clearCanvas();
-        renderMap(location, player, viewX, viewY, offsetX, offsetY);
+        switch (game.getState()) {
+            case MAP -> {
+                Player player = game.getPlayer();
+                Location location = game.getLocation();
+                int viewX = calculateViewX(player, location);
+                int viewY = calculateViewY(player, location);
+                int offsetX = calculateOffsetX(location);
+                int offsetY = calculateOffsetY(location);
+                renderMap(location, player, viewX, viewY, offsetX, offsetY);
+            }
+            case INVENTORY, ITEM_ACTION_MENU -> renderInventory(game);
+        }
+    }
+
+    private void renderInventory(Game game) {
+        gc.setFill(Color.WHITE);
+        gc.fillText("INVENTORY", 20, 30);
+
+        int startY = 60;
+        int leftColX = 20;
+        int rightColX = 400;
+
+        gc.fillText("Applied Equipment", leftColX, startY);
+        gc.fillText("Backpack", rightColX, startY);
+
+        startY += 30;
+        int leftY = startY;
+        int rightY = startY;
+
+        for (Game.InventoryEntry entry : game.getInventoryEntries()) {
+            String text = "[" + entry.key + "] " + entry.label;
+            if (entry.isApplied) {
+                gc.fillText(text, leftColX, leftY);
+                leftY += 20;
+            } else {
+                gc.fillText(text, rightColX, rightY);
+                rightY += 20;
+            }
+        }
+
+        // Draw Message
+        if (!game.getMessage().isEmpty()) {
+            gc.setFill(Color.YELLOW);
+            gc.fillText(game.getMessage(), 20, canvas.getHeight() - 50);
+        }
+
+        // Draw Action Menu Overlay
+        if (game.getState() == org.example.thewitcher.model.game.GameState.ITEM_ACTION_MENU && game.getSelectedItem() != null) {
+            renderActionMenu(game);
+        }
+    }
+
+    private void renderActionMenu(Game game) {
+        double w = 400;
+        double h = 200;
+        double x = (canvas.getWidth() - w) / 2;
+        double y = (canvas.getHeight() - h) / 2;
+
+        gc.setFill(Color.rgb(0, 0, 0, 0.9));
+        gc.fillRect(x, y, w, h);
+        gc.setStroke(Color.WHITE);
+        gc.strokeRect(x, y, w, h);
+
+        gc.setFill(Color.WHITE);
+        int textX = (int)x + 20;
+        int textY = (int)y + 30;
+
+        gc.fillText("Selected: " + game.getSelectedItem().getName(), textX, textY);
+        textY += 30;
+
+        String type = game.getSelectedItem().getType();
+        gc.fillText("1 - Inspect", textX, textY); textY += 20;
+
+        if (type.equals("food")) {
+            gc.fillText("2 - Use", textX, textY); textY += 20;
+        } else if (type.equals("silver") || type.equals("steel") || type.equals("distance") || type.equals("armor")) {
+            gc.fillText("2 - Equip/Unequip", textX, textY); textY += 20;
+        }
+
+        gc.fillText("3 - Drop", textX, textY); textY += 20;
+        gc.fillText("0 - Cancel", textX, textY);
     }
 
     private int calculateViewX(Player player, Location location) {

@@ -1,17 +1,37 @@
 package org.example.thewitcher.model.game;
 
 import org.example.thewitcher.model.entity.Player;
+import org.example.thewitcher.model.items.AppliedEquipment;
+import org.example.thewitcher.model.items.Item;
 import org.example.thewitcher.model.map.Location;
 import org.example.thewitcher.model.map.Velen;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     private Player player;
     private Location location;
+    private GameState state;
+    private Item selectedItem;
+    private String message = "";
 
     public Game() {
         player = new Player();
         location = new Velen(player);
+        state = GameState.MAP;
     }
+
+    public GameState getState() { return state; }
+    public void setState(GameState state) { this.state = state; }
+
+    public void setPlayer(Player player) { this.player = player; }
+
+    public Item getSelectedItem() { return selectedItem; }
+    public void setSelectedItem(Item item) { this.selectedItem = item; }
+
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 
     public Player getPlayer() { return player; }
     public Location getLocation() { return location; }
@@ -24,6 +44,47 @@ public class Game {
         if (!location.getPoint(newX, newY).isObstacle()) {
             player.setX(newX);
             player.setY(newY);
+        }
+    }
+
+    public List<InventoryEntry> getInventoryEntries() {
+        List<InventoryEntry> entries = new ArrayList<>();
+        char key = 'a';
+
+        // Applied Equipment
+        AppliedEquipment applied = player.getAppliedEquipment();
+        if (applied.getSilver() != null) {
+            entries.add(new InventoryEntry(key++, "Silver: " + applied.getSilver().getName(), applied.getSilver(), true));
+        }
+        if (applied.getSteel() != null) {
+            entries.add(new InventoryEntry(key++, "Steel: " + applied.getSteel().getName(), applied.getSteel(), true));
+        }
+        if (applied.getDistance() != null) {
+            entries.add(new InventoryEntry(key++, "Distance: " + applied.getDistance().getName(), applied.getDistance(), true));
+        }
+        if (applied.getArmor() != null) {
+            entries.add(new InventoryEntry(key++, "Armor: " + applied.getArmor().getName(), applied.getArmor(), true));
+        }
+
+        // Backpack
+        for (Item item : player.getEquipment().getItems()) {
+            entries.add(new InventoryEntry(key++, item.getName(), item, false));
+        }
+
+        return entries;
+    }
+
+    public static class InventoryEntry {
+        public final char key;
+        public final String label;
+        public final Item item;
+        public final boolean isApplied;
+
+        public InventoryEntry(char key, String label, Item item, boolean isApplied) {
+            this.key = key;
+            this.label = label;
+            this.item = item;
+            this.isApplied = isApplied;
         }
     }
 }

@@ -34,6 +34,8 @@ public class Player {
     private void initializeEquipment() {
         equipment.addItem(new Food("Bread"));
         equipment.addItem(new Food("Cottage"));
+        equipment.addItem(new Silver("Wolf Silver Sword"));
+        equipment.addItem(new Armor("Wolf Armor"));
     }
 
     private void updateWeight() {
@@ -66,6 +68,40 @@ public class Player {
     public AppliedEquipment getAppliedEquipment() { return appliedEquipment; }
 
     public void equip() {}
+
+    public Player equipItem(Item item) {
+        switch (item.getType()) {
+            case "silver": return new SilverPlayerDecorator(this, item);
+            case "steel": return new SteelPlayerDecorator(this, item);
+            case "distance": return new DistancePlayerDecorator(this, item);
+            case "armor": return new ArmorPlayerDecorator(this, item);
+            default: return this;
+        }
+    }
+
+    public String use(Item item) {
+        if (item.getType().equals("food")) {
+            equipment.removeItem(item);
+            weight -= item.getWeight();
+            health = health + item.getBonus() > 100 ? 100 : health + item.getBonus();
+            return "Used: " + item.getName() + " (Health: " + health + ")";
+        } else if (item.getType().equals("elixir")) {
+            // Logic for elixir if needed, for now just remove
+            equipment.removeItem(item);
+            return "Used: " + item.getName();
+        }
+        return "Cannot use " + item.getName();
+    }
+
+    public String drop(Item item) {
+        equipment.removeItem(item);
+        weight -= item.getWeight();
+        return "Dropped: " + item.getName();
+    }
+
+    public String inspect(Item item) {
+        return item.inspect();
+    }
 
     public void takeOff(Player p, IWearable item) {
         if (p.getAppliedEquipment().getItems().contains(item.getName().toLowerCase())) {

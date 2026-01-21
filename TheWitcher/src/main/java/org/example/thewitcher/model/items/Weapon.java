@@ -23,9 +23,9 @@ public abstract class Weapon extends Item implements IWearable{
     public void setBonus(int bonus) { this.damage = bonus; }
 
     @Override
-    public void inspect() {
-        super.inspect();
-        System.out.println("Damage: " + damage);
-        System.out.println("Condition: " + condition);
+    public String inspect() {
+        return super.inspect() + "\n" +
+                "Damage: " + damage + "\n" +
+                "Condition: " + condition;
     }
 }

@@ -12,5 +12,5 @@ public interface IWearable {
     void setCondition(int condition);
     int getBonus();
     void setBonus(int bonus);
-    void inspect();
+    String inspect();
 }

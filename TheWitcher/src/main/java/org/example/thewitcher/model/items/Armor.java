@@ -24,10 +24,10 @@ public class Armor extends Item implements IWearable {
     public void setBonus(int bonus) { this.armorValue = bonus; }
 
     @Override
-    public void inspect() {
-        super.inspect();
-        System.out.println("Armor: " + armorValue);
-        System.out.println("Condition: " + condition);
+    public String inspect() {
+        return super.inspect() + "\n" +
+                "Armor: " + armorValue + "\n" +
+                "Condition: " + condition;
     }
 
     public static Armor parse(Item item) {

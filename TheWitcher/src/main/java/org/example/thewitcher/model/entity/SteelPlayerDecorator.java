@@ -8,6 +8,7 @@ public class SteelPlayerDecorator extends PlayerDecorator {
 
     public SteelPlayerDecorator(Player player, Item steel) {
         super(player);
+        getEquipment().removeItem(steel);
         this.steel = new Steel(steel.getName());
         this.steel = Steel.parse(steel);
         equip();
@@ -19,7 +20,6 @@ public class SteelPlayerDecorator extends PlayerDecorator {
             takeOff(player, getAppliedEquipment().getSteel());
         }
         getAppliedEquipment().setSteel(steel);
-        getEquipment().removeItem(steel);
         getAppliedEquipment().addToList(steel.getName().toLowerCase());
     }
 }

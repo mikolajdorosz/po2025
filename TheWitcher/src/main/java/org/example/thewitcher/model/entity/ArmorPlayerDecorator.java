@@ -8,6 +8,7 @@ public class ArmorPlayerDecorator extends PlayerDecorator {
 
     public ArmorPlayerDecorator(Player player, Item armor) {
         super(player);
+        getEquipment().removeItem(armor);
         this.armor = new Armor(armor.getName());
         this.armor = Armor.parse(armor);
         equip();
@@ -19,7 +20,6 @@ public class ArmorPlayerDecorator extends PlayerDecorator {
             takeOff(player, getAppliedEquipment().getArmor());
         }
         getAppliedEquipment().setArmor(armor);
-        getEquipment().removeItem(armor);
         getAppliedEquipment().addToList(armor.getName().toLowerCase());
         setArmor(getArmor() + getAppliedEquipment().getArmor().getBonus());
     }
