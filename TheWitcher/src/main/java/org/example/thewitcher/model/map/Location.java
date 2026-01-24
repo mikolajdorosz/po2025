@@ -1,5 +1,12 @@
 package org.example.thewitcher.model.map;
 
+import org.example.thewitcher.model.entity.Entity;
+import org.example.thewitcher.model.entity.character.Armorer;
+import org.example.thewitcher.model.entity.character.Bandit;
+import org.example.thewitcher.model.entity.character.Blacksmith;
+import org.example.thewitcher.model.entity.character.Innkeeper;
+import org.example.thewitcher.model.entity.character.Merchant;
+import org.example.thewitcher.model.entity.character.Sorceress;
 import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.map.data.MapObject;
 import org.example.thewitcher.model.map.data.ObjectRegistry;
@@ -18,6 +25,7 @@ public abstract class Location {
     protected int[][] fileContents;
     protected int width;
     protected int height;
+    protected List<Entity> entities;
 
     public Location(Player player, InputStream textFile) {
         this.player = player;
@@ -27,6 +35,7 @@ public abstract class Location {
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public Point getPoint(int x, int y) { return location[y][x]; }
+    public List<Entity> getEntities() { return entities; }
 
     private void loadMap(InputStream textFile) {
         List<String> lines = readFile(textFile);
@@ -38,6 +47,7 @@ public abstract class Location {
 
         placeMultis(baseFilled);
         placeSingles();
+        spawnEntities();
     }
 
     private List<String> readFile(InputStream inputStream) {
@@ -91,5 +101,25 @@ public abstract class Location {
     private void placeSinglePointObject(MapObject object, int x, int y, int value) {
         if (location[y][x] == null) location[y][x] = new Point(object.getSinglePoint(), x, y, value > 0);
         else location[y][x].setOverlay(object.getSinglePoint(), value > 0);
+    }
+
+    private void spawnEntities() {
+        entities = new ArrayList<>();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (location[y][x] == null) continue;
+                char marker = location[y][x].getMarker();
+                Entity entity = switch (marker) {
+                    case 'I' -> new Innkeeper(x, y);
+                    case 'B' -> new Blacksmith(x, y);
+                    case 'A' -> new Armorer(x, y);
+                    case 'M' -> new Merchant(x, y);
+                    case 'S' -> new Sorceress(x, y);
+                    case 'b' -> new Bandit(x, y);
+                    default -> null;
+                };
+                if (entity != null) entities.add(entity);
+            }
+        }
     }
 }
