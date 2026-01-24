@@ -1,11 +1,14 @@
 package org.example.thewitcher.model.entity.character;
 
+import org.example.thewitcher.model.entity.Interactable;
+import org.example.thewitcher.model.game.Game;
+import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.model.items.Equipment;
 import org.example.thewitcher.model.items.Food;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Innkeeper extends Character {
+public class Innkeeper extends Character implements Interactable {
     private Equipment cargo;
     private List<String> tasks;
 
@@ -26,4 +29,10 @@ public class Innkeeper extends Character {
 
     public Equipment getCargo() { return cargo; }
     public List<String> getTasks() { return tasks; }
+
+    @Override
+    public void interact(Game game) {
+        game.setCurrentInteractable(this);
+        game.setState(GameState.INTERACTION_INNKEEPER);
+    }
 }

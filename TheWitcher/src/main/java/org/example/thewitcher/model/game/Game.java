@@ -6,6 +6,8 @@ import org.example.thewitcher.model.items.Item;
 import org.example.thewitcher.model.map.Location;
 import org.example.thewitcher.model.map.Velen;
 
+import org.example.thewitcher.model.entity.Interactable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class Game {
     private Player player;
     private Location location;
     private GameState state;
+    private Interactable currentInteractable;
     private Item selectedItem;
     private String message = "";
 
@@ -24,6 +27,9 @@ public class Game {
 
     public GameState getState() { return state; }
     public void setState(GameState state) { this.state = state; }
+
+    public Interactable getCurrentInteractable() { return currentInteractable; }
+    public void setCurrentInteractable(Interactable interactable) { this.currentInteractable = interactable; }
 
     public void setPlayer(Player player) { this.player = player; }
 

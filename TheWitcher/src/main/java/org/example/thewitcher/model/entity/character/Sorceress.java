@@ -1,9 +1,12 @@
 package org.example.thewitcher.model.entity.character;
 
+import org.example.thewitcher.model.entity.Interactable;
+import org.example.thewitcher.model.game.Game;
+import org.example.thewitcher.model.game.GameState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sorceress extends Character {
+public class Sorceress extends Character implements Interactable {
     private List<String> tasks;
     private int targetNumber;
 
@@ -16,4 +19,10 @@ public class Sorceress extends Character {
     }
 
     public List<String> getTasks() { return tasks; }
+
+    @Override
+    public void interact(Game game) {
+        game.setCurrentInteractable(this);
+        game.setState(GameState.INTERACTION_SORCERESS);
+    }
 }

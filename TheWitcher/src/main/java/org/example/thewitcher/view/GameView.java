@@ -8,6 +8,7 @@ import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.view.inventory.InventoryView;
 import org.example.thewitcher.view.map.MapView;
 import org.example.thewitcher.view.util.ViewportCalculator;
+import org.example.thewitcher.view.interaction.*;
 
 public class GameView {
     private final Canvas canvas;
@@ -15,6 +16,11 @@ public class GameView {
     private final ViewportCalculator viewport;
     private final MapView mapView;
     private final InventoryView inventoryView;
+    private final ArmorerView armorerView;
+    private final InnkeeperView innkeeperView;
+    private final BlacksmithView blacksmithView;
+    private final MerchantView merchantView;
+    private final SorceressView sorceressView;
 
     public GameView(GameConfig config) {
         this.canvas = new Canvas(config.getWindowWidth(), config.getWindowHeight());
@@ -27,6 +33,11 @@ public class GameView {
         );
         this.mapView = new MapView(gc, viewport);
         this.inventoryView = new InventoryView(gc, canvas, viewport);
+        this.armorerView = new ArmorerView(gc, canvas, viewport);
+        this.innkeeperView = new InnkeeperView(gc, canvas, viewport);
+        this.blacksmithView = new BlacksmithView(gc, canvas, viewport);
+        this.merchantView = new MerchantView(gc, canvas, viewport);
+        this.sorceressView = new SorceressView(gc, canvas, viewport);
 
         this.gc.setFont(Font.font(config.getFontName(), config.getFontSize()));
     }
@@ -38,6 +49,11 @@ public class GameView {
         switch (game.getState()) {
             case MAP ->  mapView.render(game);
             case INVENTORY, INVENTORY_ITEM_ACTION_MENU, INVENTORY_INSPECT_ITEM -> inventoryView.render(game);
+            case INTERACTION_ARMORER -> armorerView.render(game);
+            case INTERACTION_INNKEEPER -> innkeeperView.render(game);
+            case INTERACTION_BLACKSMITH -> blacksmithView.render(game);
+            case INTERACTION_MERCHANT -> merchantView.render(game);
+            case INTERACTION_SORCERESS -> sorceressView.render(game);
         }
     }
 }

@@ -1,8 +1,11 @@
 package org.example.thewitcher.model.entity.character;
 
+import org.example.thewitcher.model.entity.Interactable;
+import org.example.thewitcher.model.game.Game;
+import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.model.items.*;
 
-public class Merchant extends Character {
+public class Merchant extends Character implements Interactable {
     private Equipment cargo;
     private int serviceFee = 5;
 
@@ -24,5 +27,11 @@ public class Merchant extends Character {
 
     public Equipment getCargo() {
         return cargo;
+    }
+
+    @Override
+    public void interact(Game game) {
+        game.setCurrentInteractable(this);
+        game.setState(GameState.INTERACTION_MERCHANT);
     }
 }
