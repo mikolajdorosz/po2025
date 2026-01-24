@@ -2,6 +2,8 @@ package org.example.thewitcher.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
+import org.example.thewitcher.controller.character.ArmorerController;
+import org.example.thewitcher.controller.character.BlacksmithController;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.view.GameView;
 

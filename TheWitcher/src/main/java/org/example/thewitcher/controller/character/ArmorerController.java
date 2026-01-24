@@ -1,4 +1,4 @@
-package org.example.thewitcher.controller;
+package org.example.thewitcher.controller.character;
 
 import javafx.scene.input.KeyCode;
 import org.example.thewitcher.model.entity.character.Armorer;

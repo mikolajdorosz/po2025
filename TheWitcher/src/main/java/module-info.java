@@ -9,4 +9,6 @@ module org.example.thewitcher {
     opens org.example.thewitcher.app to javafx.fxml;
     exports org.example.thewitcher.config;
     opens org.example.thewitcher.config to javafx.fxml;
+    exports org.example.thewitcher.controller.character;
+    opens org.example.thewitcher.controller.character to javafx.fxml;
 }
