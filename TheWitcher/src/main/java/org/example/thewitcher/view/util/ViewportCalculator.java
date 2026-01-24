@@ -3,7 +3,7 @@ package org.example.thewitcher.view.util;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.example.thewitcher.model.entity.Player;
+import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.map.Location;
 
 public class ViewportCalculator {

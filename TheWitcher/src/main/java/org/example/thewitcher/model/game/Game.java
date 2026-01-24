@@ -1,6 +1,6 @@
 package org.example.thewitcher.model.game;
 
-import org.example.thewitcher.model.entity.Player;
+import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.items.AppliedEquipment;
 import org.example.thewitcher.model.items.Item;
 import org.example.thewitcher.model.map.Location;

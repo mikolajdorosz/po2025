@@ -1,4 +1,4 @@
-package org.example.thewitcher.model.entity;
+package org.example.thewitcher.model.entity.player;
 
 import org.example.thewitcher.model.items.Item;
 import org.example.thewitcher.model.items.Silver;

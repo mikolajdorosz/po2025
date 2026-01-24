@@ -1,6 +1,6 @@
 package org.example.thewitcher.model.items;
 
-import org.example.thewitcher.model.entity.Player;
+import org.example.thewitcher.model.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;

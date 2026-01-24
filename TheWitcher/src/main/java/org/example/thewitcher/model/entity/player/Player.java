@@ -1,11 +1,9 @@
-package org.example.thewitcher.model.entity;
+package org.example.thewitcher.model.entity.player;
 
+import org.example.thewitcher.model.entity.Entity;
 import org.example.thewitcher.model.items.*;
 
-public class Player {
-    private int x;
-    private int y;
-    protected String name;
+public class Player extends Entity {
     protected int health;
     protected int coins;
     protected int armor;
@@ -16,9 +14,7 @@ public class Player {
     protected AppliedEquipment appliedEquipment;
 
     public Player() {
-        this.x = 3;
-        this.y = 11;
-        this.name = "Geralt";
+        super(3, 11, "Geralt");
         this.health = 100;
         this.coins = 100;
         this.armor = 0;
@@ -45,10 +41,7 @@ public class Player {
         }
     }
 
-    public int getX() { return x; }
-    public int getY() { return y; }
-    public void setX(int x) { this.x = x; }
-    public void setY(int y) { this.y = y; }
+
     public int getHealth() { return health; }
     public void setHealth(int health) { this.health = health; }
 

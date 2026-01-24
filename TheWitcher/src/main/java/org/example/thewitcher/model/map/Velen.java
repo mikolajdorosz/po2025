@@ -1,6 +1,6 @@
 package org.example.thewitcher.model.map;
 
-import org.example.thewitcher.model.entity.Player;
+import org.example.thewitcher.model.entity.player.Player;
 
 import java.io.InputStream;
 
