@@ -20,7 +20,7 @@ public class InventoryController {
     }
 
     private void handleInventory(KeyCode code, String charInput) {
-        if (code == KeyCode.I || code == KeyCode.DIGIT0) {
+        if (code == KeyCode.I || code == KeyCode.DIGIT0 || code == KeyCode.ESCAPE) {
             game.setState(GameState.MAP);
             game.setMessage("");
             return;

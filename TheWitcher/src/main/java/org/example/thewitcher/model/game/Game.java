@@ -26,7 +26,16 @@ public class Game {
     }
 
     public GameState getState() { return state; }
-    public void setState(GameState state) { this.state = state; }
+    public void setState(GameState state) {
+        //Auto-clear message
+        if (this.state == GameState.MAP) {
+            if (state == GameState.INVENTORY || state.toString().startsWith("INTERACTION_")) {
+                this.message = "";
+            }
+        }
+
+        this.state = state;
+    }
 
     public Interactable getCurrentInteractable() { return currentInteractable; }
     public void setCurrentInteractable(Interactable interactable) { this.currentInteractable = interactable; }

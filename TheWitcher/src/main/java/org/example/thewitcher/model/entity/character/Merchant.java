@@ -22,11 +22,14 @@ public class Merchant extends Character implements Interactable {
         cargo.addItem(new Food("Pepper"));
         cargo.addItem(new Food("Lamb stew"));
         // Herbs and other items can be added here
-        cargo.addItem(new Silver("Wolf Silver Sword")); // Example
     }
 
     public Equipment getCargo() {
         return cargo;
+    }
+
+    public int getServiceFee() {
+        return serviceFee;
     }
 
     @Override

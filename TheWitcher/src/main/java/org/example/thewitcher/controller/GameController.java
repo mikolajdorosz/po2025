@@ -11,6 +11,7 @@ public class GameController {
     private final MapController mapController;
     private final InventoryController inventoryController;
     private final ArmorerController armorerController;
+    private final BlacksmithController blacksmithController;
 
     public GameController(GameView view) {
         this.game = new Game();
@@ -18,6 +19,7 @@ public class GameController {
         this.mapController = new MapController(game);
         this.inventoryController = new InventoryController(game);
         this.armorerController = new ArmorerController(game);
+        this.blacksmithController = new BlacksmithController(game);
     }
 
     public void start() {
@@ -36,7 +38,8 @@ public class GameController {
                      INVENTORY_ITEM_ACTION_MENU,
                      INVENTORY_INSPECT_ITEM -> inventoryController.handleInput(e.getCode(), e.getText());
                 case INTERACTION_ARMORER -> armorerController.handleInput(e.getCode());
-                case INTERACTION_INNKEEPER, INTERACTION_BLACKSMITH,
+                case INTERACTION_BLACKSMITH -> blacksmithController.handleInput(e.getCode());
+                case INTERACTION_INNKEEPER,
                      INTERACTION_MERCHANT, INTERACTION_SORCERESS -> {
                     if (e.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
                         game.setState(org.example.thewitcher.model.game.GameState.MAP);
