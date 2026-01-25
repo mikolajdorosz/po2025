@@ -9,16 +9,14 @@ import org.example.simulatorgui.controller.MainController;
 import java.io.IOException;
 
 public class TopbarController {
-    @FXML
-    private Button exitButton;
-    private MainController mainController;
+    @FXML private Button exitButton;
+    private Runnable onExit;
 
-    public void setMainController(MainController mainController) { this.mainController = mainController; }
+    public void setOnExit(Runnable onExit) { this.onExit = onExit; }
 
-    public void onExit() throws IOException {
-        mainController.stopRace();
+    @FXML public void onExit() throws IOException {
+        if (onExit != null) onExit.run();
         closeWindow();
-        Main.openRaceSetupWindow("/org/example/simulatorgui/view/race-setup.fxml", new Stage(), mainController.getRaceSetupController().getRaceCars(), mainController.getRaceSetupController().getStoredCars(), mainController.getRaceSetupController().getStartPosition(), mainController.getRaceSetupController().getCheckpointPositions(), mainController.getRaceSetupController().getFinishPosition());
     }
     private void closeWindow() {
         Stage stage = (Stage) exitButton.getScene().getWindow();
