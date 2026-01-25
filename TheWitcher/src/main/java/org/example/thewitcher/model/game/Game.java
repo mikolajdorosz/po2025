@@ -5,6 +5,7 @@ import org.example.thewitcher.model.items.AppliedEquipment;
 import org.example.thewitcher.model.items.Item;
 import org.example.thewitcher.model.map.Location;
 import org.example.thewitcher.model.map.Velen;
+import org.example.thewitcher.model.map.TestMap;
 
 import org.example.thewitcher.model.entity.Interactable;
 
@@ -22,6 +23,7 @@ public class Game {
     public Game() {
         player = new Player();
         location = new Velen(player);
+        location = new TestMap(player);
         state = GameState.MAP;
     }
 
