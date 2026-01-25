@@ -18,15 +18,37 @@ public class CarHUDController implements Listener {
     @FXML private Button gearUpButton;
     @FXML private Button brakeButton;
     @FXML private Button gasButton;
+
     private Car car;
 
+    // ===================== SETUP =====================
     public Car getCar() { return car; }
     public void setCar(Car car) {
         this.car = car;
-        disableClutchGearControls();
-        car.addListener(() -> Platform.runLater(this::updateHUD));
+        bindControls();
+        refresh();
+    }
+    private void bindControls() {
+        boolean isAutomatic = car.getGearbox().getType().equals("automatic");
+        clutchButton.setDisable(isAutomatic);
+        gearUpButton.setDisable(isAutomatic);
+        gearDownButton.setDisable(isAutomatic);
     }
 
+    // ===================== UPDATE =====================
+    public void refresh() {
+        if (car == null) return;
+
+        Platform.runLater(() -> {
+            rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
+            speedLabel.setText(String.valueOf(car.getSpeed()));
+            gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
+
+            if (car.getFinalScore() != 0) {
+                disableAllControls();
+            }
+        });
+    }
     private void updateHUD() {
         rpmLabel.setText(String.valueOf(car.getEngine().getRPM()));
         speedLabel.setText(String.valueOf(car.getSpeed()));
