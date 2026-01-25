@@ -20,7 +20,7 @@ import org.example.simulatorgui.config.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class RaceSetupController implements ICarRepository {
+public class RaceSetupController {
     private enum SelectionMode { NONE, START, CHECKPOINT, FINISH }
 
     @FXML private ComboBox<Car> storedCarsComboBox;
@@ -31,27 +31,24 @@ public class RaceSetupController implements ICarRepository {
     @FXML private Button placeFinishButton;
     @FXML private Button startRaceButton;
 
-    private ObservableList<Car> storedCars = FXCollections.observableArrayList();     // Change in ObservableList automatically updates GUI
-    private ObservableList<Car> raceCars = FXCollections.observableArrayList();
+    private final RaceConfig config;
+    private ICarRepository carRepository;
     private ArrayList<Position> checkpointPositions = new ArrayList<>();
     private SelectionMode selectionMode = SelectionMode.NONE;
     private Position startPosition;
     private Position finishPosition;
     private BooleanBinding startButtonDisableBinding;
 
-    @Override public ObservableList<Car> getRaceCars() { return raceCars; }
-    @Override public ObservableList<Car> getStoredCars() { return storedCars; }
-    @Override public boolean isDuplicatePlate(String plateNumber) {
-        return raceCars.stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plateNumber))
-                || storedCars.stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plateNumber));
+    public RaceSetupController(RaceConfig config) {
+        this.config = config;
     }
-    @Override public void addCar(Car car) { storedCars.add(car); }
-    @Override public void selectCar(Car car) { storedCarsComboBox.getSelectionModel().select(car); }
+
+    public void setCarRepository(ICarRepository carRepository) { this.carRepository = carRepository; }
 
     // ===================== INITIALIZATION =====================
     @FXML private void initialize() {
-        storedCarsComboBox.setItems(storedCars);
-        raceCarsListView.setItems(raceCars);
+        storedCarsComboBox.setItems(config.getStoredCars());
+        raceCarsListView.setItems(config.getRaceCars());
 
         configureRaceCarsList();
         restoreFlags();
@@ -136,10 +133,10 @@ public class RaceSetupController implements ICarRepository {
     // ===================== VALIDATION =====================
     private void setupValidation() {
         startButtonDisableBinding = new BooleanBinding() {
-            { bind(raceCars); }
+            { bind(config.getRaceCars()); }
             @Override
             protected boolean computeValue() {
-                int size = raceCars.size();
+                int size = config.getRaceCars().size();
                 return size < 2 || size > 6
                         || startPosition == null
                         || finishPosition == null;
@@ -153,7 +150,7 @@ public class RaceSetupController implements ICarRepository {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/add-car.fxml"));
         Parent root = loader.load();                                // loads fxml
         AddCarController addCarController = loader.getController(); // gets controller
-        addCarController.setCarRepository(new CarRepository(storedCars, raceCars));
+        addCarController.setCarRepository(new CarRepository(config.getStoredCars(), config.getRaceCars()));
         CarComponentsController carComponentsController = addCarController.showForm("car-components-form.fxml", addCarController.getCarComponentsForm());
         carComponentsController.setAddCarController(addCarController);
         addCarController.setCarComponentsController(carComponentsController);
@@ -170,16 +167,16 @@ public class RaceSetupController implements ICarRepository {
     @FXML private void onAddToRace() {
         Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
-            raceCars.add(selected);
-            storedCars.remove(selected);
+            config.getRaceCars().add(selected);
+            config.getStoredCars().remove(selected);
         }
         setDefaultComboBoxValue();
     }
     @FXML private void onDeleteCar() {
         Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
-            storedCars.remove(selected);
-            raceCars.remove(selected);
+            config.getStoredCars().remove(selected);
+            config.getRaceCars().remove(selected);
         }
         setDefaultComboBoxValue();
     }
@@ -188,7 +185,7 @@ public class RaceSetupController implements ICarRepository {
         if (selected != null) {
             if (selected.getPlayerControlled()) selected.setPlayerControlled(false);
             else {
-                for (Car c : raceCars) c.setPlayerControlled(false);
+                for (Car c : config.getRaceCars()) c.setPlayerControlled(false);
                 selected.setPlayerControlled(true);
             }
             raceCarsListView.refresh();
@@ -197,13 +194,13 @@ public class RaceSetupController implements ICarRepository {
     @FXML private void onRemoveFromRace() {
         Car selected = raceCarsListView.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            raceCars.remove(selected);
-            storedCars.add(selected);
+            config.getRaceCars().remove(selected);
+            config.getStoredCars().add(selected);
         }
     }
     @FXML private void onClearList() {
-        storedCars.addAll(raceCars);
-        raceCars.clear();
+        config.getStoredCars().addAll(config.getRaceCars());
+        config.getRaceCars().clear();
     }
 
     // ===================== MODE SELECTION =====================
@@ -243,8 +240,8 @@ public class RaceSetupController implements ICarRepository {
     @FXML private void onStartRace() throws IOException {
         closeWindow();
         RaceConfig config = new RaceConfig(
-                raceCars,
-                storedCars,
+                this.config.getRaceCars(),
+                this.config.getStoredCars(),
                 startPosition,
                 finishPosition,
                 checkpointPositions,

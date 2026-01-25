@@ -84,7 +84,7 @@ public class MainController implements IRaceExitHandler {
         Node hud = loader.load();
         CarHUDController controller = loader.getController();
         controller.setCar(playersCar);
-        playersCar.addListener(controller);
+        //playersCar.addListener(controller);
         Platform.runLater(() -> controller.registerInput(hud.getScene()));
         hudContainer.getChildren().setAll(hud);
     }
@@ -131,11 +131,7 @@ public class MainController implements IRaceExitHandler {
             Main.openRaceSetupWindow(
                     "/org/example/simulatorgui/view/race-setup.fxml",
                     new Stage(),
-                    config.getRaceCars(),
-                    config.getStoredCars(),
-                    config.getStartPosition(),
-                    new ArrayList<>(config.getCheckpointPositions()),
-                    config.getFinishPosition()
+                    config
             );
         } catch (IOException e) { e.printStackTrace(); }
     }

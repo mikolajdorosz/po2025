@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.simulatorgui.config.RaceConfig;
+import org.example.simulatorgui.controller.CarRepository;
 import org.example.simulatorgui.controller.RaceSetupController;
 import simulator.Car;
 import simulator.Position;
@@ -16,21 +18,19 @@ import java.util.ArrayList;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        openRaceSetupWindow("view/race-setup.fxml", stage, null, null, null, null, null);
+        openRaceSetupWindow("view/race-setup.fxml", stage, new RaceConfig());
     }
-    public static void openRaceSetupWindow(String path, Stage stage, ObservableList<Car> raceCars, ObservableList<Car> storedCars, Position start, ArrayList<Position> checkpoints, Position finish) throws IOException {
+    public static void openRaceSetupWindow(
+            String path,
+            Stage stage,
+            RaceConfig config
+    ) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(path));
-        if (raceCars != null && start != null && checkpoints != null && finish != null) {
-            fxmlLoader.setControllerFactory(param -> {
-                RaceSetupController controller = new RaceSetupController();
-                controller.setRaceCars(raceCars);
-                controller.setStoredCars(storedCars);
-                controller.setStartPosition(start);
-                controller.setCheckpointPositions(checkpoints);
-                controller.setFinishPosition(finish);
-                return controller;
-            });
-        }
+        fxmlLoader.setControllerFactory(param -> {
+            RaceSetupController controller = new RaceSetupController(config);
+            controller.setCarRepository(new CarRepository(config.getStoredCars(), config.getRaceCars()));
+            return controller;
+        });
         Parent root = fxmlLoader.load();
         stage.setTitle("CarSimulator - Setup");
         Scene scene = new Scene(root);

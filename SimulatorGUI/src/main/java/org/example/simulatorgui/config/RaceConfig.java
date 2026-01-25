@@ -1,6 +1,9 @@
 package org.example.simulatorgui.config;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
 import simulator.Car;
@@ -28,6 +31,14 @@ public class RaceConfig {
         this.finishPosition = finishPosition;
         this.checkpointPositions = checkpointPositions;
         this.referenceTrackPane = referenceTrackPane;
+    }
+    public RaceConfig() {
+        this.raceCars = FXCollections.observableArrayList();
+        this.storedCars = FXCollections.observableArrayList();
+        this.startPosition = null;
+        this.finishPosition = null;
+        this.checkpointPositions = new ArrayList<>();
+        this.referenceTrackPane = null;
     }
 
     public ObservableList<Car> getRaceCars() { return raceCars; }
