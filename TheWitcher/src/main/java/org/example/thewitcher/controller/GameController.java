@@ -35,7 +35,7 @@ public class GameController {
                 case INVENTORY,
                      INVENTORY_ITEM_ACTION_MENU,
                      INVENTORY_INSPECT_ITEM -> inventoryController.handleInput(e.getCode(), e.getText());
-                case BATTLE -> battleController.handleInput(e.getCode());
+                case BATTLE -> battleController.handleInput(e.getCode(), e.getText());
             }
         });
     }

@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.example.thewitcher.model.battle.BattleInputState;
 import org.example.thewitcher.model.battle.IBattleUnit;
 import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.game.Game;
@@ -42,13 +43,14 @@ public class BattleView {
         gc.fillText("ENEMIES", width * 0.8, headerY);
         drawAllies(game, alliesX, contentY, fontSize);
         drawEnemies(game, enemiesX, contentY, fontSize);
-        drawCenteredText("[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE", height - fontSize, width);
+        String text = game.getBattle().getInputState() == BattleInputState.ACTION ? "[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE" : "SELECT ENEMY";
+        drawCenteredText(text, height - fontSize, width);
         gc.setFont(Font.font("Consolas", FontWeight.NORMAL, 20));
     }
 
     private void drawAllies(Game game, double x, double y, double lineHeight) {
         int index = 0;
-        int active = game.getBattle().getActiveAllyIndex();
+        int active = game.getBattle().getAllyIndex();
         for (IBattleUnit ally : game.getBattle().getAllies()) {
             String marker = (index == active) ? ">>" : "  ";
             gc.fillText(
@@ -66,16 +68,20 @@ public class BattleView {
         }
     }
     private void drawEnemies(Game game, double x, double y, double lineHeight) {
+        char letter = 'a';
         for (IBattleUnit enemy : game.getBattle().getEnemies()) {
             gc.fillText(
                     String.format(
-                            "%-10s HP:%-3d ACT:%s",
+                            "[%c] %-10s HP:%-3d ACT:%s",
+                            letter,
                             enemy.getEntity().getName(),
                             enemy.getHealth(),
                             enemy.getAction()
                     ), x, y
             );
             y += lineHeight * 1.4;
+            letter++;
+            if (letter > 'z') break;
         }
     }
     private void drawCenteredText(String text, double y, double width) {

@@ -1,5 +1,9 @@
 package org.example.thewitcher.model.battle;
 
+import org.example.thewitcher.model.entity.player.Player;
+import org.example.thewitcher.model.items.Weapon;
+import org.example.thewitcher.model.items.WeaponType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +14,11 @@ public class Battle {
     private final List<IBattleUnit> defeatedEnemies;
     private BattleState battleState;
     private boolean escaped;
-    private int activeAllyIndex;
+    private int allyIndex;
+    private int enemyIndex;
+    private BattleInputState inputState;
+    private BattleAction pendingAction;
+    private WeaponType pendingWeapon;
 
     public Battle(List<IBattleUnit> allies, List<IBattleUnit> enemies) {
         this.allies = new ArrayList<>(allies);
@@ -19,29 +27,62 @@ public class Battle {
         this.defeatedEnemies = new ArrayList<>();
         this.battleState = BattleState.ACTIVE;
         this.escaped = false;
-        this.activeAllyIndex = 0;
+        this.allyIndex = 0;
+        this.enemyIndex = -1;
+        this.inputState = BattleInputState.ACTION;
     }
 
     public List<IBattleUnit> getAllies() { return allies; }
     public List<IBattleUnit> getEnemies() { return enemies; }
     public BattleState getBattleState() { return battleState; }
-    public int getActiveAllyIndex() { return activeAllyIndex; }
+    public int getAllyIndex() { return allyIndex; }
+    public BattleInputState getInputState() { return inputState; }
+    public void setInputState(BattleInputState state) { this.inputState = state; }
+
+    public boolean isEnemySelected() { return enemyIndex != -1; }
+    public IBattleUnit getEnemy() { return enemies.get(enemyIndex); }
+    public IBattleUnit getAlly() { return allies.get(allyIndex); }
+    public void setEnemy(int enemyIndex) { this.enemyIndex = enemyIndex; }
+    public void resetEnemy() { this.enemyIndex = -1; inputState = BattleInputState.ACTION; }
 
     public void allysAction(BattleAction action) {
-        switch (action) {
-             case ATTACK -> attack();
-             case DEFEND -> defend();
-             case DRINK_ELIXIR -> drinkElixir();
-             case ESCAPE -> escape();
+        pendingAction = action;
+        if (action == BattleAction.ATTACK) { setInputState(BattleInputState.ENEMY); return; }
+        executePendingAction();
+    }
+    public void executePendingAction() {
+        switch (pendingAction) {
+            case ATTACK -> { setInputState(BattleInputState.WEAPON); return; }
+            case DEFEND -> defend();
+            case DRINK_ELIXIR -> drinkElixir();
+            case ESCAPE -> escape();
         }
+        pendingAction = null;
         cleanupDead();
         updateState();
         if (isFinished()) return;
-        boolean hasNext = nextAlly();
-        if (!hasNext) {
+        if (!nextAlly()) {
             resetAllyTurn();
             enemyTurn();
         }
+        setInputState(BattleInputState.ACTION);
+    }
+    public void chooseWeapon(WeaponType weapon) {
+        this.pendingWeapon = weapon;
+        executeAttackWithWeapon();
+    }
+    public void executeAttackWithWeapon() {
+        allyAttack(pendingWeapon);
+        pendingAction = null;
+        pendingWeapon = null;
+        cleanupDead();
+        updateState();
+        if (isFinished()) return;
+        if (!nextAlly()) {
+            resetAllyTurn();
+            enemyTurn();
+        }
+        setInputState(BattleInputState.ACTION);
     }
     private void cleanupDead() {
         allies.removeIf(ally -> {
@@ -56,19 +97,22 @@ public class Battle {
     private void updateState() {
         if (allies.isEmpty() || enemies.isEmpty() || escaped) battleState = BattleState.FINISHED;
     }
-    private boolean nextAlly() { activeAllyIndex++; return activeAllyIndex < allies.size(); }
-    private void resetAllyTurn() { activeAllyIndex = 0; }
+    private boolean nextAlly() { allyIndex++; return allyIndex < allies.size(); }
+    private void resetAllyTurn() { allyIndex = 0; }
     private void enemyTurn() {
         for (IBattleUnit enemy : enemies) {
             if (!enemy.isAlive()) continue;
             switch (enemy.getAction()) {
-                case ATTACK -> attack();
-                case DEFEND -> defend();
+                //case ATTACK -> attack();
+                //case DEFEND -> defend();
             }
         }
     }
 
-    private void attack() { }
+    private void allyAttack(WeaponType weapon) {
+        if (getAlly().getEntity() instanceof Player) getAlly().attack(getEnemy(), weapon);
+        else getAlly().attack(getEnemy());
+    }
     private void defend() { }
     private void drinkElixir() { }
     public void escape() {
