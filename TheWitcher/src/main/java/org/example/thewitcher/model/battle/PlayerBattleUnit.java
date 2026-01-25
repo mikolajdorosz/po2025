@@ -25,7 +25,7 @@ public class PlayerBattleUnit implements IBattleUnit {
             default -> 0;
         };
     }
-    @Override public int attack(IBattleUnit enemy) { return 0; }
+    @Override public int attack() { return 0; }
     @Override public void takeDamage(int dmg) { player.setHealth(player.getHealth() - dmg); }
     @Override public void setAction(BattleAction action) { this.action = action; }
     @Override public BattleAction getAction() { return action; }

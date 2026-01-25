@@ -13,7 +13,7 @@ public class MonsterBattleUnit implements IBattleUnit {
     @Override public Entity getEntity() { return monster; }
     @Override public int getHealth() { return monster.getHealth(); }
     @Override public boolean isAlive() { return monster.getHealth() > 0; }
-    @Override public int attack(IBattleUnit enemy) { return monster.get; }
+    @Override public int attack() { return monster.attack(); }
     @Override public int attack(IBattleUnit enemy, WeaponType weapon) { return 0; }
     @Override public void takeDamage(int dmg) { monster.setHealth(monster.getHealth() - dmg); }
     @Override public void setAction(BattleAction action) { this.action = action; }

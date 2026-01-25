@@ -1,11 +1,11 @@
 package org.example.thewitcher.model.battle;
 
 import org.example.thewitcher.model.entity.player.Player;
-import org.example.thewitcher.model.items.Weapon;
 import org.example.thewitcher.model.items.WeaponType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Battle {
     private final List<IBattleUnit> allies;
@@ -40,10 +40,11 @@ public class Battle {
     public void setInputState(BattleInputState state) { this.inputState = state; }
 
     public boolean isEnemySelected() { return enemyIndex != -1; }
-    public IBattleUnit getEnemy() { return enemies.get(enemyIndex); }
+    public IBattleUnit getEnemy() { return enemyIndex >= 0 ? enemies.get(enemyIndex) : null; }
     public IBattleUnit getAlly() { return allies.get(allyIndex); }
     public void setEnemy(int enemyIndex) { this.enemyIndex = enemyIndex; }
-    public void resetEnemy() { this.enemyIndex = -1; inputState = BattleInputState.ACTION; }
+    public void resetEnemy() { this.enemyIndex = -1; }
+    public boolean isPlayerAlive() { return allies.stream().anyMatch(a -> a.getEntity() instanceof Player); }
 
     public void allysAction(BattleAction action) {
         pendingAction = action;
@@ -75,6 +76,7 @@ public class Battle {
         allyAttack(pendingWeapon);
         pendingAction = null;
         pendingWeapon = null;
+        resetEnemy();
         cleanupDead();
         updateState();
         if (isFinished()) return;
@@ -93,6 +95,7 @@ public class Battle {
             if (!enemy.isAlive()) { defeatedEnemies.add(enemy); return true; }
             return false;
         });
+        if (allyIndex >= allies.size()) allyIndex = 0;
     }
     private void updateState() {
         if (allies.isEmpty() || enemies.isEmpty() || escaped) battleState = BattleState.FINISHED;
@@ -100,21 +103,26 @@ public class Battle {
     private boolean nextAlly() { allyIndex++; return allyIndex < allies.size(); }
     private void resetAllyTurn() { allyIndex = 0; }
     private void enemyTurn() {
+        if (isFinished()) return;
         for (IBattleUnit enemy : enemies) {
             if (!enemy.isAlive()) continue;
-            switch (enemy.getAction()) {
-                //case ATTACK -> attack();
-                //case DEFEND -> defend();
-            }
+            if (allies.isEmpty()) { battleState = BattleState.FINISHED; return; }
+            allies.get(ThreadLocalRandom.current().nextInt(allies.size())).takeDamage(enemy.attack());
+            cleanupDead();
+            updateState();
+            if (isFinished()) return;
         }
     }
 
     private void allyAttack(WeaponType weapon) {
-        if (getAlly().getEntity() instanceof Player) getAlly().attack(getEnemy(), weapon);
-        else getAlly().attack(getEnemy());
+        if (getEnemy() == null) return;
+        System.out.println(getAlly().getEntity().getName());
+        if (getAlly().getEntity() instanceof Player) getEnemy().takeDamage(getAlly().attack(getEnemy(), weapon));
+        else getEnemy().takeDamage(getAlly().attack());
+
     }
-    private void defend() { }
-    private void drinkElixir() { }
+    private void defend() { } // take damage instead of attacked ally
+    private void drinkElixir() { } // boost ally
     public void escape() {
         escaped = true;
         battleState = BattleState.FINISHED;

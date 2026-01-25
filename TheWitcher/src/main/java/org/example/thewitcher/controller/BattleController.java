@@ -22,14 +22,12 @@ public class BattleController {
     }
     private void handleAction(KeyCode code) {
         switch (code) {
-            case DIGIT1 -> {
-                game.getBattle().allysAction(BattleAction.ATTACK);
-                game.getBattle().setInputState(BattleInputState.ENEMY);
-            }
+            case DIGIT1 -> game.getBattle().allysAction(BattleAction.ATTACK);
             case DIGIT2 -> game.getBattle().allysAction(BattleAction.DEFEND);
             case DIGIT3 -> game.getBattle().allysAction(BattleAction.DRINK_ELIXIR);
             case DIGIT4 -> { game.getBattle().allysAction(BattleAction.ESCAPE); finishBattle(); }
         }
+        if (game.getBattle().isFinished()) finishBattle();
     }
     private void handleEnemy(String charInput) {
         if (charInput == null || charInput.isEmpty()) return;
@@ -37,7 +35,6 @@ public class BattleController {
         if (index >= 0 && index < game.getBattle().getEnemies().size()) {
             game.getBattle().setEnemy(index);
             game.getBattle().executePendingAction();
-            game.getBattle().resetEnemy();
             if (game.getBattle().isFinished()) finishBattle();
         }
     }
@@ -48,6 +45,7 @@ public class BattleController {
             case DIGIT3 -> WeaponType.DISTANCE;
             default -> null;
         };
+        if (game.getBattle().isFinished()) finishBattle();
         if (weapon == null) return;
         game.getBattle().chooseWeapon(weapon);
     }

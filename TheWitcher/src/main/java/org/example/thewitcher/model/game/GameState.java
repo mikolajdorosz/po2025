@@ -5,5 +5,6 @@ public enum GameState {
     INVENTORY,
     INVENTORY_ITEM_ACTION_MENU,
     INVENTORY_INSPECT_ITEM,
-    BATTLE
+    BATTLE,
+    GAME_OVER
 }

@@ -1,8 +1,10 @@
 package org.example.thewitcher.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import org.example.thewitcher.model.game.Game;
+import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.view.GameView;
 
 public class GameController {
@@ -11,6 +13,7 @@ public class GameController {
     private final MapController mapController;
     private final InventoryController inventoryController;
     private final BattleController battleController;
+    private AnimationTimer timer;
 
     public GameController(GameView view) {
         this.game = new Game();
@@ -21,12 +24,14 @@ public class GameController {
     }
 
     public void start() {
-        new AnimationTimer() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 gameView.render(game);
+                if (game.getState() == GameState.GAME_OVER) { stop(); Platform.exit(); }
             }
-        }.start();
+        };
+        timer.start();
     }
     public void attachInput(Scene scene) {
         scene.setOnKeyPressed(e -> {
@@ -36,6 +41,7 @@ public class GameController {
                      INVENTORY_ITEM_ACTION_MENU,
                      INVENTORY_INSPECT_ITEM -> inventoryController.handleInput(e.getCode(), e.getText());
                 case BATTLE -> battleController.handleInput(e.getCode(), e.getText());
+                case GAME_OVER -> { timer.stop(); Platform.exit(); }
             }
         });
     }

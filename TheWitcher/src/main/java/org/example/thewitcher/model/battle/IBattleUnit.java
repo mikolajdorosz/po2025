@@ -9,7 +9,7 @@ public interface IBattleUnit {
     int getHealth();
     boolean isAlive();
     int attack(IBattleUnit enemy, WeaponType weapon);
-    int attack(IBattleUnit enemy);
+    int attack();
     void takeDamage(int dmg);
     void setAction(BattleAction action);
     BattleAction getAction();

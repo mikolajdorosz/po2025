@@ -15,4 +15,5 @@ public class Monster extends Entity {
     public int getHealth() {  return health; }
     public void setHealth(int health) { this.health = health; }
     public boolean getIsFlying() { return flying; }
+    public int attack() { return damage; }
 }

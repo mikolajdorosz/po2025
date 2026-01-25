@@ -43,7 +43,11 @@ public class BattleView {
         gc.fillText("ENEMIES", width * 0.8, headerY);
         drawAllies(game, alliesX, contentY, fontSize);
         drawEnemies(game, enemiesX, contentY, fontSize);
-        String text = game.getBattle().getInputState() == BattleInputState.ACTION ? "[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE" : "SELECT ENEMY";
+        String text = switch (game.getBattle().getInputState()) {
+            case ACTION -> "[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE";
+            case ENEMY -> "SELECT ENEMY";
+            case WEAPON -> "[1] SILVER  [2] STEEL  [3] DISTANCE";
+        };
         drawCenteredText(text, height - fontSize, width);
         gc.setFont(Font.font("Consolas", FontWeight.NORMAL, 20));
     }

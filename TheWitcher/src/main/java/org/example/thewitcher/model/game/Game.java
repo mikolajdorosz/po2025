@@ -62,6 +62,7 @@ public class Game {
             if (BattleDetector.searchForEnemy(player, enemy, BATTLE_TRIGGER_RADIUS)) {
                 state = GameState.BATTLE;
                 battle = new Battle(player.getAllies(), BattleDetector.gatherEnemies(player, location.getEnemies(), BATTLE_ENEMIES_RADIUS));
+                if (!battle.isPlayerAlive()) { state = GameState.GAME_OVER; }
                 return;
             }
         }

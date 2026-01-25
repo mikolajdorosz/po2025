@@ -1,6 +1,6 @@
 package org.example.thewitcher.model.map;
 
-import org.example.thewitcher.model.battle.HumanBattleUnit;
+import org.example.thewitcher.model.battle.CharacterBattleUnit;
 import org.example.thewitcher.model.battle.IBattleUnit;
 import org.example.thewitcher.model.battle.MonsterBattleUnit;
 import org.example.thewitcher.model.entity.character.Bandit;
@@ -103,7 +103,7 @@ public abstract class Location {
         else {
             location[y][x].setOverlay(object.getSinglePoint(), value > 0);
         }
-        if (location[y][x].getMarker() == ObjectDrawings.bandit()) enemies.add(new HumanBattleUnit(new Bandit(location[y][x].getX(), location[y][x].getY())));
+        if (location[y][x].getMarker() == ObjectDrawings.bandit()) enemies.add(new CharacterBattleUnit(new Bandit(location[y][x].getX(), location[y][x].getY())));
         if (location[y][x].getMarker() == ObjectDrawings.ghul()) enemies.add(new MonsterBattleUnit(new Ghul(location[y][x].getX(), location[y][x].getY())));
         if (location[y][x].getMarker() == ObjectDrawings.wolf()) enemies.add(new MonsterBattleUnit(new Wolf(location[y][x].getX(), location[y][x].getY())));
     }
