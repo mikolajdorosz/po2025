@@ -32,18 +32,14 @@ public class RaceSetupController {
     @FXML private Button startRaceButton;
 
     private final RaceConfig config;
-    private ICarRepository carRepository;
-    private ArrayList<Position> checkpointPositions = new ArrayList<>();
+    private final CarRepository carRepository;
     private SelectionMode selectionMode = SelectionMode.NONE;
-    private Position startPosition;
-    private Position finishPosition;
     private BooleanBinding startButtonDisableBinding;
 
     public RaceSetupController(RaceConfig config) {
         this.config = config;
+        this.carRepository = new CarRepository(config);
     }
-
-    public void setCarRepository(ICarRepository carRepository) { this.carRepository = carRepository; }
 
     // ===================== INITIALIZATION =====================
     @FXML private void initialize() {
@@ -57,7 +53,7 @@ public class RaceSetupController {
         setDefaultComboBoxValue();
     }
     private void configureRaceCarsList() {
-        raceCarsListView.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.SINGLE);        // Ensures selecting only one item
+        raceCarsListView.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.SINGLE);
         raceCarsListView.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Car item, boolean empty) {
@@ -67,8 +63,7 @@ public class RaceSetupController {
                     setStyle("");
                 } else {
                     setText(item.toString());
-                    if (item.getPlayerControlled()) setStyle("-fx-font-weight: bold; -fx-text-fill: blue;");
-                    else setStyle("");
+                    setStyle(item.getPlayerControlled() ? "-fx-font-weight: bold; -fx-text-fill: blue;" : "");
                 }
             }
         });
@@ -85,43 +80,41 @@ public class RaceSetupController {
         });
     }
     private void placeStart(double x, double y) {
-        if (startPosition != null) return;
-        startPosition = new Position(x, y);
-        placeFlag("start.png", startPosition);
+        if (config.getStartPosition() != null) return;
+        config.setStartPosition(new Position(x, y));
+        placeFlag("start.png", config.getStartPosition());
         startButtonDisableBinding.invalidate();
         resetButtons();
     }
     private void placeCheckpoint(double x, double y) {
-        checkpointPositions.add(new Position(x, y));
+        config.addCheckpoint(new Position(x, y));
         redrawCheckpoints();
     }
     private void placeFinish(double x, double y) {
-        if (finishPosition != null) return;
-        finishPosition = new Position(x, y);
-        placeFlag("finish.png", finishPosition);
+        if (config.getFinishPosition() != null) return;
+        config.setFinishPosition(new Position(x, y));
+        placeFlag("finish.png", config.getFinishPosition());
         startButtonDisableBinding.invalidate();
         resetButtons();
     }
     private void restoreFlags() {
-        if (startPosition != null) placeFlag("start.png", startPosition);
-        if (finishPosition != null) placeFlag("finish.png", finishPosition);
+        if (config.getStartPosition() != null) placeFlag("start.png", config.getStartPosition());
+        if (config.getFinishPosition() != null) placeFlag("finish.png", config.getFinishPosition());
         redrawCheckpoints();
     }
     private void redrawCheckpoints() {
         raceTrackPane.getChildren().removeIf(
                 n -> n instanceof ImageView && "checkpoint".equals(n.getUserData())
         );
-        for (Position p : checkpointPositions) {
+        for (Position p : config.getCheckpointPositions()) {
             ImageView cp = placeFlag("checkpoint.png", p);
             cp.setUserData("checkpoint");
         }
     }
     private ImageView placeFlag(String img, Position pos) {
-        ImageView flag = new ImageView(
-                new Image(getClass()
-                        .getResource("/org/example/simulatorgui/images/" + img)
-                        .toExternalForm())
-        );
+        ImageView flag = new ImageView(new Image(
+                getClass().getResource("/org/example/simulatorgui/images/" + img).toExternalForm()
+        ));
         flag.setFitWidth(20);
         flag.setFitHeight(20);
         flag.setLayoutX(pos.getX());
@@ -138,8 +131,8 @@ public class RaceSetupController {
             protected boolean computeValue() {
                 int size = config.getRaceCars().size();
                 return size < 2 || size > 6
-                        || startPosition == null
-                        || finishPosition == null;
+                        || config.getStartPosition() == null
+                        || config.getFinishPosition() == null;
             }
         };
         startRaceButton.disableProperty().bind(startButtonDisableBinding);
@@ -148,10 +141,14 @@ public class RaceSetupController {
     // ===================== ACTIONS =====================
     @FXML private void onNewCar() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/add-car.fxml"));
-        Parent root = loader.load();                                // loads fxml
-        AddCarController addCarController = loader.getController(); // gets controller
-        addCarController.setCarRepository(new CarRepository(config.getStoredCars(), config.getRaceCars()));
-        CarComponentsController carComponentsController = addCarController.showForm("car-components-form.fxml", addCarController.getCarComponentsForm());
+        Parent root = loader.load();
+
+        AddCarController addCarController = loader.getController();
+        addCarController.setCarRepository(carRepository);
+
+        CarComponentsController carComponentsController =
+                addCarController.showForm("car-components-form.fxml", addCarController.getCarComponentsForm());
+
         carComponentsController.setAddCarController(addCarController);
         addCarController.setCarComponentsController(carComponentsController);
 
@@ -167,16 +164,16 @@ public class RaceSetupController {
     @FXML private void onAddToRace() {
         Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
-            config.getRaceCars().add(selected);
-            config.getStoredCars().remove(selected);
+            carRepository.getRaceCars().add(selected);
+            carRepository.getStoredCars().remove(selected);
         }
         setDefaultComboBoxValue();
     }
     @FXML private void onDeleteCar() {
         Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
-            config.getStoredCars().remove(selected);
-            config.getRaceCars().remove(selected);
+            carRepository.getStoredCars().remove(selected);
+            carRepository.getRaceCars().remove(selected);
         }
         setDefaultComboBoxValue();
     }
@@ -185,7 +182,7 @@ public class RaceSetupController {
         if (selected != null) {
             if (selected.getPlayerControlled()) selected.setPlayerControlled(false);
             else {
-                for (Car c : config.getRaceCars()) c.setPlayerControlled(false);
+                carRepository.getRaceCars().forEach(c -> c.setPlayerControlled(false));
                 selected.setPlayerControlled(true);
             }
             raceCarsListView.refresh();
@@ -194,13 +191,13 @@ public class RaceSetupController {
     @FXML private void onRemoveFromRace() {
         Car selected = raceCarsListView.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            config.getRaceCars().remove(selected);
-            config.getStoredCars().add(selected);
+            carRepository.getRaceCars().remove(selected);
+            carRepository.getStoredCars().add(selected);
         }
     }
     @FXML private void onClearList() {
-        config.getStoredCars().addAll(config.getRaceCars());
-        config.getRaceCars().clear();
+        carRepository.getStoredCars().addAll(carRepository.getRaceCars());
+        carRepository.getRaceCars().clear();
     }
 
     // ===================== MODE SELECTION =====================
@@ -226,12 +223,12 @@ public class RaceSetupController {
     }
     private void resetButtons() {
         selectionMode = SelectionMode.NONE;
-        highlight(placeStartButton); // resets all
+        highlight(placeStartButton);
     }
     @FXML private void onClearTrack() {
-        startPosition = null;
-        finishPosition = null;
-        checkpointPositions.clear();
+        config.setStartPosition(null);
+        config.setFinishPosition(null);
+        config.clearCheckpoints();
         raceTrackPane.getChildren().clear();
         startButtonDisableBinding.invalidate();
     }
@@ -239,14 +236,7 @@ public class RaceSetupController {
     // ===================== NAVIGATION =====================
     @FXML private void onStartRace() throws IOException {
         closeWindow();
-        RaceConfig config = new RaceConfig(
-                this.config.getRaceCars(),
-                this.config.getStoredCars(),
-                startPosition,
-                finishPosition,
-                checkpointPositions,
-                raceTrackPane
-        );
+        config.setReferenceTrackPane(raceTrackPane);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/main.fxml"));
         loader.setControllerFactory(_ -> new MainController(config));
         Parent root = loader.load();
@@ -263,11 +253,11 @@ public class RaceSetupController {
         stage.close();
     }
     private void setDefaultComboBoxValue() {
-        storedCarsComboBox.setButtonCell(new ListCell<>() {     // default value for empty ComboBox
-            @Override protected void updateItem(Car item, boolean empty) {
+        storedCarsComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Car item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty) setText("Select car");
-                else setText(item.toString());
+                setText((item == null || empty) ? "Select car" : item.toString());
             }
         });
     }

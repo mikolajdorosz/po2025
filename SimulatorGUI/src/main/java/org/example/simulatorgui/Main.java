@@ -28,7 +28,6 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(path));
         fxmlLoader.setControllerFactory(param -> {
             RaceSetupController controller = new RaceSetupController(config);
-            controller.setCarRepository(new CarRepository(config.getStoredCars(), config.getRaceCars()));
             return controller;
         });
         Parent root = fxmlLoader.load();

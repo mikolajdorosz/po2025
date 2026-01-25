@@ -30,12 +30,14 @@ public class MainController implements IRaceExitHandler {
     @FXML private VBox hudContainer;
 
     private final RaceConfig config;
+    private final CarRepository carRepository;
     private final Map<String, CarTileController> carTileControllers = new HashMap<>();
     private RaceRenderer raceRenderer;
     private RaceSession raceSession;
 
     public MainController(RaceConfig config) {
         this.config = config;
+        this.carRepository = new CarRepository(config);
     }
 
     @FXML private void initialize() throws IOException {
@@ -56,7 +58,7 @@ public class MainController implements IRaceExitHandler {
         topbarContainer.getChildren().setAll(topbar);
     }
     private void loadCarTiles() throws IOException {
-        for (Car car : config.getRaceCars()) {
+        for (Car car : carRepository.getRaceCars()) {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/org/example/simulatorgui/view/maincomponent/car-tile-main.fxml")
             );
@@ -76,7 +78,12 @@ public class MainController implements IRaceExitHandler {
         }
     }
     private void loadPlayerHUD() throws IOException {
-        Car playersCar = config.getRaceCars().stream().filter(Car::getPlayerControlled).findFirst().orElse(null);
+        Car playersCar = carRepository.getRaceCars()
+                .stream()
+                .filter(Car::getPlayerControlled)
+                .findFirst()
+                .orElse(null);
+
         if (playersCar == null) return;
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/org/example/simulatorgui/view/maincomponent/car-hud-main.fxml")
@@ -84,7 +91,6 @@ public class MainController implements IRaceExitHandler {
         Node hud = loader.load();
         CarHUDController controller = loader.getController();
         controller.setCar(playersCar);
-        //playersCar.addListener(controller);
         Platform.runLater(() -> controller.registerInput(hud.getScene()));
         hudContainer.getChildren().setAll(hud);
     }
@@ -94,22 +100,22 @@ public class MainController implements IRaceExitHandler {
                 config.getStartPosition(),
                 config.getFinishPosition(),
                 config.getCheckpointPositions(),
-                config.getRaceCars()
+                carRepository.getRaceCars()
         );
         raceSession.getRaceEngine().createRace(
-                config.getRaceCars(),
+                carRepository.getRaceCars(),
                 config.getStartPosition(),
                 config.getFinishPosition(),
                 config.getCheckpointPositions()
         );
         raceSession.start(
-                config.getRaceCars(),
+                carRepository.getRaceCars(),
                 this::onUpdate,
                 this::onRaceFinished
         );
     }
     private void onUpdate() {
-        raceRenderer.renderCars(config.getRaceCars());
+        raceRenderer.renderCars(carRepository.getRaceCars());
         updateCarTiles();
     }
     private void updateCarTiles() {
@@ -117,7 +123,7 @@ public class MainController implements IRaceExitHandler {
                 .getRaceEngine()
                 .getRace()
                 .computeCarPositions();
-        for (Car car : config.getRaceCars()) {
+        for (Car car : carRepository.getRaceCars()) {
             CarTileController controller = carTileControllers.get(car.getPlateNumber());
             if (controller == null) continue;
             int position = positions.getOrDefault(car, 1);

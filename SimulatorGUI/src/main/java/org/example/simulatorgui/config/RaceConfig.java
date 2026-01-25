@@ -12,10 +12,10 @@ import simulator.Position;
 public class RaceConfig {
     private final ObservableList<Car> raceCars;
     private final ObservableList<Car> storedCars;
-    private final Position startPosition;
-    private final Position finishPosition;
     private final List<Position> checkpointPositions;
-    private final Pane referenceTrackPane;
+    private Position startPosition;
+    private Position finishPosition;
+    private Pane referenceTrackPane;
 
     public RaceConfig(
             ObservableList<Car> raceCars,
@@ -35,16 +35,18 @@ public class RaceConfig {
     public RaceConfig() {
         this.raceCars = FXCollections.observableArrayList();
         this.storedCars = FXCollections.observableArrayList();
-        this.startPosition = null;
-        this.finishPosition = null;
         this.checkpointPositions = new ArrayList<>();
-        this.referenceTrackPane = null;
     }
 
     public ObservableList<Car> getRaceCars() { return raceCars; }
     public ObservableList<Car> getStoredCars() { return storedCars; }
     public Position getStartPosition() { return startPosition; }
+    public void setStartPosition(Position startPosition) { this.startPosition = startPosition; }
     public Position getFinishPosition() { return finishPosition; }
+    public void setFinishPosition(Position finishPosition) { this.finishPosition = finishPosition; }
     public List<Position> getCheckpointPositions() { return checkpointPositions; }
+    public void addCheckpoint(Position position) { checkpointPositions.add(position); }
+    public void clearCheckpoints() { checkpointPositions.clear(); }
     public Pane getReferenceTrackPane() { return referenceTrackPane; }
+    public void setReferenceTrackPane(Pane referenceTrackPane) { this.referenceTrackPane = referenceTrackPane; }
 }
