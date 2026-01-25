@@ -20,7 +20,7 @@ import org.example.simulatorgui.config.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class RaceSetupController {
+public class RaceSetupController implements ICarRepository {
     private enum SelectionMode { NONE, START, CHECKPOINT, FINISH }
 
     @FXML private ComboBox<Car> storedCarsComboBox;
@@ -34,12 +34,19 @@ public class RaceSetupController {
     private ObservableList<Car> storedCars = FXCollections.observableArrayList();     // Change in ObservableList automatically updates GUI
     private ObservableList<Car> raceCars = FXCollections.observableArrayList();
     private ArrayList<Position> checkpointPositions = new ArrayList<>();
-
     private SelectionMode selectionMode = SelectionMode.NONE;
     private Position startPosition;
     private Position finishPosition;
-
     private BooleanBinding startButtonDisableBinding;
+
+    @Override public ObservableList<Car> getRaceCars() { return raceCars; }
+    @Override public ObservableList<Car> getStoredCars() { return storedCars; }
+    @Override public boolean isDuplicatePlate(String plateNumber) {
+        return raceCars.stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plateNumber))
+                || storedCars.stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plateNumber));
+    }
+    @Override public void addCar(Car car) { storedCars.add(car); }
+    @Override public void selectCar(Car car) { storedCarsComboBox.getSelectionModel().select(car); }
 
     // ===================== INITIALIZATION =====================
     @FXML private void initialize() {
@@ -142,12 +149,11 @@ public class RaceSetupController {
     }
 
     // ===================== ACTIONS =====================
-    @FXML
-    private void onNewCar() throws IOException {
+    @FXML private void onNewCar() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/add-car.fxml"));
         Parent root = loader.load();                                // loads fxml
         AddCarController addCarController = loader.getController(); // gets controller
-        addCarController.setRaceSetupController(this);              // set RaceSetupController BEFORE loading CarComponentsController
+        addCarController.setCarRepository(new CarRepository(storedCars, raceCars));
         CarComponentsController carComponentsController = addCarController.showForm("car-components-form.fxml", addCarController.getCarComponentsForm());
         carComponentsController.setAddCarController(addCarController);
         addCarController.setCarComponentsController(carComponentsController);
