@@ -1,12 +1,13 @@
-package org.example.thewitcher.model.entity.character;
+package org.example.thewitcher.model.entity.monster;
 
 import org.example.thewitcher.model.entity.Entity;
 
-public abstract class Character extends Entity {
+public class Monster extends Entity {
     protected int health;
 
-    public Character(int x, int y, String name) {
+    public Monster(int x, int y, String name) {
         super(x, y, name);
+        this.health = 100;
     }
 
     public int getHealth() {  return health; }
