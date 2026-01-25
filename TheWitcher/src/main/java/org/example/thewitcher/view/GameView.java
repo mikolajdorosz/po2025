@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 import org.example.thewitcher.config.GameConfig;
 import org.example.thewitcher.model.game.Game;
+import org.example.thewitcher.view.battle.BattleView;
 import org.example.thewitcher.view.inventory.InventoryView;
 import org.example.thewitcher.view.map.MapView;
 import org.example.thewitcher.view.util.ViewportCalculator;
@@ -21,6 +22,7 @@ public class GameView {
     private final BlacksmithView blacksmithView;
     private final MerchantView merchantView;
     private final SorceressView sorceressView;
+    private final BattleView battleView;
 
     public GameView(GameConfig config) {
         this.canvas = new Canvas(config.getWindowWidth(), config.getWindowHeight());
@@ -38,6 +40,7 @@ public class GameView {
         this.blacksmithView = new BlacksmithView(gc, canvas, viewport);
         this.merchantView = new MerchantView(gc, canvas, viewport);
         this.sorceressView = new SorceressView(gc, canvas, viewport);
+        this.battleView = new BattleView(gc, canvas, viewport);
 
         this.gc.setFont(Font.font(config.getFontName(), config.getFontSize()));
     }
@@ -48,12 +51,15 @@ public class GameView {
         viewport.clear(gc, canvas);
         switch (game.getState()) {
             case MAP ->  mapView.render(game);
-            case INVENTORY, INVENTORY_ITEM_ACTION_MENU, INVENTORY_INSPECT_ITEM -> inventoryView.render(game);
+            case INVENTORY,
+                 INVENTORY_ITEM_ACTION_MENU,
+                 INVENTORY_INSPECT_ITEM -> inventoryView.render(game);
             case INTERACTION_ARMORER -> armorerView.render(game);
             case INTERACTION_INNKEEPER -> innkeeperView.render(game);
             case INTERACTION_BLACKSMITH -> blacksmithView.render(game);
             case INTERACTION_MERCHANT -> merchantView.render(game);
             case INTERACTION_SORCERESS -> sorceressView.render(game);
+            case BATTLE -> battleView.render(game);
         }
     }
 }

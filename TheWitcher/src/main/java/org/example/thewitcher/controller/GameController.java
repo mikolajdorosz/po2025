@@ -1,10 +1,12 @@
 package org.example.thewitcher.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import org.example.thewitcher.controller.character.ArmorerController;
 import org.example.thewitcher.controller.character.BlacksmithController;
 import org.example.thewitcher.model.game.Game;
+import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.view.GameView;
 
 public class GameController {
@@ -14,6 +16,8 @@ public class GameController {
     private final InventoryController inventoryController;
     private final ArmorerController armorerController;
     private final BlacksmithController blacksmithController;
+    private final BattleController battleController;
+    private AnimationTimer timer;
 
     public GameController(GameView view) {
         this.game = new Game();
@@ -22,15 +26,18 @@ public class GameController {
         this.inventoryController = new InventoryController(game);
         this.armorerController = new ArmorerController(game);
         this.blacksmithController = new BlacksmithController(game);
+        this.battleController = new BattleController(game);
     }
 
     public void start() {
-        new AnimationTimer() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 gameView.render(game);
+                if (game.getState() == GameState.GAME_OVER) { stop(); Platform.exit(); }
             }
-        }.start();
+        };
+        timer.start();
     }
     public void attachInput(Scene scene) {
         scene.setOnKeyPressed(e -> {
@@ -48,6 +55,8 @@ public class GameController {
                         game.setCurrentInteractable(null);
                     }
                 }
+                case BATTLE -> battleController.handleInput(e.getCode(), e.getText());
+                case GAME_OVER -> { timer.stop(); Platform.exit(); }
             }
         });
     }
