@@ -47,6 +47,6 @@ public class ItemActionOverlay {
         }
 
         gc.fillText("3 - Drop", textX, textY); textY += 20;
-        gc.fillText("0 - Cancel", textX, textY);
+        gc.fillText("ESC - Cancel", textX, textY);
     }
 }

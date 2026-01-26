@@ -16,6 +16,14 @@ public class BattleController {
     public BattleController(Game game) { this.game = game; }
 
     public void handleInput(KeyCode code, String charInput) {
+
+        // Clear status messages from previous turn/action
+        if (game.getBattle() != null) {
+            for (IBattleUnit ally : game.getBattle().getAllies()) {
+                ally.resetStatusMessage();
+            }
+        }
+
         switch (game.getBattle().getInputState()) {
             case ACTION -> handleAction(code);
             case ENEMY -> handleEnemy(charInput);

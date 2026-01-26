@@ -23,4 +23,6 @@ public class CharacterBattleUnit implements IBattleUnit {
     @Override public void takeDamage(int dmg) { character.setHealth(character.getHealth() - dmg); }
     @Override public void setAction(BattleAction action) { this.action = action; }
     @Override public BattleAction getAction() { return action; }
+    @Override public String getStatusMessage() { return null; }
+    @Override public void resetStatusMessage() {}
 }

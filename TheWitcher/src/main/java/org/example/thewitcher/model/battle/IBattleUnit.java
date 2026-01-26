@@ -13,4 +13,6 @@ public interface IBattleUnit {
     void takeDamage(int dmg);
     void setAction(BattleAction action);
     BattleAction getAction();
+    String getStatusMessage();
+    void resetStatusMessage();
 }

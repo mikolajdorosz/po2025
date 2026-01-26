@@ -21,7 +21,7 @@ public class Player extends Entity {
 
     public Player() {
         super(3, 11, "Geralt");
-        this.health = 500;
+        this.health = 100;
         this.coins = 100;
         this.armor = 0;
         this.weight = 0;

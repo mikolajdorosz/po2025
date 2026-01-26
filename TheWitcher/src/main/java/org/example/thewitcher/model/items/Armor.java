@@ -8,7 +8,7 @@ public class Armor extends Item implements IWearable {
         super(name);
         this.type = "armor";
         this.condition = 100;
-        this.armorValue = 25 + randBonus.nextInt(50); // 25 to 74
+        this.armorValue = 6 + randBonus.nextInt(4);
         this.price = 1000 + randPrice.nextInt(1000); // 1000 to 1999
         this.weight = (5 + randWeight.nextInt(2)) + Math.round(randWeight.nextDouble() * 10.0) / 10.0;
     }

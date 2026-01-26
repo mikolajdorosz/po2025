@@ -18,4 +18,6 @@ public class MonsterBattleUnit implements IBattleUnit {
     @Override public void takeDamage(int dmg) { monster.setHealth(monster.getHealth() - dmg); }
     @Override public void setAction(BattleAction action) { this.action = action; }
     @Override public BattleAction getAction() { return BattleAction.ATTACK; }
+    @Override public String getStatusMessage() { return null; }
+    @Override public void resetStatusMessage() {}
 }

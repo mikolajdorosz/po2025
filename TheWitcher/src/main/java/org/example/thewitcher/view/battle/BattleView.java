@@ -49,6 +49,16 @@ public class BattleView {
             case WEAPON -> "[1] SILVER  [2] STEEL  [3] DISTANCE";
         };
         drawCenteredText(text, height - fontSize, width);
+
+        // Draw Status Messages
+        gc.setFill(Color.YELLOW);
+        for (IBattleUnit ally : game.getBattle().getAllies()) {
+            if (ally.getStatusMessage() != null) {
+                drawCenteredText(ally.getStatusMessage(), height - fontSize * 2.5, width);
+                break;
+            }
+        }
+
         gc.setFont(Font.font("Consolas", FontWeight.NORMAL, 20));
     }
 

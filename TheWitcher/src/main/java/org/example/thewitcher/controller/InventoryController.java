@@ -44,7 +44,7 @@ public class InventoryController {
         }
 
         switch (code) {
-            case DIGIT0 -> game.setState(GameState.INVENTORY);
+            case ESCAPE -> game.setState(GameState.INVENTORY);
             case DIGIT1 -> {
                 game.setMessage(game.getPlayer().inspect(item));
                 game.setState(GameState.INVENTORY_INSPECT_ITEM);
