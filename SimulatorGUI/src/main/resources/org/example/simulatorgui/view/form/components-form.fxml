@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.simulatorgui.controller.form.CarComponentsController" spacing="16" style="
+        -fx-background-color: #ffffff;
+        -fx-padding: 24;
+        -fx-background-radius: 16;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 14, 0.2, 0, 4);
+    ">
+    <Label text="Components" styleClass="title-grey-label"/>
+    <Separator opacity="0.3"/>
+    <VBox spacing="12">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Engine" styleClass="input-label"/>
+            <ComboBox fx:id="engineComboBox" promptText="Select engine" HBox.hgrow="ALWAYS" styleClass="combobox"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="New" fx:id="newEngineButton" onAction="#onNewEngine" styleClass="btn, btn-blue" />
+            <Button text="Delete" fx:id="deleteEngineButton" onAction="#onDeleteEngine" styleClass="btn, btn-red-reverse"/>
+        </HBox>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Gearbox" styleClass="input-label"/>
+            <ComboBox fx:id="gearboxComboBox" promptText="Select gearbox" HBox.hgrow="ALWAYS" styleClass="combobox"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="New" fx:id="newGearboxButton" onAction="#onNewGearbox" styleClass="btn, btn-blue"/>
+            <Button text="Delete" fx:id="deleteGearboxButton" onAction="#onDeleteGearbox" styleClass="btn, btn-red-reverse"/>
+        </HBox>
+    </VBox>
+</VBox>

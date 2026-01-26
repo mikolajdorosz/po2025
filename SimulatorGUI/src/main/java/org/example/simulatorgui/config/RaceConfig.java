@@ -1,4 +1,4 @@
-package org.example.simulatorgui.config;
+package model.race;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
-import simulator.Car;
-import simulator.Position;
+import model.car.Car;
 
 public class RaceConfig {
     private final ObservableList<Car> raceCars;
