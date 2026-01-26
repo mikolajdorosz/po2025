@@ -7,11 +7,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
 import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.components.Clutch;
+import org.example.simulatorgui.model.components.Engine;
+import org.example.simulatorgui.model.components.Gearbox;
 import org.example.simulatorgui.model.util.Position;
 
 public class RaceConfig {
     private final ObservableList<Car> raceCars;
-    private final ObservableList<Car> storedCars;
+    private ObservableList<Car> storedCars;
     private final List<Position> checkpointPositions;
     private Position startPosition;
     private Position finishPosition;
@@ -26,7 +29,6 @@ public class RaceConfig {
             Pane referenceTrackPane
     ) {
         this.raceCars = raceCars;
-        this.storedCars = storedCars;
         this.startPosition = startPosition;
         this.finishPosition = finishPosition;
         this.checkpointPositions = checkpointPositions;
@@ -36,6 +38,17 @@ public class RaceConfig {
         this.raceCars = FXCollections.observableArrayList();
         this.storedCars = FXCollections.observableArrayList();
         this.checkpointPositions = new ArrayList<>();
+
+        storedCars.add(new Car("RPR10101", "Ford", 3005.12, 180,
+                new Position(0, 0),
+                new Engine(3200, "Cummins 6.7L TurboDiesel", 444.97, 15000),
+                new Gearbox(6, "manual", "TorqShift 6R140", 220, 8000,
+                        new Clutch("Clutch", 35, 2000))));
+        storedCars.add(new Car("RPR101401", "Ford", 3005.12, 180,
+                new Position(0, 0),
+                new Engine(3200, "Cummins 6.7L TurboDiesel", 444.97, 15000),
+                new Gearbox(6, "manual", "TorqShift 6R140", 220, 8000,
+                        new Clutch("Clutch", 35, 2000))));
     }
 
     public ObservableList<Car> getRaceCars() { return raceCars; }

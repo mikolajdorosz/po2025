@@ -1,10 +1,14 @@
 package org.example.simulatorgui.model.race;
 
+import org.example.simulatorgui.model.AIDriverController;
+import org.example.simulatorgui.model.CarInitializer;
 import org.example.simulatorgui.model.car.Car;
 
 public class RaceEngine {
     private Race race;
     private boolean running;
+    private final CarInitializer carInitializer = new CarInitializer();
+    private final AIDriverController aiController = new AIDriverController();
 
     public RaceEngine() { this.running = false; }
 
@@ -20,31 +24,18 @@ public class RaceEngine {
         );
     }
     public void start() {
+        if (race == null) throw new IllegalStateException("Race must be created before starting");
         running = true;
-        initCars();
-    }
-    private void initCars() {
-        for (Car car : race.getCars()) {
-            car.resetCar(true);
-            car.setCurrentTarget(
-                race.getCheckpoints().isEmpty()
-                    ? race.getFinish()
-                    : race.getCheckpoints().getFirst()
-            );
-            if (!car.getPlayerControlled()) {
-                car.turnOn();
-                car.getGearbox().setCurrentGear(1);
-            }
-        }
+        carInitializer.initialize(race);
     }
     public void update() {
         if (!running) return;
         race.updateProgress();
-        for (Car car : race.getCars()) if (!car.getPlayerControlled()) car.aiDriving(car.getCurrentTarget());
+        aiController.updateAI(race);
         race.checkFinish();
     }
     public void stop() {
         running = false;
-        for (Car car : race.getCars()) car.turnOff();
+        race.getCars().forEach(Car::turnOff);
     }
 }
