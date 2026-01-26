@@ -1,7 +1,12 @@
 package org.example.thewitcher.model.entity.player;
 
+import org.example.thewitcher.model.battle.IBattleUnit;
+import org.example.thewitcher.model.battle.PlayerBattleUnit;
 import org.example.thewitcher.model.entity.Entity;
 import org.example.thewitcher.model.items.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends Entity {
     protected int health;
@@ -12,6 +17,7 @@ public class Player extends Entity {
 
     protected Equipment equipment;
     protected AppliedEquipment appliedEquipment;
+    private List<IBattleUnit> allies;
 
     public Player() {
         super(3, 11, "Geralt");
@@ -25,6 +31,8 @@ public class Player extends Entity {
 
         initializeEquipment();
         updateWeight();
+        allies = new ArrayList<>();
+        allies.add(new PlayerBattleUnit(this));
     }
 
     private void initializeEquipment() {
@@ -59,6 +67,8 @@ public class Player extends Entity {
 
     public Equipment getEquipment() { return equipment; }
     public AppliedEquipment getAppliedEquipment() { return appliedEquipment; }
+    public List<IBattleUnit> getAllies() { return allies; }
+    public void setAllies(List<IBattleUnit> allies) { this.allies = allies; }
 
     public void equip() {}
 

@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.model.map.Location;
+import org.example.thewitcher.model.map.data.ObjectDrawings;
+import org.example.thewitcher.model.map.point.Point;
 import org.example.thewitcher.view.util.ViewportCalculator;
 
 public class MapView {
@@ -25,8 +27,12 @@ public class MapView {
         for (int y = 0; y < viewport.getViewHeight(); y++) {
             for (int x = 0; x < viewport.getViewWidth(); x++) {
                 if (!isInBounds(location, viewport.getLocationX(x), viewport.getLocationY(y))) continue;
-                char marker = location.getPoint(viewport.getLocationX(x), viewport.getLocationY(y)).getMarker();
-                if (viewport.getLocationX(x) == player.getX() && viewport.getLocationY(y) == player.getY()) marker = 'G';
+                Point point = location.getPoint(viewport.getLocationX(x), viewport.getLocationY(y));
+                char marker = point.getMarker();
+                if ((point.getMarker() == ObjectDrawings.wolf() || point.getMarker() == ObjectDrawings.ghul() || point.getMarker() == ObjectDrawings.bandit())
+                    && !location.getEnemies().stream().anyMatch(enemy -> enemy.getEntity().getX() == point.getX() && enemy.getEntity().getY() == point.getY()))
+                    marker = ObjectDrawings.loot();
+                if (viewport.getLocationX(x) == player.getX() && viewport.getLocationY(y) == player.getY()) marker = ObjectDrawings.player();
                 gc.fillText(String.valueOf(marker), x * viewport.getPointWidth(), (y + 1) * viewport.getPointHeight());
             }
         }

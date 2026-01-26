@@ -1,5 +1,8 @@
 package org.example.thewitcher.model.game;
 
+import org.example.thewitcher.model.battle.Battle;
+import org.example.thewitcher.model.battle.BattleDetector;
+import org.example.thewitcher.model.battle.IBattleUnit;
 import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.items.AppliedEquipment;
 import org.example.thewitcher.model.items.Item;
@@ -13,12 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+    private static final int BATTLE_TRIGGER_RADIUS = 2;
+    private static final int BATTLE_ENEMIES_RADIUS = 5;
+
     private Player player;
     private Location location;
     private GameState state;
     private Interactable currentInteractable;
     private Item selectedItem;
     private String message = "";
+    private Battle battle;
 
     public Game() {
         player = new Player();
@@ -52,6 +59,8 @@ public class Game {
 
     public Player getPlayer() { return player; }
     public Location getLocation() { return location; }
+    public Battle getBattle() { return battle; }
+    public void setBattle(Battle battle) { this.battle = battle; }
 
     public void movePlayer(int deltaX, int deltaY) {
         int newX = player.getX() + deltaX;
@@ -61,6 +70,18 @@ public class Game {
         if (!location.getPoint(newX, newY).isObstacle()) {
             player.setX(newX);
             player.setY(newY);
+        }
+        checkBattle();
+    }
+
+    private void checkBattle() {
+        for (IBattleUnit enemy : location.getEnemies()) {
+            if (BattleDetector.searchForEnemy(player, enemy, BATTLE_TRIGGER_RADIUS)) {
+                state = GameState.BATTLE;
+                battle = new Battle(player.getAllies(), BattleDetector.gatherEnemies(player, location.getEnemies(), BATTLE_ENEMIES_RADIUS));
+                if (!battle.isPlayerAlive()) { state = GameState.GAME_OVER; }
+                return;
+            }
         }
     }
 

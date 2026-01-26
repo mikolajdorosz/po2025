@@ -7,8 +7,15 @@ import org.example.thewitcher.model.entity.character.Blacksmith;
 import org.example.thewitcher.model.entity.character.Innkeeper;
 import org.example.thewitcher.model.entity.character.Merchant;
 import org.example.thewitcher.model.entity.character.Sorceress;
+import org.example.thewitcher.model.battle.CharacterBattleUnit;
+import org.example.thewitcher.model.battle.IBattleUnit;
+import org.example.thewitcher.model.battle.MonsterBattleUnit;
+import org.example.thewitcher.model.entity.character.Bandit;
+import org.example.thewitcher.model.entity.monster.Ghul;
+import org.example.thewitcher.model.entity.monster.Wolf;
 import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.map.data.MapObject;
+import org.example.thewitcher.model.map.data.ObjectDrawings;
 import org.example.thewitcher.model.map.data.ObjectRegistry;
 import org.example.thewitcher.model.map.point.Point;
 
@@ -26,9 +33,11 @@ public abstract class Location {
     protected int width;
     protected int height;
     protected List<Entity> entities;
+    protected List<IBattleUnit> enemies;
 
     public Location(Player player, InputStream textFile) {
         this.player = player;
+        this.enemies = new ArrayList<>();
         loadMap(textFile);
     }
 
@@ -36,6 +45,7 @@ public abstract class Location {
     public int getHeight() { return height; }
     public Point getPoint(int x, int y) { return location[y][x]; }
     public List<Entity> getEntities() { return entities; }
+    public List<IBattleUnit> getEnemies() { return enemies; }
 
     private void loadMap(InputStream textFile) {
         List<String> lines = readFile(textFile);
@@ -100,7 +110,12 @@ public abstract class Location {
     }
     private void placeSinglePointObject(MapObject object, int x, int y, int value) {
         if (location[y][x] == null) location[y][x] = new Point(object.getSinglePoint(), x, y, value > 0);
-        else location[y][x].setOverlay(object.getSinglePoint(), value > 0);
+        else {
+            location[y][x].setOverlay(object.getSinglePoint(), value > 0);
+        }
+        if (location[y][x].getMarker() == ObjectDrawings.bandit()) enemies.add(new CharacterBattleUnit(new Bandit(location[y][x].getX(), location[y][x].getY())));
+        if (location[y][x].getMarker() == ObjectDrawings.ghul()) enemies.add(new MonsterBattleUnit(new Ghul(location[y][x].getX(), location[y][x].getY())));
+        if (location[y][x].getMarker() == ObjectDrawings.wolf()) enemies.add(new MonsterBattleUnit(new Wolf(location[y][x].getX(), location[y][x].getY())));
     }
 
     private void spawnEntities() {
