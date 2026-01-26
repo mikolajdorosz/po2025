@@ -16,12 +16,7 @@ public class RaceEngine {
     public boolean getRunning() { return running; }
 
     public void createRace(RaceSetup setup) {
-        race = new Race(
-                setup.cars(),
-                setup.start(),
-                setup.finish(),
-                setup.checkpoints()
-        );
+        race = new Race(setup);
     }
     public void start() {
         if (race == null) throw new IllegalStateException("Race must be created before starting");
