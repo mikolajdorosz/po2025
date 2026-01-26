@@ -1,12 +1,11 @@
-package org.example.simulatorgui.controller.maincomponent;
+package org.example.simulatorgui.controller.race;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import simulator.Car;
-import simulator.Listener;
+import org.example.simulatorgui.model.car.Car;
 
 public class CarHUDController {
     @FXML private Label rpmLabel;

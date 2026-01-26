@@ -1,12 +1,12 @@
-package org.example.simulatorgui.controller.addcarform;
+package org.example.simulatorgui.controller.form;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import org.example.simulatorgui.controller.AddCarController;
-import simulator.*;
+import org.example.simulatorgui.model.components.CarComponentsRepository;
+import org.example.simulatorgui.model.components.Clutch;
+import org.example.simulatorgui.model.util.Utils;
 
 public class ClutchController {
     @FXML private TextField clutchNameTextField;
@@ -15,10 +15,10 @@ public class ClutchController {
     @FXML private Button confirmClutchButton;
 
     private final CarComponentsRepository carComponentsRepository = CarComponentsRepository.getInstance();
-    private AddCarController addCarController;
+    private NewCarController addCarController;
     private GearboxController gearboxController;
 
-    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
+    public void setAddCarController(NewCarController addCarController) { this.addCarController = addCarController; }
     public void setGearboxController(GearboxController gearboxController) { this.gearboxController = gearboxController; }
 
     @FXML private void initialize() { Platform.runLater(this::validateInput); }
@@ -49,7 +49,7 @@ public class ClutchController {
     @FXML private void onConfirm() {
         Clutch clutch = getClutchFromInput();
         if (clutch == null) return;
-        CarComponentsStorage.addClutch(clutch);
+        CarComponentsRepository.getInstance().addClutchIfAbsent(clutch);
         carComponentsRepository.addClutchIfAbsent(clutch);
         gearboxController.getClutchComboBox().getSelectionModel().select(clutch);
         addCarController.closeForm(addCarController.getClutchForm(), addCarController.getEngineGearboxForm());

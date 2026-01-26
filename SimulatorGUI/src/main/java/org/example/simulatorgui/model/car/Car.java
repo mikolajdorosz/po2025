@@ -1,12 +1,12 @@
-package model.car;
+package org.example.simulatorgui.model.car;
 
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
-import model.util.Position;
-import model.components.Clutch;
-import model.components.Engine;
-import model.components.Gearbox;
-import model.util.Utils;
+import org.example.simulatorgui.model.util.Position;
+import org.example.simulatorgui.model.components.Clutch;
+import org.example.simulatorgui.model.components.Engine;
+import org.example.simulatorgui.model.components.Gearbox;
+import org.example.simulatorgui.model.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

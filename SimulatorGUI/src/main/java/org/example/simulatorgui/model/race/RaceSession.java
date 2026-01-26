@@ -1,7 +1,7 @@
-package model.race;
+package org.example.simulatorgui.model.race;
 
 import javafx.animation.AnimationTimer;
-import model.car.Car;
+import org.example.simulatorgui.model.car.Car;
 
 import java.util.List;
 

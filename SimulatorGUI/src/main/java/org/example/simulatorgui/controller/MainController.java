@@ -10,16 +10,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.example.simulatorgui.controller.form.AddCarController;
-import org.example.simulatorgui.controller.form.CarComponentsController;
+import org.example.simulatorgui.model.car.CarRepository;
+import org.example.simulatorgui.config.RaceConfig;
+import org.example.simulatorgui.controller.form.NewCarController;
+import org.example.simulatorgui.controller.form.ComponentsController;
 import org.example.simulatorgui.controller.race.RaceController;
-import simulator.Car;
-import simulator.Position;
-import org.example.simulatorgui.config.*;
+import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.util.Position;
 
 import java.io.IOException;
 
-public class RaceSetupController {
+public class MainController {
     private enum SelectionMode { NONE, START, CHECKPOINT, FINISH }
 
     @FXML private ComboBox<Car> storedCarsComboBox;
@@ -35,7 +36,7 @@ public class RaceSetupController {
     private SelectionMode selectionMode = SelectionMode.NONE;
     private BooleanBinding startButtonDisableBinding;
 
-    public RaceSetupController(RaceConfig config) {
+    public MainController(RaceConfig config) {
         this.config = config;
         this.carRepository = new CarRepository(config);
     }
@@ -139,14 +140,14 @@ public class RaceSetupController {
 
     // ===================== ACTIONS =====================
     @FXML private void onNewCar() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/add-car.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/form/new-car-view.fxml"));
         Parent root = loader.load();
 
-        AddCarController addCarController = loader.getController();
+        NewCarController addCarController = loader.getController();
         addCarController.setCarRepository(carRepository);
 
-        CarComponentsController carComponentsController =
-                addCarController.showForm("car-components-form.fxml", addCarController.getCarComponentsForm());
+        ComponentsController carComponentsController =
+                addCarController.showForm("components-form.fxml", addCarController.getCarComponentsForm());
 
         carComponentsController.setAddCarController(addCarController);
         addCarController.setCarComponentsController(carComponentsController);
@@ -236,7 +237,7 @@ public class RaceSetupController {
     @FXML private void onStartRace() throws IOException {
         closeWindow();
         config.setReferenceTrackPane(raceTrackPane);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/main.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/race/race-view.fxml"));
         loader.setControllerFactory(_ -> new RaceController(config));
         Parent root = loader.load();
         Stage raceStage = new Stage();

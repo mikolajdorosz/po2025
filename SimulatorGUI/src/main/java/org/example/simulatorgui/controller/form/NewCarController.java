@@ -8,13 +8,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.simulatorgui.controller.CarRepository;
-import simulator.*;
+import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.car.CarRepository;
+import org.example.simulatorgui.model.components.Engine;
+import org.example.simulatorgui.model.components.Gearbox;
+import org.example.simulatorgui.model.util.Position;
+import org.example.simulatorgui.model.util.Utils;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public class AddCarController {
+public class NewCarController {
     @FXML private TextField carModelTextField;
     @FXML private TextField carPlateNumberTextField;
     @FXML private TextField carWeightTextField;
@@ -26,7 +30,7 @@ public class AddCarController {
     @FXML private VBox engineGearboxForm;
     @FXML private VBox clutchForm;
 
-    private CarComponentsController carComponentsController;
+    private ComponentsController carComponentsController;
     private CarRepository carRepository;
 
     public VBox getCarBasicInfoForm() { return carBasicInfoForm; }
@@ -35,7 +39,7 @@ public class AddCarController {
     public VBox getClutchForm() { return clutchForm; }
 
     public void setCarRepository(CarRepository carRepository) { this.carRepository = carRepository; }
-    public void setCarComponentsController(CarComponentsController carComponentsController) {
+    public void setCarComponentsController(ComponentsController carComponentsController) {
         this.carComponentsController = carComponentsController;
         initializeValidation();
     }
@@ -80,7 +84,7 @@ public class AddCarController {
 
     // ===================== ACTIONS =====================
     public <T> T showForm(String view, VBox toShow) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/addcarform/" + view));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/simulatorgui/view/form/" + view));
         Node form = loader.load();
         T controller = loader.getController();
         toShow.getChildren().setAll(form); // Placing form in add_car view

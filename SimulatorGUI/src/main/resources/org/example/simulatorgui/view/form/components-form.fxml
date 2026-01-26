@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.simulatorgui.controller.form.CarComponentsController" spacing="16" style="
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.simulatorgui.controller.form.ComponentsController" spacing="16" style="
         -fx-background-color: #ffffff;
         -fx-padding: 24;
         -fx-background-radius: 16;

@@ -1,4 +1,4 @@
-package model.util;
+package org.example.simulatorgui.model.util;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;

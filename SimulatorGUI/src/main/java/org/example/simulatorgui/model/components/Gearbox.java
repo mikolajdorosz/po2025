@@ -1,4 +1,4 @@
-package model.components;
+package org.example.simulatorgui.model.components;
 
 public class Gearbox extends Component {
     private String type;

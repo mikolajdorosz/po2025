@@ -1,4 +1,4 @@
-package org.example.simulatorgui;
+package org.example.simulatorgui.app;
 
 import javafx.application.Application;
 

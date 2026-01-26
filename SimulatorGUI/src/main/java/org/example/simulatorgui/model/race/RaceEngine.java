@@ -1,9 +1,6 @@
-package model.race;
+package org.example.simulatorgui.model.race;
 
-import model.car.Car;
-import model.util.Position;
-
-import java.util.List;
+import org.example.simulatorgui.model.car.Car;
 
 public class RaceEngine {
     private Race race;

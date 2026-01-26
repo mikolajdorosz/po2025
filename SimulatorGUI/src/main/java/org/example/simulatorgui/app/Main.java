@@ -1,4 +1,4 @@
-package org.example.simulatorgui;
+package org.example.simulatorgui.app;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        openRaceSetupWindow("view/main-view.fxml", stage, new RaceConfig());
+        openRaceSetupWindow("/org/example/simulatorgui/view/main-view.fxml", stage, new RaceConfig());
     }
     public static void openRaceSetupWindow(
             String path,

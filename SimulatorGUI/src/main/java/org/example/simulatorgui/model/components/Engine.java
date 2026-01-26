@@ -1,4 +1,4 @@
-package model.components;
+package org.example.simulatorgui.model.components;
 
 public class Engine extends Component {
     private int RPM;

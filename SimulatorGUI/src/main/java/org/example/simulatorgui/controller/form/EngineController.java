@@ -1,11 +1,12 @@
-package org.example.simulatorgui.controller.addcarform;
+package org.example.simulatorgui.controller.form;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import org.example.simulatorgui.controller.AddCarController;
-import simulator.*;
+import org.example.simulatorgui.model.components.CarComponentsRepository;
+import org.example.simulatorgui.model.components.Engine;
+import org.example.simulatorgui.model.util.Utils;
 
 public class EngineController {
     @FXML private TextField engineNameTextField;
@@ -15,11 +16,11 @@ public class EngineController {
     @FXML private Button confirmEngineButton;
 
     private final CarComponentsRepository carComponentsRepository = CarComponentsRepository.getInstance();
-    private AddCarController addCarController;
-    private CarComponentsController carComponentsController;
+    private NewCarController addCarController;
+    private ComponentsController carComponentsController;
 
-    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
-    public void setCarComponentsController(CarComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
+    public void setAddCarController(NewCarController addCarController) { this.addCarController = addCarController; }
+    public void setCarComponentsController(ComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
 
     @FXML private void initialize() { Platform.runLater(this::validateInput); }
     private void validateInput() {

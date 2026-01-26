@@ -1,8 +1,8 @@
-package model.race;
+package org.example.simulatorgui.model.race;
 
-import model.car.Car;
-import model.util.Position;
-import model.util.Utils;
+import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.util.Position;
+import org.example.simulatorgui.model.util.Utils;
 
 import java.util.*;
 

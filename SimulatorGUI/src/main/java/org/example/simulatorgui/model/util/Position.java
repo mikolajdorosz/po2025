@@ -1,4 +1,4 @@
-package model.util;
+package org.example.simulatorgui.model.util;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;

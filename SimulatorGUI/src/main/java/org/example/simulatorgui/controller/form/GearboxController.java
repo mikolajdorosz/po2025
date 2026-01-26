@@ -1,12 +1,14 @@
-package org.example.simulatorgui.controller.addcarform;
+package org.example.simulatorgui.controller.form;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import org.example.simulatorgui.controller.AddCarController;
-import simulator.*;
+import org.example.simulatorgui.model.components.CarComponentsRepository;
+import org.example.simulatorgui.model.components.Clutch;
+import org.example.simulatorgui.model.components.Gearbox;
+import org.example.simulatorgui.model.util.Utils;
 
 import java.io.IOException;
 
@@ -25,12 +27,12 @@ public class GearboxController {
 
     private final CarComponentsRepository carComponentsRepository = CarComponentsRepository.getInstance();
     private StringProperty gearboxTypeProperty = new SimpleStringProperty();
-    private AddCarController addCarController;
-    private CarComponentsController carComponentsController;
+    private NewCarController addCarController;
+    private ComponentsController carComponentsController;
 
     public ComboBox<Clutch> getClutchComboBox() { return clutchComboBox; }
-    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
-    public void setCarComponentsController(CarComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
+    public void setAddCarController(NewCarController addCarController) { this.addCarController = addCarController; }
+    public void setCarComponentsController(ComponentsController carComponentsController) { this.carComponentsController = carComponentsController; }
 
     @FXML
     private void initialize() {

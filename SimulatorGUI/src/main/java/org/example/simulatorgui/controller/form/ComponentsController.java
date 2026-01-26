@@ -3,20 +3,22 @@ package org.example.simulatorgui.controller.form;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
-import simulator.*;
+import org.example.simulatorgui.model.components.CarComponentsRepository;
+import org.example.simulatorgui.model.components.Engine;
+import org.example.simulatorgui.model.components.Gearbox;
 
 import java.io.IOException;
 
-public class CarComponentsController {
+public class ComponentsController {
     @FXML private ComboBox<Engine> engineComboBox;
     @FXML private ComboBox<Gearbox> gearboxComboBox;
 
     private final CarComponentsRepository carComponentsRepository = CarComponentsRepository.getInstance();
-    private AddCarController addCarController;
+    private NewCarController addCarController;
 
     public ComboBox<Engine> getEngineComboBox() { return engineComboBox; }
     public ComboBox<Gearbox> getGearboxComboBox() { return gearboxComboBox; }
-    public void setAddCarController(AddCarController addCarController) { this.addCarController = addCarController; }
+    public void setAddCarController(NewCarController addCarController) { this.addCarController = addCarController; }
 
     @FXML private void initialize() {
         engineComboBox.setItems(carComponentsRepository.getEngines());

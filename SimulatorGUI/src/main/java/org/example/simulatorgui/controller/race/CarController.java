@@ -1,15 +1,14 @@
-package org.example.simulatorgui.controller.maincomponent;
+package org.example.simulatorgui.controller.race;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import simulator.Car;
-import simulator.Listener;
-import simulator.Utils;
+import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.util.Utils;
 
-public class CarTileController {
+public class CarController {
     @FXML private Label plateNumberLabel;
     @FXML private Label modelLabel;
     @FXML private ImageView carImageView;

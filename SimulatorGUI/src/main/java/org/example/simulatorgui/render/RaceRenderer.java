@@ -1,10 +1,10 @@
-package org.example.simulatorgui.renderer;
+package org.example.simulatorgui.render;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import simulator.Car;
-import simulator.Position;
+import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.util.Position;
 
 import java.util.HashMap;
 import java.util.List;

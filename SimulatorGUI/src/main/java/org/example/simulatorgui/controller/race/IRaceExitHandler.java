@@ -1,4 +1,4 @@
-package org.example.simulatorgui;
+package org.example.simulatorgui.controller.race;
 
 public interface IRaceExitHandler {
     void onExitRequested();

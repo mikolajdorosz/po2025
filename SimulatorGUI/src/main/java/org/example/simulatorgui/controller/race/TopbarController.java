@@ -1,10 +1,8 @@
-package org.example.simulatorgui.controller.maincomponent;
+package org.example.simulatorgui.controller.race;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import org.example.simulatorgui.Main;
-import org.example.simulatorgui.controller.MainController;
 
 import java.io.IOException;
 

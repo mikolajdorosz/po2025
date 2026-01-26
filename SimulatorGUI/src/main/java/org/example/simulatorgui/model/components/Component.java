@@ -1,4 +1,4 @@
-package model.components;
+package org.example.simulatorgui.model.components;
 
 public abstract class Component {
     private String name;
