@@ -49,4 +49,10 @@ public abstract class PlayerDecorator extends Player {
     public Equipment getEquipment() { return player.getEquipment(); }
     @Override
     public AppliedEquipment getAppliedEquipment() { return player.getAppliedEquipment(); }
+
+    @Override
+    public java.util.List<org.example.thewitcher.model.battle.IBattleUnit> getAllies() { return player.getAllies(); }
+    @Override
+    public void setAllies(java.util.List<org.example.thewitcher.model.battle.IBattleUnit> allies) { player.setAllies(allies); }
+
 }

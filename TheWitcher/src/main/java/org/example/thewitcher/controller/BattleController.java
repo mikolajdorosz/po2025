@@ -56,6 +56,13 @@ public class BattleController {
         game.getLocation().getEnemies().removeAll(result.defeatedEnemies());
         game.getPlayer().getAllies().removeAll(result.defeatedAllies());
 
+        // Remove dead allies from map
+        for (IBattleUnit unit : result.defeatedAllies()) {
+            if (unit.getEntity() instanceof Ally ally) {
+                game.getLocation().removeEntity(ally);
+            }
+        }
+
         // Recruit surviving allies
         for (IBattleUnit unit : game.getBattle().getAllies()) {
             if (unit.getEntity() instanceof Ally ally && !game.getPlayer().getAllies().contains(unit)) {
