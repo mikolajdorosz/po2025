@@ -7,6 +7,8 @@ import org.example.thewitcher.model.battle.BattleResult;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.model.items.WeaponType;
+import org.example.thewitcher.model.battle.IBattleUnit;
+import org.example.thewitcher.model.entity.character.Ally;
 
 public class BattleController {
     private final Game game;
@@ -53,6 +55,15 @@ public class BattleController {
         BattleResult result = game.getBattle().getResult();
         game.getLocation().getEnemies().removeAll(result.defeatedEnemies());
         game.getPlayer().getAllies().removeAll(result.defeatedAllies());
+
+        // Recruit surviving allies
+        for (IBattleUnit unit : game.getBattle().getAllies()) {
+            if (unit.getEntity() instanceof Ally ally && !game.getPlayer().getAllies().contains(unit)) {
+                game.getPlayer().getAllies().add(unit);
+                game.getLocation().removeEntity(ally);
+            }
+        }
+
         game.setBattle(null);
         game.setState(GameState.MAP);
     }

@@ -10,6 +10,7 @@ public final class ObjectDrawings {
     public static char bandit() { return 'b'; }
     public static char ghul() { return 'g'; }
     public static char wolf() { return 'w'; }
+    public static char ally() { return 'W'; }
 
     public static char path() { return '.'; }
     public static char grass() { return ' '; }

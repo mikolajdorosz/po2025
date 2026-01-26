@@ -3,10 +3,13 @@ package org.example.thewitcher.model.game;
 import org.example.thewitcher.model.battle.Battle;
 import org.example.thewitcher.model.battle.BattleDetector;
 import org.example.thewitcher.model.battle.IBattleUnit;
+import org.example.thewitcher.model.entity.Entity;
 import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.items.AppliedEquipment;
 import org.example.thewitcher.model.items.Item;
 import org.example.thewitcher.model.map.Location;
+import org.example.thewitcher.model.entity.character.Ally;
+import org.example.thewitcher.model.battle.CharacterBattleUnit;
 import org.example.thewitcher.model.map.Velen;
 import org.example.thewitcher.model.map.TestMap;
 
@@ -30,7 +33,7 @@ public class Game {
     public Game() {
         player = new Player();
         location = new Velen(player);
-        location = new TestMap(player);
+        //location = new TestMap(player);
         state = GameState.MAP;
     }
 
@@ -78,7 +81,19 @@ public class Game {
         for (IBattleUnit enemy : location.getEnemies()) {
             if (BattleDetector.searchForEnemy(player, enemy, BATTLE_TRIGGER_RADIUS)) {
                 state = GameState.BATTLE;
-                battle = new Battle(player.getAllies(), BattleDetector.gatherEnemies(player, location.getEnemies(), BATTLE_ENEMIES_RADIUS));
+
+                // Gather nearby allies
+                List<IBattleUnit> battleAllies = new ArrayList<>(player.getAllies());
+                for (Entity entity : location.getEntities()) {
+                    if (entity instanceof Ally ally) {
+                        if (BattleDetector.searchForEnemy(player, new CharacterBattleUnit(ally), BATTLE_ENEMIES_RADIUS)) {
+                            battleAllies.add(new CharacterBattleUnit(ally));
+                        }
+                    }
+                }
+
+                battle = new Battle(battleAllies, BattleDetector.gatherEnemies(player, location.getEnemies(), BATTLE_ENEMIES_RADIUS));
+
                 if (!battle.isPlayerAlive()) { state = GameState.GAME_OVER; }
                 return;
             }

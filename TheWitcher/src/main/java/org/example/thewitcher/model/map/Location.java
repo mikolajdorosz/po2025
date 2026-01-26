@@ -8,6 +8,7 @@ import org.example.thewitcher.model.entity.character.Innkeeper;
 import org.example.thewitcher.model.entity.character.Merchant;
 import org.example.thewitcher.model.entity.character.Sorceress;
 import org.example.thewitcher.model.battle.CharacterBattleUnit;
+import org.example.thewitcher.model.entity.character.Ally;
 import org.example.thewitcher.model.battle.IBattleUnit;
 import org.example.thewitcher.model.battle.MonsterBattleUnit;
 import org.example.thewitcher.model.entity.character.Bandit;
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Location {
     protected Point[][] location;
@@ -58,6 +60,7 @@ public abstract class Location {
         placeMultis(baseFilled);
         placeSingles();
         spawnEntities();
+        spawnAllies();
     }
 
     private List<String> readFile(InputStream inputStream) {
@@ -134,6 +137,58 @@ public abstract class Location {
                     default -> null;
                 };
                 if (entity != null) entities.add(entity);
+            }
+        }
+    }
+
+    private void spawnAllies() {
+        // Iterate enemies list. For each enemy, small chance to spawn an ally nearby.
+
+        List<IBattleUnit> currentEnemies = new ArrayList<>(enemies);
+        for (IBattleUnit unit : currentEnemies) {
+            if (ThreadLocalRandom.current().nextInt(100) < 40) { // 40% chance per enemy
+                Entity enemy = unit.getEntity();
+                spawnAllyNear(enemy.getX(), enemy.getY());
+            }
+        }
+    }
+
+    private void spawnAllyNear(int x, int y) {
+        // Try to find a valid spot around x,y
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dy = -2; dy <= 2; dy++) {
+                int nx = x + dx;
+                int ny = y + dy;
+                if (nx >= 0 && ny >= 0 && nx < width && ny < height) {
+                    if (location[ny][nx] != null && !location[ny][nx].isObstacle() && location[ny][nx].getMarker() == ObjectDrawings.grass()) {
+                        // Check if occupied by another entity
+                        boolean occupied = false;
+                        for(Entity e : entities) if(e.getX() == nx && e.getY() == ny) occupied = true;
+                        if(!occupied) {
+                            addAlly(nx, ny);
+                            return; // Spawn one and done for this trigger
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void addAlly(int x, int y) {
+        Ally ally = new Ally(x, y);
+        entities.add(ally);
+        // Updating point marker
+        if (location[y][x] != null) {
+            location[y][x].setOverlay(ObjectDrawings.ally(), false);
+        }
+    }
+
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
+        if (entity.getX() >= 0 && entity.getX() < width && entity.getY() >= 0 && entity.getY() < height) {
+            Point p = location[entity.getY()][entity.getX()];
+            if (p != null && p.getMarker() == ObjectDrawings.ally()) {
+                p.setOverlay(ObjectDrawings.grass(), false); // Restore to grass
             }
         }
     }

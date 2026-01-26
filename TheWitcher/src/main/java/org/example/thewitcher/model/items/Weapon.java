@@ -7,7 +7,7 @@ public abstract class Weapon extends Item implements IWearable{
     public Weapon(String name) {
         super(name);
         this.condition = 100;
-        this.damage = 5 + randBonus.nextInt(5);
+        this.damage = 15 + randBonus.nextInt(5);
         this.price = 500 + randPrice.nextInt(1000); // 500 to 1499
         this.weight = (2 + randWeight.nextInt(2)) + Math.round(randWeight.nextDouble() * 10.0) / 10.0;
     }
