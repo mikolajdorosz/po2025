@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RaceController implements IRaceExitHandler {
+public class RaceController {
     @FXML private Pane raceTrackPane;
     @FXML private VBox topbarContainer;
     @FXML private VBox competitorsContainer;
@@ -40,8 +40,8 @@ public class RaceController implements IRaceExitHandler {
 
     @FXML private void initialize() throws IOException {
         loadTopbar();
-        loadPlayerHUD();
         loadCarTiles();
+        loadPlayerHUD();
         raceRenderer = new RaceRenderer(raceTrackPane);
         raceSession = new RaceSession();
         Platform.runLater(this::startRace);
@@ -84,6 +84,7 @@ public class RaceController implements IRaceExitHandler {
         Platform.runLater(() -> controller.registerInput(hud.getScene()));
         hudContainer.getChildren().setAll(hud);
     }
+    // BRIDGE WITH MODEL
     private void startRace() {
         raceRenderer.renderTrack(
                 config.getReferenceTrackPane(),
@@ -92,10 +93,8 @@ public class RaceController implements IRaceExitHandler {
                 config.getCheckpointPositions(),
                 carRepository.getRaceCars()
         );
-        RaceSetup raceSetup = buildRaceSetup(config);
-        raceSession.getRaceEngine().createRace(raceSetup);
         raceSession.start(
-                carRepository.getRaceCars(),
+                buildRaceSetup(config),
                 this::onUpdate,
                 this::onRaceFinished
         );

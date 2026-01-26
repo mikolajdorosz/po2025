@@ -6,12 +6,12 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.car.ICarListener;
 import org.example.simulatorgui.model.util.Utils;
 
-public class CarController {
+public class CarController implements ICarListener {
     @FXML private Label plateNumberLabel;
     @FXML private Label modelLabel;
-    @FXML private ImageView carImageView;
     @FXML private Label positionLabel;
     @FXML private Label timeLabel;
     @FXML private Label scoreLabel;
@@ -29,8 +29,11 @@ public class CarController {
     private int lastGear;
 
     // ===================== SETUP =====================
-    public void setCar(Car car) { this.car = car; refresh(1); }
-    public void setCarImage(Image image) { carImageView.setImage(image); }
+    public void setCar(Car car) {
+        if (this.car != null) this.car.removeListener(this);
+        this.car = car;
+        car.addListener(this);
+    }
 
     // ===================== UPDATE =====================
     public void refresh(int position) {
@@ -40,10 +43,10 @@ public class CarController {
             lastRaceTime = car.getRaceTime();
             lastScore = car.getFinalScore();
             lastSpeed = car.getSpeed();
-            lastRPM = car.getEngine().getRPM();
+            lastRPM = car.getEngine().getRpm();
             lastGear = car.getGearbox().getCurrentGear();
         }
-        Platform.runLater(this::updateView);
+        updateView();
     }
     private void updateView() {
         plateNumberLabel.setText(car.getPlateNumber());
@@ -59,4 +62,7 @@ public class CarController {
         playerControlledLabel.setVisible(isPlayer);
         playerControlledLabel.setManaged(isPlayer);
     }
+
+    @Override public void onCarUpdated(Car car) { refresh(lastPosition); }
+    @Override public void onCarFinished(Car car) { refresh(lastPosition); }
 }
