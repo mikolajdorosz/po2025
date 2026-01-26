@@ -101,7 +101,10 @@ public class Battle {
         if (allies.isEmpty() || enemies.isEmpty() || escaped) battleState = BattleState.FINISHED;
     }
     private boolean nextAlly() { allyIndex++; return allyIndex < allies.size(); }
-    private void resetAllyTurn() { allyIndex = 0; }
+    private void resetAllyTurn() {
+        allyIndex = 0;
+        resetDefense();
+    }
     private void enemyTurn() {
         if (isFinished()) return;
         for (IBattleUnit enemy : enemies) {
@@ -121,11 +124,15 @@ public class Battle {
         else getEnemy().takeDamage(getAlly().attack());
 
     }
-    private void defend() { } // take damage instead of attacked ally
+    private void defend() { getAlly().setDefending(true); }
     private void drinkElixir() { } // boost ally
     public void escape() {
         escaped = true;
         battleState = BattleState.FINISHED;
+    }
+
+    private void resetDefense() {
+        allies.forEach(ally -> ally.setDefending(false));
     }
 
     public BattleResult getResult() { return new BattleResult(defeatedAllies, defeatedEnemies); }

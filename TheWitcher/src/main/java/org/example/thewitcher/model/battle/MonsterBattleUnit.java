@@ -20,4 +20,6 @@ public class MonsterBattleUnit implements IBattleUnit {
     @Override public BattleAction getAction() { return BattleAction.ATTACK; }
     @Override public String getStatusMessage() { return null; }
     @Override public void resetStatusMessage() {}
+    @Override public void setDefending(boolean defending) {}
+    @Override public boolean isDefending() { return false; }
 }

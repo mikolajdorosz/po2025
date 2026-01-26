@@ -15,4 +15,6 @@ public interface IBattleUnit {
     BattleAction getAction();
     String getStatusMessage();
     void resetStatusMessage();
+    void setDefending(boolean defending);
+    boolean isDefending();
 }

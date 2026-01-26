@@ -14,6 +14,7 @@ public class PlayerBattleUnit implements IBattleUnit {
     private final Player player;
     private BattleAction action;
     private String statusMessage;
+    private boolean defending;
 
     public PlayerBattleUnit(Player player) { this.player = player; }
 
@@ -42,12 +43,15 @@ public class PlayerBattleUnit implements IBattleUnit {
                 if (dmg < 0) dmg = 0;
             }
         }
+        if (defending) dmg /= 3;
         player.setHealth(player.getHealth() - dmg);
     }
     @Override public void setAction(BattleAction action) { this.action = action; }
     @Override public BattleAction getAction() { return action; }
     @Override public String getStatusMessage() { return statusMessage; }
     @Override public void resetStatusMessage() { statusMessage = null; }
+    @Override public void setDefending(boolean defending) { this.defending = defending; }
+    @Override public boolean isDefending() { return defending; }
 
     private int silverAttack(IBattleUnit enemy) {
         if (player.getAppliedEquipment().getSilver() != null && player.getAppliedEquipment().getSilver().getCondition() > 0) {
