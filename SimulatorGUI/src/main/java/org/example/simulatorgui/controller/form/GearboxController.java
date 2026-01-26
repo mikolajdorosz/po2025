@@ -1,10 +1,13 @@
 package org.example.simulatorgui.controller.form;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import org.example.simulatorgui.model.GearboxType;
 import org.example.simulatorgui.model.components.CarComponentsRepository;
 import org.example.simulatorgui.model.components.Clutch;
 import org.example.simulatorgui.model.components.Gearbox;
@@ -26,7 +29,7 @@ public class GearboxController {
 
 
     private final CarComponentsRepository carComponentsRepository = CarComponentsRepository.getInstance();
-    private StringProperty gearboxTypeProperty = new SimpleStringProperty();
+    private ObjectProperty<GearboxType> gearboxTypeProperty = new SimpleObjectProperty<>();
     private NewCarController addCarController;
     private ComponentsController carComponentsController;
 
@@ -37,6 +40,7 @@ public class GearboxController {
     @FXML
     private void initialize() {
         clutchComboBox.setItems(carComponentsRepository.getClutches());
+        clutchComboBox.getSelectionModel().selectFirst();
 
         setupTypeToggling();
         validateInput();
@@ -52,15 +56,16 @@ public class GearboxController {
                         oldToggle.setSelected(true);
                         return;
                     }
-                    String gearboxType = newToggle.getUserData().toString();
-                    gearboxTypeProperty.set(gearboxType);
-                    clutchComboBoxContainer.setDisable("automatic".equals(gearboxType));
+                    GearboxType type = GearboxType.valueOf(newToggle.getUserData().toString());
+                    gearboxTypeProperty.set(type);
+                    clutchComboBoxContainer.setDisable(type == GearboxType.AUTOMATIC);
                 }
         );
         Toggle selected = gearboxTypeToggleGroup.getSelectedToggle();
         if (selected != null) {
-            gearboxTypeProperty.set(selected.getUserData().toString());
-            clutchComboBoxContainer.setDisable("automatic".equals(gearboxTypeProperty.get()));
+            GearboxType type = GearboxType.valueOf(selected.getUserData().toString());
+            gearboxTypeProperty.set(type);
+            clutchComboBoxContainer.setDisable(type == GearboxType.AUTOMATIC);
         }
     }
     private void validateInput() {
@@ -73,7 +78,7 @@ public class GearboxController {
                 .or(gearboxWeightTextField.textProperty().isEmpty())
                 .or(gearsTextField.textProperty().isEmpty())
                 .or(clutchComboBox.valueProperty().isNull()
-                    .and(gearboxTypeProperty.isEqualTo("manual"))
+                    .and(gearboxTypeProperty.isEqualTo(GearboxType.MANUAL))
                 )
         );
     }
@@ -92,11 +97,9 @@ public class GearboxController {
             int gears = Integer.parseInt(gearsTextField.getText());
             double weight = Double.parseDouble(gearboxWeightTextField.getText());
             double price = Double.parseDouble(gearboxPriceTextField.getText());
-            if ("manual".equals(gearboxTypeProperty.get())) {
-                return new Gearbox(gears, gearboxTypeProperty.get(), name, weight, price, clutch);
-            } else {
-                return new Gearbox(gears, gearboxTypeProperty.get(), name, weight, price);
-            }
+            GearboxType type = gearboxTypeProperty.get();
+            if (type == GearboxType.MANUAL) return new Gearbox(gears, type, name, weight, price, clutch);
+            else return new Gearbox(gears, type, name, weight, price);
         } catch (NumberFormatException e) { throw new IllegalStateException("Input value is incorrect!"); }
     }
 
@@ -113,6 +116,7 @@ public class GearboxController {
     @FXML private void onDeleteClutch() {
         Clutch selected = clutchComboBox.getValue();
         if (selected != null) carComponentsRepository.removeClutch(selected);
+        if (!carComponentsRepository.getClutches().isEmpty()) clutchComboBox.getSelectionModel().selectFirst();
         setDefaultComboBoxValue();
     }
     @FXML private void onConfirm() {

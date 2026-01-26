@@ -22,7 +22,9 @@ public class ComponentsController {
 
     @FXML private void initialize() {
         engineComboBox.setItems(carComponentsRepository.getEngines());
+        engineComboBox.getSelectionModel().selectFirst();
         gearboxComboBox.setItems(carComponentsRepository.getGearboxes());
+        gearboxComboBox.getSelectionModel().selectFirst();
         setDefaultEngineComboBoxValue();
         setDefaultGearboxComboBoxValue();
     }
@@ -52,6 +54,7 @@ public class ComponentsController {
     @FXML private void onDeleteEngine() {
         Engine selected = engineComboBox.getValue();
         if (selected != null) carComponentsRepository.removeEngine(selected);
+        if (!carComponentsRepository.getEngines().isEmpty()) engineComboBox.getSelectionModel().selectFirst();
         setDefaultEngineComboBoxValue();
     }
     @FXML private void onNewGearbox() throws IOException {
@@ -67,6 +70,7 @@ public class ComponentsController {
     @FXML private void onDeleteGearbox() {
         Gearbox selected = gearboxComboBox.getValue();
         if (selected != null) carComponentsRepository.removeGearbox(selected);
+        if (!carComponentsRepository.getGearboxes().isEmpty()) gearboxComboBox.getSelectionModel().selectFirst();
         setDefaultGearboxComboBoxValue();
     }
     private void setDefaultEngineComboBoxValue() {

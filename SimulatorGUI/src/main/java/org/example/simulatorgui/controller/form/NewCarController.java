@@ -60,8 +60,7 @@ public class NewCarController {
         );
     }
 
-    // ===================== BUSINESS LOGIC =====================
-    public Optional<Car> getCarFromInput() {
+    private Optional<Car> getCarFromInput() {
         if (carComponentsController == null || carRepository == null) throw new IllegalStateException("Controller not fully initialized!");
         Engine engine = carComponentsController.getEngineFromInput();
         Gearbox gearbox = carComponentsController.getGearboxFromInput();
@@ -72,14 +71,12 @@ public class NewCarController {
             Utils.showDuplicateAlert("license plate", plateNumber);
             return Optional.empty();
         }
-        double weight;
-        int vMax;
         try {
-            weight = Double.parseDouble(carWeightTextField.getText());
-            vMax = Integer.parseInt(carMaxSpeedTextField.getText());
+            double weight = Double.parseDouble(carWeightTextField.getText());
+            int vMax = Integer.parseInt(carMaxSpeedTextField.getText());
+            Position position = new Position(0, 0);
+            return Optional.of(new Car(plateNumber, model, weight, vMax, position, engine, gearbox));
         } catch (NumberFormatException e) { throw new IllegalStateException("Input value is incorrect!"); }
-        Position position = new Position(0, 0);
-        return Optional.of(new Car(plateNumber, model, weight, vMax, position, engine, gearbox));
     }
 
     // ===================== ACTIONS =====================
@@ -127,7 +124,6 @@ public class NewCarController {
         if (carOpt.isEmpty()) return;
         Car car = carOpt.get();
         carRepository.addCar(car);
-        carRepository.selectCar(car);
         closeWindow();
     }
 }
