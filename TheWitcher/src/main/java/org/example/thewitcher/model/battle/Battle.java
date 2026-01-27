@@ -44,7 +44,7 @@ public class Battle {
     public IBattleUnit getAlly() { return allies.get(allyIndex); }
     public void setEnemy(int enemyIndex) { this.enemyIndex = enemyIndex; }
     public boolean isPlayerAlive() { return allies.stream().anyMatch(a -> a.getEntity() instanceof Player); }
-    public boolean getIsAllyAttacking() { return isAllyAttacking; }
+    public boolean isPlayerTurn() { return getAlly().getEntity() instanceof Player; }
 
     public boolean isFinished() { return battleState == BattleState.FINISHED; }
 
@@ -54,8 +54,8 @@ public class Battle {
         switch (action) {
             case ATTACK -> inputState = BattleInputState.ENEMY;
             case DEFEND -> { defend(); endTurn(); }
-            case DRINK_ELIXIR -> inputState = BattleInputState.ELIXIR_SELECTION;
-            case ESCAPE -> escape();
+            case DRINK_ELIXIR -> { if (!isPlayerTurn()) return; inputState = BattleInputState.ELIXIR_SELECTION; }
+            case ESCAPE ->{ if (!isPlayerTurn()) return; escape(); }
         }
     }
     public void selectEnemy(int index) {
@@ -70,6 +70,7 @@ public class Battle {
         performAttack();
     }
     public void selectElixir(int index) {
+        if (!isPlayerTurn()) return;
         // Find player to access inventory
         IBattleUnit playerUnit = allies.stream()
                 .filter(a -> a.getEntity() instanceof Player)

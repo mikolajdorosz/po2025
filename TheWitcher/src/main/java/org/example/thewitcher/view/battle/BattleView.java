@@ -51,8 +51,9 @@ public class BattleView {
             elixirMenuOverlay.draw(gc, game, width, height, fontSize);
         }
 
+        String attackText = game.getBattle().isPlayerTurn() ? "[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE" : "[1] ATTACK  [2] DEFEND";
         String text = switch (game.getBattle().getInputState()) {
-            case ACTION -> "[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE";
+            case ACTION -> attackText;
             case ENEMY -> "SELECT ENEMY";
             case WEAPON -> "[1] SILVER  [2] STEEL  [3] DISTANCE";
             case ELIXIR_SELECTION -> "SELECT ELIXIR [ESC] BACK";
