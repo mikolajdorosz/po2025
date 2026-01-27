@@ -26,6 +26,7 @@ public class MapController {
         int playerX = game.getPlayer().getX();
         int playerY = game.getPlayer().getY();
 
+        // Check for entity interaction
         for (Entity entity : game.getLocation().getEntities()) {
             if (entity instanceof Interactable interactable) {
                 if (isAdjacent(playerX, playerY, entity.getX(), entity.getY())) {
@@ -33,6 +34,15 @@ public class MapController {
                     return;
                 }
             }
+        }
+
+        // Check for herb gathering (standing on the herb)
+        org.example.thewitcher.model.map.point.Point point = game.getLocation().getPoint(playerX, playerY);
+        if (point != null && point.getMarker() == org.example.thewitcher.model.map.data.ObjectDrawings.herb()) {
+            org.example.thewitcher.model.items.Herb herb = org.example.thewitcher.model.items.Herb.random();
+            game.getPlayer().getEquipment().addItem(herb);
+            game.getLocation().removeHerb(playerX, playerY);
+            game.setMessage("Gathered " + herb.getName());
         }
     }
 
