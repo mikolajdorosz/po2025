@@ -73,7 +73,12 @@ public class BattleController {
     }
     private void finishBattle() {
         BattleResult result = game.getBattle().getResult();
-        game.getLocation().getEnemies().removeAll(result.defeatedEnemies());
+
+        // Remove defeated enemies from map
+        for (IBattleUnit enemy : result.defeatedEnemies()) {
+            game.getLocation().removeEnemy(enemy);
+        }
+
         game.getPlayer().getAllies().removeAll(result.defeatedAllies());
 
         // Remove dead allies from map

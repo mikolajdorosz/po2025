@@ -4,8 +4,8 @@ public class Bandit extends Character {
     private int damage;
     public Bandit(int x, int y) {
         super(x, y, "bandit");
-        this.damage = 13;
-        this.setHealth(200);
+        this.damage = 8;
+        this.setHealth(100);
     }
 
     public int attack() { return damage; }
