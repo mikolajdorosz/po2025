@@ -4,7 +4,7 @@ import org.example.thewitcher.model.entity.Entity;
 import org.example.thewitcher.model.items.Weapon;
 import org.example.thewitcher.model.items.WeaponType;
 
-public interface IBattleUnit {
+public interface IBattleUnit extends java.io.Serializable {
     Entity getEntity();
     int getHealth();
     boolean isAlive();

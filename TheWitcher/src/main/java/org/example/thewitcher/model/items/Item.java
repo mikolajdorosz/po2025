@@ -2,7 +2,7 @@ package org.example.thewitcher.model.items;
 
 import java.util.Random;
 
-public abstract class Item {
+public abstract class Item implements java.io.Serializable {
     protected String name;
     protected String type;
     protected int price;

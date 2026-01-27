@@ -1,6 +1,6 @@
 package org.example.thewitcher.model.map.point;
 
-public class Point {
+public class Point implements java.io.Serializable {
     private final char baseMarker;
     private Character overlayMarker;
     private int x;

@@ -11,6 +11,7 @@ import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.view.battle.BattleView;
 import org.example.thewitcher.view.inventory.InventoryView;
 import org.example.thewitcher.view.map.MapView;
+import org.example.thewitcher.view.menu.PauseMenuView;
 import org.example.thewitcher.view.util.ViewportCalculator;
 import org.example.thewitcher.view.interaction.*;
 
@@ -26,6 +27,7 @@ public class GameView {
     private final MerchantView merchantView;
     private final SorceressView sorceressView;
     private final BattleView battleView;
+    private final PauseMenuView pauseMenuView;
 
     public GameView(GameConfig config) {
         this.canvas = new Canvas(config.getWindowWidth(), config.getWindowHeight());
@@ -44,6 +46,7 @@ public class GameView {
         this.merchantView = new MerchantView(gc, canvas, viewport);
         this.sorceressView = new SorceressView(gc, canvas, viewport);
         this.battleView = new BattleView(gc, canvas, viewport);
+        this.pauseMenuView = new PauseMenuView(gc, canvas);
 
         this.gc.setFont(Font.font(config.getFontName(), config.getFontSize()));
     }
@@ -63,6 +66,7 @@ public class GameView {
             case INTERACTION_MERCHANT -> merchantView.render(game);
             case INTERACTION_SORCERESS -> sorceressView.render(game);
             case BATTLE -> battleView.render(game);
+            case PAUSE_MENU -> pauseMenuView.render();
             case GAME_OVER -> renderGameOver();
         }
     }

@@ -18,7 +18,7 @@ import org.example.thewitcher.model.entity.Interactable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+public class Game implements java.io.Serializable {
     private static final int BATTLE_TRIGGER_RADIUS = 2;
     private static final int BATTLE_ENEMIES_RADIUS = 5;
 

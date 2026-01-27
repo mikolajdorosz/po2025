@@ -10,29 +10,33 @@ import org.example.thewitcher.controller.character.SorceressController;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.view.GameView;
+import org.example.thewitcher.service.GameStateManager;
 
 public class GameController {
-    private final Game game;
+    private Game game;
     private final GameView gameView;
-    private final MapController mapController;
-    private final InventoryController inventoryController;
-    private final ArmorerController armorerController;
-    private final BlacksmithController blacksmithController;
-    private final MerchantController merchantController;
-    private final SorceressController sorceressController;
-    private final BattleController battleController;
+    private MapController mapController;
+    private InventoryController inventoryController;
+    private ArmorerController armorerController;
+    private BlacksmithController blacksmithController;
+    private MerchantController merchantController;
+    private SorceressController sorceressController;
+    private PauseMenuController pauseMenuController;
+    private BattleController battleController;
     private AnimationTimer timer;
 
+
+
     public GameController(GameView view) {
-        this.game = new Game();
+        Game loadedGame = GameStateManager.loadGame();
+        if (loadedGame != null) {
+            this.game = loadedGame;
+        } else {
+            this.game = new Game();
+        }
+
         this.gameView = view;
-        this.mapController = new MapController(game);
-        this.inventoryController = new InventoryController(game);
-        this.armorerController = new ArmorerController(game);
-        this.blacksmithController = new BlacksmithController(game);
-        this.merchantController =  new MerchantController(game);
-        this.sorceressController = new SorceressController(game);
-        this.battleController = new BattleController(game);
+        initControllers();
     }
 
     public void start() {
@@ -48,6 +52,7 @@ public class GameController {
         scene.setOnKeyPressed(e -> {
             switch (game.getState()) {
                 case MAP -> mapController.handleInput(e.getCode());
+                case PAUSE_MENU -> pauseMenuController.handleInput(e.getCode());
                 case INVENTORY,
                      INVENTORY_ITEM_ACTION_MENU,
                      INVENTORY_INSPECT_ITEM -> inventoryController.handleInput(e.getCode(), e.getText());
@@ -65,5 +70,22 @@ public class GameController {
                 case GAME_OVER -> { timer.stop(); Platform.exit(); }
             }
         });
+    }
+
+    private void restartGame() {
+        this.game = new Game();
+        initControllers();
+        game.setState(GameState.MAP);
+    }
+
+    private void initControllers() {
+        this.mapController = new MapController(game);
+        this.inventoryController = new InventoryController(game);
+        this.armorerController = new ArmorerController(game);
+        this.blacksmithController = new BlacksmithController(game);
+        this.merchantController =  new MerchantController(game);
+        this.sorceressController = new SorceressController(game);
+        this.battleController = new BattleController(game);
+        this.pauseMenuController = new PauseMenuController(game, this::restartGame, () -> timer.stop());
     }
 }

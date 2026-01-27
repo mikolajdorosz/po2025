@@ -11,5 +11,6 @@ public enum GameState {
     INTERACTION_MERCHANT,
     INTERACTION_SORCERESS,
     BATTLE,
-    GAME_OVER
+    GAME_OVER,
+    PAUSE_MENU
 }
