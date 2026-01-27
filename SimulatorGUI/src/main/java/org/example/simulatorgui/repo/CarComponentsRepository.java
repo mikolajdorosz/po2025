@@ -1,15 +1,28 @@
-package org.example.simulatorgui.model.components;
+package org.example.simulatorgui.repo;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.example.simulatorgui.model.components.Clutch;
+import org.example.simulatorgui.model.components.Engine;
+import org.example.simulatorgui.model.components.Gearbox;
+import org.example.simulatorgui.model.components.GearboxType;
 
 public class CarComponentsRepository {
     private static final CarComponentsRepository INSTANCE = new CarComponentsRepository();
     public static CarComponentsRepository getInstance() { return INSTANCE; }
 
-    private final ObservableList<Engine> engines = FXCollections.observableArrayList();
-    private final ObservableList<Gearbox> gearboxes = FXCollections.observableArrayList();
-    private final ObservableList<Clutch> clutches = FXCollections.observableArrayList();
+    private final ObservableList<Engine> engines = FXCollections.observableArrayList(
+            new Engine(6000, "Engine A", 120.0, 1500.0),
+            new Engine(7000, "Engine B", 130.0, 2000.0)
+    );
+    private final ObservableList<Clutch> clutches = FXCollections.observableArrayList(
+            new Clutch("Standard Clutch", 35, 2000),
+            new Clutch("Performance Clutch", 45, 3500)
+    );
+    private final ObservableList<Gearbox> gearboxes = FXCollections.observableArrayList(
+            new Gearbox(6, GearboxType.MANUAL, "Manual 6-Speed", 85.0, 2500.0, clutches.getFirst()),
+            new Gearbox(8, GearboxType.AUTOMATIC, "Automatic 8-Speed", 95.0, 3000.0)
+    );
 
     public ObservableList<Engine> getEngines() { return engines; }
     public ObservableList<Gearbox> getGearboxes() { return gearboxes; }

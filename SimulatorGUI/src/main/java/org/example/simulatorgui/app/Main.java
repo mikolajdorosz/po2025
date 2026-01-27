@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.simulatorgui.config.RaceConfig;
+import org.example.simulatorgui.model.race.RaceConfig;
 import org.example.simulatorgui.controller.MainController;
 
 import java.io.IOException;

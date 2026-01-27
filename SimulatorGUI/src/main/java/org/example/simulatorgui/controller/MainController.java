@@ -11,8 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.example.simulatorgui.model.car.CarRepository;
-import org.example.simulatorgui.config.RaceConfig;
+import org.example.simulatorgui.repo.CarRepository;
+import org.example.simulatorgui.model.race.RaceConfig;
 import org.example.simulatorgui.controller.form.NewCarController;
 import org.example.simulatorgui.controller.form.ComponentsController;
 import org.example.simulatorgui.controller.race.RaceController;
@@ -95,7 +95,7 @@ public class MainController {
         redrawCheckpoints();
     }
     private void placeFinish(double x, double y) {
-        if (config.getStartPosition() != null) raceTrackPane.getChildren().remove(finishFlagNode);
+        if (config.getFinishPosition() != null) raceTrackPane.getChildren().remove(finishFlagNode);
         config.setFinishPosition(new Position(x, y));
         finishFlagNode = placeFlag("finish.png", config.getFinishPosition());
         startButtonDisableBinding.invalidate();

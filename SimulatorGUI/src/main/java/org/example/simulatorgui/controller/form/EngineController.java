@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import org.example.simulatorgui.model.components.CarComponentsRepository;
+import org.example.simulatorgui.repo.CarComponentsRepository;
 import org.example.simulatorgui.model.components.Engine;
 import org.example.simulatorgui.model.util.Utils;
 

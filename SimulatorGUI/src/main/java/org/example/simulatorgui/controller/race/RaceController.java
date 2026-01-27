@@ -8,13 +8,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.simulatorgui.model.car.Car;
-import org.example.simulatorgui.model.car.CarRepository;
+import org.example.simulatorgui.repo.CarRepository;
 import org.example.simulatorgui.model.race.Race;
 import org.example.simulatorgui.model.race.RaceSetup;
 import org.example.simulatorgui.app.Main;
-import org.example.simulatorgui.config.RaceConfig;
+import org.example.simulatorgui.model.race.RaceConfig;
 import org.example.simulatorgui.render.RaceRenderer;
-import org.example.simulatorgui.model.race.RaceSession;
+import org.example.simulatorgui.model.engine.RaceSession;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -81,8 +81,8 @@ public class RaceController {
         Node hud = loader.load();
         CarHUDController controller = loader.getController();
         controller.setCar(playersCar);
-        Platform.runLater(() -> controller.registerInput(hud.getScene()));
         hudContainer.getChildren().setAll(hud);
+        Platform.runLater(() -> controller.registerInput(hud.getScene()));
     }
     // BRIDGE WITH MODEL
     private void startRace() {

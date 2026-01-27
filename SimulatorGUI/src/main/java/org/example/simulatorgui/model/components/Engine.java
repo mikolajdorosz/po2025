@@ -1,35 +1,37 @@
 package org.example.simulatorgui.model.components;
 
 public class Engine extends Component {
-    private int RPM;
-    private int minRPM;
-    private int maxRPM;
+    private static final int DEFAULT_MIN_RPM = 1000;
+    private static final double GAS_RPM_INCREASE = 1500;
+    private static final double NO_GAS_RPM_DECREASE = 500;
 
-    public Engine(int maxRPM, String name, double weight, double price) {
+    private int rpm;
+    private int minRpm;
+    private int maxRpm;
+
+    public Engine(int maxRpm, String name, double weight, double price) {
         super(name, weight, price);
-        this.RPM = 0;
-        this.minRPM = 1000;
-        this.maxRPM = maxRPM;
+        this.rpm = 0;
+        this.minRpm = 1000;
+        this.maxRpm = maxRpm;
     }
 
-    public int getRPM() { return RPM; }
-    public int getMinRPM() { return minRPM; }
-    public int getMaxRPM() { return maxRPM; }
-    public double getNormalizedRPM() { return (double) (RPM - minRPM) / (maxRPM - minRPM); }
+    public int getRpm() { return rpm; }
+    public int getMaxRpm() { return maxRpm; }
+    public double getNormalizedRPM() { return (double) (rpm - minRpm) / (maxRpm - minRpm); }
 
-    public void setRPM(int RPM) { this.RPM = Math.max(minRPM, Math.min(RPM, maxRPM)); }
+    public void setRpm(int rpm) { this.rpm = clamp(rpm); }
 
-    public void start() { RPM = minRPM; }
-    public void stop() { RPM = 0; }
-    public void manipulateGas(double deltaTime, boolean gasPressed) {
-        double rpmChange;
-        if (gasPressed) rpmChange = 1500 * deltaTime;       // RPM increase factor
-        else rpmChange = -500 * deltaTime;                  // RPM decrease factor
-        setRPM((int)(RPM + rpmChange));
+    // ========================= LIFECYCLE =========================
+    public void start() { rpm = minRpm; }
+    public void stop() { rpm = 0; }
+
+    // ========================= ENGINE BEHAVIOR =========================
+    public void updateRPM(double deltaTime, boolean gasPressed) {
+        double rpmDelta = gasPressed ? GAS_RPM_INCREASE * deltaTime : -NO_GAS_RPM_DECREASE * deltaTime;
+        setRpm((int) (rpm + rpmDelta));
     }
-    public double manipulateBrake(double deltaTime, boolean brakePressed, double carWeight) {
-        if (!brakePressed) return 0;
-        return (8000 / carWeight) * deltaTime;
-    }
-    public void zeroRPM() { this.RPM = 0; }
+
+    // ========================= HELPERS =========================
+    private int clamp(int value) { return Math.max(minRpm, Math.min(value, maxRpm)); }
 }

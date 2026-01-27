@@ -3,7 +3,7 @@ package org.example.simulatorgui.controller.form;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
-import org.example.simulatorgui.model.components.CarComponentsRepository;
+import org.example.simulatorgui.repo.CarComponentsRepository;
 import org.example.simulatorgui.model.components.Engine;
 import org.example.simulatorgui.model.components.Gearbox;
 

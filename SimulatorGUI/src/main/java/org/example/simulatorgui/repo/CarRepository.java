@@ -1,7 +1,8 @@
-package org.example.simulatorgui.model.car;
+package org.example.simulatorgui.repo;
 
 import javafx.collections.ObservableList;
-import org.example.simulatorgui.config.RaceConfig;
+import org.example.simulatorgui.model.car.Car;
+import org.example.simulatorgui.model.race.RaceConfig;
 
 public class CarRepository {
     private final RaceConfig config;
@@ -16,9 +17,5 @@ public class CarRepository {
     public boolean isDuplicatePlate(String plate) {
         return config.getStoredCars().stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plate))
                 || config.getRaceCars().stream().anyMatch(c -> c.getPlateNumber().equalsIgnoreCase(plate));
-    }
-    public void selectCar(Car car) {
-        // optionally set default selection
-        // you can leave empty or implement as needed
     }
 }

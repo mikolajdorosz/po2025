@@ -1,11 +1,10 @@
 package org.example.simulatorgui.controller.race;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import org.example.simulatorgui.model.GearboxType;
+import org.example.simulatorgui.model.components.GearboxType;
 import org.example.simulatorgui.model.car.Car;
 import org.example.simulatorgui.model.car.ICarListener;
 
@@ -43,7 +42,7 @@ public class CarHUDController implements ICarListener {
         rpmLabel.setText(String.valueOf(car.getEngine().getRpm()));
         speedLabel.setText(String.valueOf(car.getSpeed()));
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
-        if (car.getFinalScore() != 0) disableAllControls();
+        if (car.getFinished()) disableAllControls();
     }
     private void disableAllControls() {
         carIgnitionButton.setDisable(true);

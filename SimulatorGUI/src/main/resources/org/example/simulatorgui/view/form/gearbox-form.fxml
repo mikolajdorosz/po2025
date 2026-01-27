@@ -30,10 +30,10 @@
         <HBox spacing="12" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" >
             <Label text="Type" styleClass="input-label"/>
             <ToggleButton fx:id="typeAutoToggleButton" text="Automatic" toggleGroup="$gearboxTypeToggleGroup" HBox.hgrow="ALWAYS" maxWidth="Infinity" selected="true" styleClass="btn, toggle-btn, toggle-btn-selected">
-                <userData>automatic</userData>
+                <userData>AUTOMATIC</userData>
             </ToggleButton>
             <ToggleButton fx:id="typeManualToggleButton" text="Manual" toggleGroup="$gearboxTypeToggleGroup" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="btn, toggle-btn">
-                <userData>manual</userData>
+                <userData>MANUAL</userData>
             </ToggleButton>
         </HBox>
         <HBox fx:id="clutchComboBoxContainer" spacing="12" alignment="CENTER_LEFT" disable="true">

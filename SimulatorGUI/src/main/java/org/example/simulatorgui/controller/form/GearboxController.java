@@ -2,13 +2,11 @@ package org.example.simulatorgui.controller.form;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import org.example.simulatorgui.model.GearboxType;
-import org.example.simulatorgui.model.components.CarComponentsRepository;
+import org.example.simulatorgui.model.components.GearboxType;
+import org.example.simulatorgui.repo.CarComponentsRepository;
 import org.example.simulatorgui.model.components.Clutch;
 import org.example.simulatorgui.model.components.Gearbox;
 import org.example.simulatorgui.model.util.Utils;

@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.simulatorgui.model.car.Car;
-import org.example.simulatorgui.model.car.CarRepository;
+import org.example.simulatorgui.repo.CarRepository;
 import org.example.simulatorgui.model.components.Engine;
 import org.example.simulatorgui.model.components.Gearbox;
 import org.example.simulatorgui.model.util.Position;
