@@ -1,13 +1,10 @@
 package org.example.thewitcher.controller;
 
 import javafx.scene.input.KeyCode;
-import org.example.thewitcher.model.battle.BattleAction;
-import org.example.thewitcher.model.battle.BattleInputState;
-import org.example.thewitcher.model.battle.BattleResult;
+import org.example.thewitcher.model.battle.*;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.model.items.WeaponType;
-import org.example.thewitcher.model.battle.IBattleUnit;
 import org.example.thewitcher.model.entity.character.Ally;
 
 public class BattleController {
@@ -16,13 +13,9 @@ public class BattleController {
     public BattleController(Game game) { this.game = game; }
 
     public void handleInput(KeyCode code, String charInput) {
-
+        if (game.getBattle() == null) return;
         // Clear status messages from previous turn/action
-        if (game.getBattle() != null) {
-            for (IBattleUnit ally : game.getBattle().getAllies()) {
-                ally.resetStatusMessage();
-            }
-        }
+        clearStatusMessages(game.getBattle());
 
         switch (game.getBattle().getInputState()) {
             case ACTION -> handleAction(code);
@@ -30,24 +23,26 @@ public class BattleController {
             case WEAPON -> handleWeapon(code);
             case ELIXIR_SELECTION -> handleElixirSelection(code);
         }
+        if (game.getBattle().isFinished()) finishBattle();
+    }
+
+    private void clearStatusMessages(Battle battle) {
+        for (IBattleUnit ally : battle.getAllies()) {
+            ally.resetStatusMessage();
+        }
     }
     private void handleAction(KeyCode code) {
         switch (code) {
             case DIGIT1 -> game.getBattle().allysAction(BattleAction.ATTACK);
             case DIGIT2 -> game.getBattle().allysAction(BattleAction.DEFEND);
             case DIGIT3 -> game.getBattle().allysAction(BattleAction.DRINK_ELIXIR);
-            case DIGIT4 -> { game.getBattle().allysAction(BattleAction.ESCAPE); finishBattle(); }
+            case DIGIT4 -> game.getBattle().allysAction(BattleAction.ESCAPE);
         }
     }
     private void handleEnemy(String charInput) {
         if (charInput == null || charInput.isEmpty()) return;
         int index = Character.toLowerCase(charInput.charAt(0)) - 'a';
-        if (index >= 0 && index < game.getBattle().getEnemies().size()) {
-            game.getBattle().setEnemy(index);
-            if (!game.getBattle().getIsAllyAttacking()) game.getBattle().executePendingAction();
-            else game.getBattle().executeAttack();
-            if (game.getBattle().isFinished()) finishBattle();
-        }
+        if (index >= 0 && index < game.getBattle().getEnemies().size()) game.getBattle().selectEnemy(index);
     }
     private void handleWeapon(KeyCode code) {
         WeaponType weapon = switch (code) {
@@ -56,19 +51,13 @@ public class BattleController {
             case DIGIT3 -> WeaponType.DISTANCE;
             default -> null;
         };
-        if (game.getBattle().isFinished()) finishBattle();
-        if (weapon == null) return;
-        game.getBattle().chooseWeapon(weapon);
+        if (weapon != null) game.getBattle().chooseWeapon(weapon);
     }
     private void handleElixirSelection(KeyCode code) {
-        if (code == KeyCode.ESCAPE) {
-            game.getBattle().setInputState(BattleInputState.ACTION);
-            return;
-        }
+        if (code == KeyCode.ESCAPE) { game.getBattle().setInputState(BattleInputState.ACTION); return; }
         if (code.isDigitKey()) {
             int index = Integer.parseInt(code.getChar()) - 1;
             game.getBattle().selectElixir(index);
-            if (game.getBattle().isFinished()) finishBattle();
         }
     }
     private void finishBattle() {

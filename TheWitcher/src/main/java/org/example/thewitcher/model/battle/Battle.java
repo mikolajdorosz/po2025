@@ -13,13 +13,13 @@ public class Battle {
     private final List<IBattleUnit> defeatedAllies;
     private final List<IBattleUnit> defeatedEnemies;
     private BattleState battleState;
+    private BattleInputState inputState;
     private boolean escaped;
+    private boolean isAllyAttacking;
     private int allyIndex;
     private int enemyIndex;
-    private BattleInputState inputState;
     private BattleAction pendingAction;
     private WeaponType pendingWeapon;
-    private boolean isAllyAttacking;
 
     public Battle(List<IBattleUnit> allies, List<IBattleUnit> enemies) {
         this.allies = new ArrayList<>(allies);
@@ -36,120 +36,39 @@ public class Battle {
 
     public List<IBattleUnit> getAllies() { return allies; }
     public List<IBattleUnit> getEnemies() { return enemies; }
-    public BattleState getBattleState() { return battleState; }
     public int getAllyIndex() { return allyIndex; }
     public BattleInputState getInputState() { return inputState; }
     public void setInputState(BattleInputState state) { this.inputState = state; }
 
-    public boolean isEnemySelected() { return enemyIndex != -1; }
     public IBattleUnit getEnemy() { return enemyIndex >= 0 ? enemies.get(enemyIndex) : null; }
     public IBattleUnit getAlly() { return allies.get(allyIndex); }
     public void setEnemy(int enemyIndex) { this.enemyIndex = enemyIndex; }
-    public void resetEnemy() { this.enemyIndex = -1; }
     public boolean isPlayerAlive() { return allies.stream().anyMatch(a -> a.getEntity() instanceof Player); }
     public boolean getIsAllyAttacking() { return isAllyAttacking; }
-    public void setIsAllyAttacking(boolean value) { this.isAllyAttacking = value; }
 
+    public boolean isFinished() { return battleState == BattleState.FINISHED; }
+
+    // ========================= PLAYER INPUT =========================
     public void allysAction(BattleAction action) {
         pendingAction = action;
-        if (action == BattleAction.ATTACK) { setInputState(BattleInputState.ENEMY); return; }
-        executePendingAction();
-    }
-    public void executePendingAction() {
-        switch (pendingAction) {
-            case ATTACK -> {
-                if (!isAllyAttacking) setInputState(BattleInputState.WEAPON);
-                else setInputState(BattleInputState.ACTION);
-                return;
-            }
-            case DEFEND -> defend();
-            case DRINK_ELIXIR -> { drinkElixir(); return;}
+        switch (action) {
+            case ATTACK -> inputState = BattleInputState.ENEMY;
+            case DEFEND -> { defend(); endTurn(); }
+            case DRINK_ELIXIR -> inputState = BattleInputState.ELIXIR_SELECTION;
             case ESCAPE -> escape();
         }
-        pendingAction = null;
-        cleanupDead();
-        updateState();
-        if (isFinished()) return;
-        if (!nextAlly()) {
-            resetAllyTurn();
-            enemyTurn();
+    }
+    public void selectEnemy(int index) {
+        enemyIndex = index;
+        if (getAlly().getEntity() instanceof Player && !isAllyAttacking) {
+            inputState = BattleInputState.WEAPON; return;
         }
-        setInputState(BattleInputState.ACTION);
+        performAttack();
     }
     public void chooseWeapon(WeaponType weapon) {
         this.pendingWeapon = weapon;
-        executeAttackWithWeapon();
+        performAttack();
     }
-    public void executeAttackWithWeapon() {
-        playerAttack(pendingWeapon);
-        pendingAction = null;
-        pendingWeapon = null;
-        resetEnemy();
-        cleanupDead();
-        updateState();
-        if (isFinished()) return;
-        if (!nextAlly()) {
-            resetAllyTurn();
-            enemyTurn();
-        }
-        setInputState(BattleInputState.ACTION);
-    }
-    public void executeAttack() {
-        allysAttack();
-        pendingAction = null;
-        pendingWeapon = null;
-        resetEnemy();
-        cleanupDead();
-        updateState();
-        if (isFinished()) return;
-        if (!nextAlly()) {
-            resetAllyTurn();
-            enemyTurn();
-        }
-        setInputState(BattleInputState.ACTION);
-    }
-    private void cleanupDead() {
-        allies.removeIf(ally -> {
-            if (!ally.isAlive()) { defeatedAllies.add(ally); return true; }
-            return false;
-        });
-        enemies.removeIf(enemy -> {
-            if (!enemy.isAlive()) { defeatedEnemies.add(enemy); return true; }
-            return false;
-        });
-        if (allyIndex >= allies.size()) allyIndex = 0;
-    }
-    private void updateState() {
-        if (allies.isEmpty() || enemies.isEmpty() || escaped) battleState = BattleState.FINISHED;
-    }
-    private boolean nextAlly() { allyIndex++; return allyIndex < allies.size(); }
-    private void resetAllyTurn() {
-        allyIndex = 0;
-        isAllyAttacking = false;
-        resetDefense();
-    }
-    private void enemyTurn() {
-        if (isFinished()) return;
-        for (IBattleUnit enemy : enemies) {
-            if (!enemy.isAlive()) continue;
-            if (allies.isEmpty()) { battleState = BattleState.FINISHED; return; }
-            allies.get(ThreadLocalRandom.current().nextInt(allies.size())).takeDamage(enemy.attack());
-            cleanupDead();
-            updateState();
-            if (isFinished()) return;
-        }
-    }
-
-    private void playerAttack(WeaponType weapon) {
-        if (getEnemy() == null || !(getAlly().getEntity() instanceof Player)) return;
-        getEnemy().takeDamage(getAlly().attack(getEnemy(), weapon));
-        isAllyAttacking = true;
-    }
-    private void allysAttack() { getEnemy().takeDamage(getAlly().attack()); }
-    private void defend() { getAlly().setDefending(true); }
-
-    private void drinkElixir() { setInputState(BattleInputState.ELIXIR_SELECTION); }
-
     public void selectElixir(int index) {
         // Find player to access inventory
         IBattleUnit playerUnit = allies.stream()
@@ -176,19 +95,70 @@ public class Battle {
             // Remove from inventory
             player.getEquipment().removeItem(elixir);
 
-            setInputState(BattleInputState.ACTION);
+            inputState = BattleInputState.ACTION;
         }
     }
 
+    //======================= BATTLE LOGIC =======================
+    public void performAttack() {
+        if (getAlly() == null) return;
+        if (getAlly().getEntity() instanceof Player && pendingWeapon != null) {
+            getEnemy().takeDamage(getAlly().attack(getEnemy(), pendingWeapon));
+            isAllyAttacking = true;
+        } else getEnemy().takeDamage(getAlly().attack());
+        endTurn();
+    }
+    private void defend() { getAlly().setDefending(true); }
+    private void drinkElixir() { setInputState(BattleInputState.ELIXIR_SELECTION); }
     public void escape() {
         escaped = true;
-        battleState = BattleState.FINISHED;
+        updateState();
     }
 
-    private void resetDefense() {
-        allies.forEach(ally -> ally.setDefending(false));
+    // ======================= TURN =======================
+    private void endTurn() {
+        pendingAction = null;
+        pendingWeapon = null;
+        enemyIndex = -1;
+        cleanupDead();
+        updateState();
+        if (isFinished()) return;
+        if (!nextAlly()) {
+            resetAllyTurn();
+            enemyTurn();
+        }
+        inputState = BattleInputState.ACTION;
+    }
+    private boolean nextAlly() { allyIndex++; return allyIndex < allies.size(); }
+    private void resetAllyTurn() {
+        allyIndex = 0;
+        isAllyAttacking = false;
+        allies.forEach(a -> a.setDefending(false));
+    }
+    private void enemyTurn() {
+        for (IBattleUnit enemy : enemies) {
+            if (!enemy.isAlive() || allies.isEmpty()) break;
+            IBattleUnit target = allies.get(ThreadLocalRandom.current().nextInt(allies.size()));
+            target.takeDamage(enemy.attack());
+            cleanupDead();
+            updateState();
+            if (isFinished()) return;
+        }
     }
 
+    private void cleanupDead() {
+        allies.removeIf(ally -> {
+            if (!ally.isAlive()) { defeatedAllies.add(ally); return true; }
+            return false;
+        });
+        enemies.removeIf(enemy -> {
+            if (!enemy.isAlive()) { defeatedEnemies.add(enemy); return true; }
+            return false;
+        });
+        if (allyIndex >= allies.size()) allyIndex = 0;
+    }
+    private void updateState() {
+        if (allies.isEmpty() || enemies.isEmpty() || escaped) battleState = BattleState.FINISHED;
+    }
     public BattleResult getResult() { return new BattleResult(defeatedAllies, defeatedEnemies); }
-    public boolean isFinished() { return battleState == BattleState.FINISHED; }
 }
