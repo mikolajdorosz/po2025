@@ -117,4 +117,25 @@ public class EntityManager {
             }
         }
     }
+
+    public void spawnHerbs(Point[][] location, int width, int height) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (location[y][x] != null && location[y][x].getMarker() == ObjectDrawings.grass()) {
+                    if (ThreadLocalRandom.current().nextInt(100) < 5) { // 5% chance
+                        location[y][x].setOverlay(ObjectDrawings.herb(), false);
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeHerb(int x, int y, Point[][] location, int width, int height) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            Point p = location[y][x];
+            if (p != null && (p.getMarker() == ObjectDrawings.herb())) {
+                p.setOverlay(ObjectDrawings.grass(), false);
+            }
+        }
+    }
 }

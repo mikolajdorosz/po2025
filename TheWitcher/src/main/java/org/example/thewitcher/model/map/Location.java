@@ -56,7 +56,10 @@ public abstract class Location {
         placeSingles(); // Populates enemies via addEnemy
         entityManager.spawnEntities(location, width, height);
         entityManager.spawnAllies(location, width, height);
+        entityManager.spawnHerbs(location, width, height);
     }
+
+    public void removeHerb(int x, int y) { entityManager.removeHerb(x, y, location, width, height); }
 
     private List<String> readFile(InputStream inputStream) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
