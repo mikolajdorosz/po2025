@@ -37,10 +37,9 @@ public class GameController {
 
     public void start() {
         timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
+            @Override public void handle(long now) {
                 gameView.render(game);
-                if (game.getState() == GameState.GAME_OVER) { stop(); Platform.exit(); }
+                if (game.getState() == GameState.GAME_OVER) stop();
             }
         };
         timer.start();

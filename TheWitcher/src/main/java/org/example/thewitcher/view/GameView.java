@@ -2,7 +2,10 @@ package org.example.thewitcher.view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import org.example.thewitcher.config.GameConfig;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.view.battle.BattleView;
@@ -60,6 +63,29 @@ public class GameView {
             case INTERACTION_MERCHANT -> merchantView.render(game);
             case INTERACTION_SORCERESS -> sorceressView.render(game);
             case BATTLE -> battleView.render(game);
+            case GAME_OVER -> renderGameOver();
         }
+    }
+
+    private void renderGameOver() {
+        double width = canvas.getWidth();
+        double height = canvas.getHeight();
+
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, width, height);
+
+        gc.setFill(Color.RED);
+        gc.setFont(Font.font("Consolas", FontWeight.BOLD, 48));
+        drawCenteredText("You died :(", height / 2 - 30, width);
+
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Consolas", FontWeight.NORMAL, 20));
+        drawCenteredText("Press ESC to exit", height / 2 + 30, width);
+    }
+    private void drawCenteredText(String text, double y, double width) {
+        Text t = new Text(text);
+        t.setFont(gc.getFont());
+        double textWidth = t.getLayoutBounds().getWidth();
+        gc.fillText(text, (width - textWidth) / 2, y);
     }
 }
