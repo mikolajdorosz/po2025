@@ -29,9 +29,6 @@ public class MapView {
                 if (!isInBounds(location, viewport.getLocationX(x), viewport.getLocationY(y))) continue;
                 Point point = location.getPoint(viewport.getLocationX(x), viewport.getLocationY(y));
                 char marker = point.getMarker();
-                if ((point.getMarker() == ObjectDrawings.wolf() || point.getMarker() == ObjectDrawings.ghul() || point.getMarker() == ObjectDrawings.bandit())
-                    && !location.getEnemies().stream().anyMatch(enemy -> enemy.getEntity().getX() == point.getX() && enemy.getEntity().getY() == point.getY()))
-                    marker = ObjectDrawings.loot();
                 if (viewport.getLocationX(x) == player.getX() && viewport.getLocationY(y) == player.getY()) marker = ObjectDrawings.player();
                 gc.fillText(String.valueOf(marker), x * viewport.getPointWidth(), (y + 1) * viewport.getPointHeight());
             }
