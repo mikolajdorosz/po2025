@@ -34,9 +34,14 @@ public class BattleController {
     private void handleAction(KeyCode code) {
         switch (code) {
             case DIGIT1 -> game.getBattle().allysAction(BattleAction.ATTACK);
-            case DIGIT2 -> game.getBattle().allysAction(BattleAction.DEFEND);
-            case DIGIT3 -> game.getBattle().allysAction(BattleAction.DRINK_ELIXIR);
-            case DIGIT4 -> game.getBattle().allysAction(BattleAction.ESCAPE);
+            case DIGIT2 -> {
+                if (game.getBattle().isPlayerTurn()) game.getBattle().allysAction(BattleAction.DRINK_ELIXIR);
+                else game.getBattle().allysAction(BattleAction.DEFEND);
+            }
+            case DIGIT3 -> {
+                if (game.getBattle().isPlayerTurn()) game.getBattle().allysAction(BattleAction.ESCAPE);
+                else game.getBattle().allysAction(BattleAction.DRINK_ELIXIR);
+            }
         }
     }
     private void handleEnemy(String charInput) {

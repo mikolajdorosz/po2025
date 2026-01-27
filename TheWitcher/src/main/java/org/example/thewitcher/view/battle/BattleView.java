@@ -51,9 +51,9 @@ public class BattleView {
             elixirMenuOverlay.draw(gc, game, width, height, fontSize);
         }
 
-        String attackText = game.getBattle().isPlayerTurn() ? "[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE" : "[1] ATTACK  [2] DEFEND";
+        String actionText = game.getBattle().isPlayerTurn() ? "[1] ATTACK  [2] ELIXIR  [3] ESCAPE" : "[1] ATTACK  [2] DEFEND";
         String text = switch (game.getBattle().getInputState()) {
-            case ACTION -> attackText;
+            case ACTION -> actionText;
             case ENEMY -> "SELECT ENEMY";
             case WEAPON -> "[1] SILVER  [2] STEEL  [3] DISTANCE";
             case ELIXIR_SELECTION -> "SELECT ELIXIR [ESC] BACK";
@@ -79,12 +79,11 @@ public class BattleView {
             String marker = (index == active) ? ">>" : "  ";
             gc.fillText(
                     String.format(
-                            "%s %-10s HP:%-3d AR:%-2d ACT:%s",
+                            "%s %-12s HP:%-3d ARMOR:%-3d",
                             marker,
                             ally.getEntity().getName(),
                             ally.getHealth(),
-                            ally.getEntity() instanceof Player ? ((Player) ally.getEntity()).getArmor() : 0,
-                            ally.getAction()
+                            ally.getEntity() instanceof Player ? ((Player) ally.getEntity()).getArmor() : 0
                     ), x, y
             );
             y += lineHeight * 1.4;
@@ -96,11 +95,10 @@ public class BattleView {
         for (IBattleUnit enemy : game.getBattle().getEnemies()) {
             gc.fillText(
                     String.format(
-                            "[%c] %-10s HP:%-3d ACT:%s",
+                            "[%c] %-12s HP:%-3d",
                             letter,
                             enemy.getEntity().getName(),
-                            enemy.getHealth(),
-                            enemy.getAction()
+                            enemy.getHealth()
                     ), x, y
             );
             y += lineHeight * 1.4;

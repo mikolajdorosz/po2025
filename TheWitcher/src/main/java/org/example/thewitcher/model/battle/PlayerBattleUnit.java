@@ -14,7 +14,6 @@ public class PlayerBattleUnit implements IBattleUnit {
     private final Player player;
     private BattleAction action;
     private String statusMessage;
-    private boolean defending;
     private int damageBoost = 0;
     private int resistance = 0;
 
@@ -47,15 +46,11 @@ public class PlayerBattleUnit implements IBattleUnit {
         }
         dmg -= resistance;
         if (dmg < 0) dmg = 0;
-        if (defending) dmg /= 3;
         player.setHealth(player.getHealth() - dmg);
     }
-    @Override public void setAction(BattleAction action) { this.action = action; }
     @Override public BattleAction getAction() { return action; }
     @Override public String getStatusMessage() { return statusMessage; }
     @Override public void resetStatusMessage() { statusMessage = null; }
-    @Override public void setDefending(boolean defending) { this.defending = defending; }
-    @Override public boolean isDefending() { return defending; }
     @Override public void applyEffect(String effectName) {
         if ("Thunderbolt".equalsIgnoreCase(effectName)) {
             damageBoost += 5;

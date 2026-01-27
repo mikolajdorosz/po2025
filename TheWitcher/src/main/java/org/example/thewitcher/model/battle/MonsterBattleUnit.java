@@ -6,7 +6,6 @@ import org.example.thewitcher.model.items.WeaponType;
 
 public class MonsterBattleUnit implements IBattleUnit {
     private final Monster monster;
-    private BattleAction action;
 
     public MonsterBattleUnit(Monster monster) { this.monster = monster; }
 
@@ -16,11 +15,8 @@ public class MonsterBattleUnit implements IBattleUnit {
     @Override public int attack() { return monster.attack(); }
     @Override public int attack(IBattleUnit enemy, WeaponType weapon) { return 0; }
     @Override public void takeDamage(int dmg) { monster.setHealth(monster.getHealth() - dmg); }
-    @Override public void setAction(BattleAction action) { this.action = action; }
     @Override public BattleAction getAction() { return BattleAction.ATTACK; }
     @Override public String getStatusMessage() { return null; }
     @Override public void resetStatusMessage() {}
-    @Override public void setDefending(boolean defending) {}
-    @Override public boolean isDefending() { return false; }
     @Override public void applyEffect(String effectName) { }
 }

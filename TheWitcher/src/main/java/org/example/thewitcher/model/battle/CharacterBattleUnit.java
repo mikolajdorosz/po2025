@@ -8,7 +8,6 @@ import org.example.thewitcher.model.items.WeaponType;
 public class CharacterBattleUnit implements IBattleUnit {
     private final Character character;
     private BattleAction action;
-    private boolean defending;
     private int damageBoost = 0;
     private int resistance = 0;
     private String statusMessage;
@@ -29,15 +28,11 @@ public class CharacterBattleUnit implements IBattleUnit {
     @Override public void takeDamage(int dmg) {
         dmg -= resistance;
         if (dmg < 0) dmg = 0;
-        if (defending) dmg /= 3;
         character.setHealth(character.getHealth() - dmg);
     }
-    @Override public void setAction(BattleAction action) { this.action = action; }
     @Override public BattleAction getAction() { return action; }
     @Override public String getStatusMessage() { return statusMessage; }
     @Override public void resetStatusMessage() { statusMessage = null; }
-    @Override public void setDefending(boolean defending) { this.defending = defending; }
-    @Override public boolean isDefending() { return defending; }
     @Override public void applyEffect(String effectName) {
         if ("Thunderbolt".equalsIgnoreCase(effectName)) {
             damageBoost += 5;

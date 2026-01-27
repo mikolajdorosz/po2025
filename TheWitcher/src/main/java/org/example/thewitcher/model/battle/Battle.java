@@ -20,6 +20,8 @@ public class Battle {
     private int enemyIndex;
     private BattleAction pendingAction;
     private WeaponType pendingWeapon;
+    private boolean playerGuarded;
+    private IBattleUnit guardingAlly;
 
     public Battle(List<IBattleUnit> allies, List<IBattleUnit> enemies) {
         this.allies = new ArrayList<>(allies);
@@ -32,6 +34,8 @@ public class Battle {
         this.enemyIndex = -1;
         this.inputState = BattleInputState.ACTION;
         this.isAllyAttacking = false;
+        this.playerGuarded = false;
+        this.guardingAlly = null;
     }
 
     public List<IBattleUnit> getAllies() { return allies; }
@@ -53,9 +57,9 @@ public class Battle {
         pendingAction = action;
         switch (action) {
             case ATTACK -> inputState = BattleInputState.ENEMY;
-            case DEFEND -> { defend(); endTurn(); }
-            case DRINK_ELIXIR -> { if (!isPlayerTurn()) return; inputState = BattleInputState.ELIXIR_SELECTION; }
-            case ESCAPE ->{ if (!isPlayerTurn()) return; escape(); }
+            case DEFEND -> defend();
+            case DRINK_ELIXIR -> drinkElixir();
+            case ESCAPE -> escape();
         }
     }
     public void selectEnemy(int index) {
@@ -109,9 +113,15 @@ public class Battle {
         } else getEnemy().takeDamage(getAlly().attack());
         endTurn();
     }
-    private void defend() { getAlly().setDefending(true); }
-    private void drinkElixir() { setInputState(BattleInputState.ELIXIR_SELECTION); }
+    private void defend() {
+        if (isPlayerTurn()) return;
+        guardingAlly = getAlly();
+        playerGuarded = true;
+        endTurn();
+    }
+    private void drinkElixir() { if (!isPlayerTurn()) return; inputState = BattleInputState.ELIXIR_SELECTION; }
     public void escape() {
+        if (!isPlayerTurn()) return;
         escaped = true;
         updateState();
     }
@@ -134,13 +144,16 @@ public class Battle {
     private void resetAllyTurn() {
         allyIndex = 0;
         isAllyAttacking = false;
-        allies.forEach(a -> a.setDefending(false));
     }
     private void enemyTurn() {
         for (IBattleUnit enemy : enemies) {
             if (!enemy.isAlive() || allies.isEmpty()) break;
             IBattleUnit target = allies.get(ThreadLocalRandom.current().nextInt(allies.size()));
-            target.takeDamage(enemy.attack());
+            if (playerGuarded && target.getEntity() instanceof Player && guardingAlly != null && guardingAlly.isAlive()) {
+                guardingAlly.takeDamage(enemy.attack());
+                playerGuarded = false;
+                guardingAlly = null;
+            } else target.takeDamage(enemy.attack());
             cleanupDead();
             updateState();
             if (isFinished()) return;
@@ -149,7 +162,11 @@ public class Battle {
 
     private void cleanupDead() {
         allies.removeIf(ally -> {
-            if (!ally.isAlive()) { defeatedAllies.add(ally); return true; }
+            if (!ally.isAlive()) {
+                defeatedAllies.add(ally);
+                if (ally == guardingAlly) { playerGuarded = false; guardingAlly = null; }
+                return true;
+            }
             return false;
         });
         enemies.removeIf(enemy -> {

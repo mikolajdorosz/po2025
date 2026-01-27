@@ -11,11 +11,8 @@ public interface IBattleUnit {
     int attack(IBattleUnit enemy, WeaponType weapon);
     int attack();
     void takeDamage(int dmg);
-    void setAction(BattleAction action);
     BattleAction getAction();
     String getStatusMessage();
     void resetStatusMessage();
-    void setDefending(boolean defending);
-    boolean isDefending();
     void applyEffect(String effectName);
 }
