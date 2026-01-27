@@ -3,22 +3,21 @@ package org.example.thewitcher.model.entity.character;
 import org.example.thewitcher.model.entity.Interactable;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.model.game.GameState;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Sorceress extends Character implements Interactable {
-    private List<String> tasks;
-    private int targetNumber;
+    private int serviceFee = 10;
+    private java.util.Map<String, String> recipes;
 
     public Sorceress(int x, int y) {
         super(x, y, "Sorceress");
-        this.targetNumber = 5;
-        this.tasks = new ArrayList<>();
-        tasks.add("Gather " + targetNumber + " pieces of Verbena");
-        tasks.add("Gather " + targetNumber + " pieces of Wolfsbane");
+
+        this.recipes = new java.util.LinkedHashMap<>();
+        this.recipes.put("Thunderbolt", "Wolfsbane");
+        this.recipes.put("Resistance Potion", "Verbena");
     }
 
-    public List<String> getTasks() { return tasks; }
+    public int getServiceFee() { return serviceFee; }
+    public java.util.Map<String, String> getRecipes() { return recipes; }
 
     @Override
     public void interact(Game game) {

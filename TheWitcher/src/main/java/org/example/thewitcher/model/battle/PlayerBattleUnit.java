@@ -15,6 +15,8 @@ public class PlayerBattleUnit implements IBattleUnit {
     private BattleAction action;
     private String statusMessage;
     private boolean defending;
+    private int damageBoost = 0;
+    private int resistance = 0;
 
     public PlayerBattleUnit(Player player) { this.player = player; }
 
@@ -23,9 +25,9 @@ public class PlayerBattleUnit implements IBattleUnit {
     @Override public boolean isAlive() { return player.getHealth() > 0; }
     @Override public int attack(IBattleUnit enemy, WeaponType weapon) {
         return switch (weapon) {
-            case SILVER -> silverAttack(enemy);
-            case STEEL -> steelAttack(enemy);
-            case DISTANCE -> distanceAttack(enemy);
+            case SILVER -> silverAttack(enemy) + damageBoost;
+            case STEEL -> steelAttack(enemy) + damageBoost;
+            case DISTANCE -> distanceAttack(enemy) + damageBoost;
             default -> 0;
         };
     }
@@ -43,6 +45,8 @@ public class PlayerBattleUnit implements IBattleUnit {
                 if (dmg < 0) dmg = 0;
             }
         }
+        dmg -= resistance;
+        if (dmg < 0) dmg = 0;
         if (defending) dmg /= 3;
         player.setHealth(player.getHealth() - dmg);
     }
@@ -52,6 +56,15 @@ public class PlayerBattleUnit implements IBattleUnit {
     @Override public void resetStatusMessage() { statusMessage = null; }
     @Override public void setDefending(boolean defending) { this.defending = defending; }
     @Override public boolean isDefending() { return defending; }
+    @Override public void applyEffect(String effectName) {
+        if ("Thunderbolt".equalsIgnoreCase(effectName)) {
+            damageBoost += 5;
+            statusMessage = "Thunderbolt! (+5 DMG)";
+        } else if ("Resistance Potion".equalsIgnoreCase(effectName)) {
+            resistance += 3;
+            statusMessage = "Resistance! (-3 DMG Taken)";
+        }
+    }
 
     private int silverAttack(IBattleUnit enemy) {
         if (player.getAppliedEquipment().getSilver() != null && player.getAppliedEquipment().getSilver().getCondition() > 0) {

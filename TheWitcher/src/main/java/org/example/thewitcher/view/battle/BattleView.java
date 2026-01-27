@@ -10,16 +10,20 @@ import org.example.thewitcher.model.battle.IBattleUnit;
 import org.example.thewitcher.model.entity.player.Player;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.view.util.ViewportCalculator;
+import org.example.thewitcher.view.battle.overlay.*;
 
 public class BattleView {
     private final GraphicsContext gc;
     private final Canvas canvas;
     private final ViewportCalculator viewport;
 
+    private final ElixirMenuOverlay elixirMenuOverlay;
+
     public BattleView(GraphicsContext gc, Canvas canvas, ViewportCalculator viewport) {
         this.gc = gc;
         this.canvas = canvas;
         this.viewport = viewport;
+        this.elixirMenuOverlay = new org.example.thewitcher.view.battle.overlay.ElixirMenuOverlay();
     }
 
     public void render(Game game) {
@@ -43,10 +47,15 @@ public class BattleView {
         gc.fillText("ENEMIES", width * 0.8, headerY);
         drawAllies(game, alliesX, contentY, fontSize);
         drawEnemies(game, enemiesX, contentY, fontSize);
+        if (game.getBattle().getInputState() == BattleInputState.ELIXIR_SELECTION) {
+            elixirMenuOverlay.draw(gc, game, width, height, fontSize);
+        }
+
         String text = switch (game.getBattle().getInputState()) {
             case ACTION -> "[1] ATTACK  [2] DEFEND  [3] ELIXIR  [4] ESCAPE";
             case ENEMY -> "SELECT ENEMY";
             case WEAPON -> "[1] SILVER  [2] STEEL  [3] DISTANCE";
+            case ELIXIR_SELECTION -> "SELECT ELIXIR [ESC] BACK";
         };
         drawCenteredText(text, height - fontSize, width);
 

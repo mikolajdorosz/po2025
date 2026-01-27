@@ -9,5 +9,4 @@ public class Elixir extends Item{
         this.weight = Math.round(Math.abs(randWeight.nextDouble() - randWeight.nextDouble()) * 10.0) / 10.0;
         this.price = 100 + randPrice.nextInt(200); // 100 to 299
     }
-    //na później składniki, podnoszenie statystyk, może?: podklasy różnych eliksirów
 }

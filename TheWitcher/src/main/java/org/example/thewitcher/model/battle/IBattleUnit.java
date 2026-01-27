@@ -17,4 +17,5 @@ public interface IBattleUnit {
     void resetStatusMessage();
     void setDefending(boolean defending);
     boolean isDefending();
+    void applyEffect(String effectName);
 }

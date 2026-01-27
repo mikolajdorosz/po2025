@@ -22,4 +22,5 @@ public class MonsterBattleUnit implements IBattleUnit {
     @Override public void resetStatusMessage() {}
     @Override public void setDefending(boolean defending) {}
     @Override public boolean isDefending() { return false; }
+    @Override public void applyEffect(String effectName) { }
 }

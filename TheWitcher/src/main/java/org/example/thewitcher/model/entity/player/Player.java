@@ -40,6 +40,9 @@ public class Player extends Entity {
         equipment.addItem(new Food("Cottage"));
         equipment.addItem(new Silver("Wolf Silver Sword"));
         equipment.addItem(new Armor("Wolf Armor"));
+        equipment.addItem(new Herb("Verbena"));
+        equipment.addItem(new Herb("Wolfsbane"));
+        equipment.addItem(new Elixir("Thunderbolt"));
     }
 
     private void updateWeight() {

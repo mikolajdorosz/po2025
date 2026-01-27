@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import org.example.thewitcher.controller.character.ArmorerController;
 import org.example.thewitcher.controller.character.BlacksmithController;
+import org.example.thewitcher.controller.character.MerchantController;
+import org.example.thewitcher.controller.character.SorceressController;
 import org.example.thewitcher.model.game.Game;
 import org.example.thewitcher.model.game.GameState;
 import org.example.thewitcher.view.GameView;
@@ -16,6 +18,8 @@ public class GameController {
     private final InventoryController inventoryController;
     private final ArmorerController armorerController;
     private final BlacksmithController blacksmithController;
+    private final MerchantController merchantController;
+    private final SorceressController sorceressController;
     private final BattleController battleController;
     private AnimationTimer timer;
 
@@ -26,6 +30,8 @@ public class GameController {
         this.inventoryController = new InventoryController(game);
         this.armorerController = new ArmorerController(game);
         this.blacksmithController = new BlacksmithController(game);
+        this.merchantController =  new MerchantController(game);
+        this.sorceressController = new SorceressController(game);
         this.battleController = new BattleController(game);
     }
 
@@ -48,8 +54,9 @@ public class GameController {
                      INVENTORY_INSPECT_ITEM -> inventoryController.handleInput(e.getCode(), e.getText());
                 case INTERACTION_ARMORER -> armorerController.handleInput(e.getCode());
                 case INTERACTION_BLACKSMITH -> blacksmithController.handleInput(e.getCode());
-                case INTERACTION_INNKEEPER,
-                     INTERACTION_MERCHANT, INTERACTION_SORCERESS -> {
+                case INTERACTION_MERCHANT -> merchantController.handleInput(e.getCode());
+                case INTERACTION_SORCERESS -> sorceressController.handleInput(e.getCode());
+                case INTERACTION_INNKEEPER -> {
                     if (e.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
                         game.setState(org.example.thewitcher.model.game.GameState.MAP);
                         game.setCurrentInteractable(null);

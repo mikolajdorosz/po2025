@@ -55,7 +55,7 @@ public class Battle {
         switch (pendingAction) {
             case ATTACK -> { setInputState(BattleInputState.WEAPON); return; }
             case DEFEND -> defend();
-            case DRINK_ELIXIR -> drinkElixir();
+            case DRINK_ELIXIR -> { drinkElixir(); return;}
             case ESCAPE -> escape();
         }
         pendingAction = null;
@@ -125,7 +125,39 @@ public class Battle {
 
     }
     private void defend() { getAlly().setDefending(true); }
-    private void drinkElixir() { } // boost ally
+
+    private void drinkElixir() { setInputState(BattleInputState.ELIXIR_SELECTION); }
+
+    public void selectElixir(int index) {
+        // Find player to access inventory
+        IBattleUnit playerUnit = allies.stream()
+                .filter(a -> a.getEntity() instanceof Player)
+                .findFirst()
+                .orElse(null);
+
+        if (playerUnit == null) return;
+        Player player = (Player) playerUnit.getEntity();
+
+        // Get Elixirs
+        List<org.example.thewitcher.model.items.Item> elixirs = new ArrayList<>();
+        for (org.example.thewitcher.model.items.Item item : player.getEquipment().getItems()) {
+            if (item instanceof org.example.thewitcher.model.items.Elixir) {
+                elixirs.add(item);
+            }
+        }
+
+        if (index >= 0 && index < elixirs.size()) {
+            org.example.thewitcher.model.items.Item elixir = elixirs.get(index);
+            // Apply effect to CURRENT ally (could be Player or Ally)
+            getAlly().applyEffect(elixir.getName());
+
+            // Remove from inventory
+            player.getEquipment().removeItem(elixir);
+
+            setInputState(BattleInputState.ACTION);
+        }
+    }
+
     public void escape() {
         escaped = true;
         battleState = BattleState.FINISHED;

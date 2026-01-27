@@ -28,6 +28,7 @@ public class BattleController {
             case ACTION -> handleAction(code);
             case ENEMY -> handleEnemy(charInput);
             case WEAPON -> handleWeapon(code);
+            case ELIXIR_SELECTION -> handleElixirSelection(code);
         }
     }
     private void handleAction(KeyCode code) {
@@ -58,6 +59,17 @@ public class BattleController {
         if (game.getBattle().isFinished()) finishBattle();
         if (weapon == null) return;
         game.getBattle().chooseWeapon(weapon);
+    }
+    private void handleElixirSelection(KeyCode code) {
+        if (code == KeyCode.ESCAPE) {
+            game.getBattle().setInputState(BattleInputState.ACTION);
+            return;
+        }
+        if (code.isDigitKey()) {
+            int index = Integer.parseInt(code.getChar()) - 1;
+            game.getBattle().selectElixir(index);
+            if (game.getBattle().isFinished()) finishBattle();
+        }
     }
     private void finishBattle() {
         BattleResult result = game.getBattle().getResult();
