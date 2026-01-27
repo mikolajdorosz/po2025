@@ -32,6 +32,7 @@ public final class ObjectRegistry {
         registry.put(36, MapObject.ofSinglePoint(ObjectDrawings.bandit()));
         registry.put(37, MapObject.ofSinglePoint(ObjectDrawings.ghul()));
         registry.put(38, MapObject.ofSinglePoint(ObjectDrawings.wolf()));
+        registry.put(39, MapObject.ofSinglePoint(ObjectDrawings.ally()));
     }
     public static MapObject get(int id) { return registry.get(id); }
 }
