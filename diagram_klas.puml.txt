@@ -1,0 +1,319 @@
+@startuml
+package org.example.thewitcher.app {
+    class GameApp {
+        +start(Stage stage)
+    }
+    class Launcher {
+        +main(String[] args)
+    }
+    class Main {
+        +main(String[] args)
+    }
+    
+    class GameConfig {
+        -String title
+        -int windowWidth
+        -int windowHeight
+        -String fontName
+        -int fontSize
+        -int pointWidth
+        -int pointHeight
+    }
+    
+    GameApp ..> GameController : creates
+    GameApp ..> GameView : creates
+    GameApp ..> GameConfig : uses
+}
+package org.example.thewitcher.controller {
+    class GameController {
+        -Game game
+        +start()
+        +attachInput(Scene scene)
+    }
+    
+    class MapController {
+        -Game game
+        +handleInput(KeyCode code)
+    }
+    
+    class InventoryController {
+        -Game game
+        +handleInput(KeyCode code, String text)
+    }
+    
+    class PauseMenuController {
+        -Game game
+        +handleInput(KeyCode code)
+    }
+    
+    class BattleController {
+        -Game game
+        +handleInput(KeyCode code, String text)
+    }
+    
+    package character {
+        class ArmorerController {
+            -Game game
+            +handleInput(KeyCode code)
+        }
+        class BlacksmithController {
+            -Game game
+            +handleInput(KeyCode code)
+        }
+        class MerchantController {
+            -Game game
+            +handleInput(KeyCode code)
+        }
+        class SorceressController {
+            -Game game
+            +handleInput(KeyCode code)
+        }
+    }
+    
+    GameController *-- Game
+    GameController *-- GameView
+    GameController *-- MapController
+    GameController *-- InventoryController
+    GameController *-- BattleController
+    GameController *-- PauseMenuController
+    GameController *-- ArmorerController
+    GameController *-- BlacksmithController
+    GameController *-- MerchantController
+    GameController *-- SorceressController
+}
+package org.example.thewitcher.model {
+    package battle {
+        class Battle {
+            -List<IBattleUnit> allies
+            -List<IBattleUnit> enemies
+            -BattleState battleState
+            -BattleInputState inputState
+            -boolean escaped
+            -boolean isAllyAttacking
+            -int allyIndex
+            -int enemyIndex
+            +allysAction(BattleAction action)
+            +performAttack()
+        }
+        enum BattleAction
+        class BattleDetector
+        enum BattleInputState
+        class BattleResult
+        enum BattleState
+        
+        interface IBattleUnit {
+            +attack()
+            +takeDamage(int dmg)
+            +isAlive()
+            +getEntity()
+        }
+        
+        class CharacterBattleUnit implements IBattleUnit
+        class MonsterBattleUnit implements IBattleUnit
+        class PlayerBattleUnit implements IBattleUnit
+        
+        Battle *-- IBattleUnit
+        Battle ..> org.example.thewitcher.model.entity.player.Player : depends on
+        Battle ..> org.example.thewitcher.model.items.Elixir : uses
+        Battle ..> BattleResult : produces
+    }
+    
+    package entity {
+        abstract class Entity {
+            #int x
+            #int y
+            #String name
+        }
+        
+        interface Interactable {
+            +interact(Game game)
+        }
+        
+        package character as entity_character {
+            abstract class Character extends Entity {
+                #int health
+            }
+            class Ally extends Character
+            class Bandit extends Character
+            
+            class Armorer extends Character implements Interactable
+            class Blacksmith extends Character implements Interactable
+            class Innkeeper extends Character implements Interactable
+            class Merchant extends Character implements Interactable
+            class Sorceress extends Character implements Interactable
+        }
+        
+        package monster {
+            class Monster extends Entity
+            class Ghul extends Monster
+            class Wolf extends Monster
+        }
+        
+        package player {
+            class Player extends Entity {
+                #Equipment equipment
+                #AppliedEquipment appliedEquipment
+                -List<IBattleUnit> allies
+                +equipItem(Item item)
+                +use(Item item)
+                +drop(Item item)
+                +inspect(Item item)
+            }
+            abstract class PlayerDecorator extends Player
+            class ArmorPlayerDecorator extends PlayerDecorator
+            class DistancePlayerDecorator extends PlayerDecorator
+            class SilverPlayerDecorator extends PlayerDecorator
+            class SteelPlayerDecorator extends PlayerDecorator
+        }
+    }
+    
+    package game {
+        class Game {
+            -Player player
+            -Location location
+            -GameState state
+            -Battle battle
+            -Interactable currentInteractable
+            -Item selectedItem
+        }
+        enum GameState
+        
+        class InventoryEntry {
+            +char key
+            +String label
+            +Item item
+            +boolean isApplied
+        }
+        
+        Game +-- InventoryEntry
+    }
+    
+    package items {
+        abstract class Item
+        class Equipment
+        class AppliedEquipment
+        interface IWearable
+        
+        abstract class Weapon extends Item implements IWearable
+        enum WeaponType
+        
+        class Armor extends Item implements IWearable
+        class Distance extends Weapon
+        class Elixir extends Item
+        class Food extends Item
+        class Herb extends Item
+        class Silver extends Weapon
+        class Steel extends Weapon
+        
+        Equipment o-- Item
+        AppliedEquipment --> Silver
+        AppliedEquipment --> Steel
+        AppliedEquipment --> Distance
+        AppliedEquipment --> Armor
+    }
+    
+    package map {
+        abstract class Location {
+            -List<Entity> entities
+            #List<IBattleUnit> enemies
+            +getPoint(int x, int y)
+        }
+        class Velen extends Location
+        class TestMap extends Location
+        class EntityManager
+        
+        package point {
+            class Point
+        }
+        package data {
+            class MapObject
+            class ObjectRegistry {
+                +{static} MapObject get(int id)
+            }
+            class ObjectDrawings
+            
+            ObjectRegistry ..> MapObject : returns
+            ObjectRegistry ..> ObjectDrawings : uses
+        }
+        
+        Location --> EntityManager
+        Location o-- Entity
+        Location --> org.example.thewitcher.model.battle.IBattleUnit : contains enemies
+    }
+}
+package org.example.thewitcher.service {
+    class GameStateManager {
+        +{static} void saveGame(Game game)
+        +{static} Game loadGame()
+    }
+}
+package org.example.thewitcher.view {
+    class GameView
+    
+    package battle as view_battle {
+        class BattleView
+        package overlay as battle_overlay {
+            class ElixirMenuOverlay
+        }
+        BattleView *-- ElixirMenuOverlay
+    }
+    
+    package interaction {
+        interface InteractionView
+        class GenericInteractionView implements InteractionView
+        class ArmorerView extends GenericInteractionView
+        class BlacksmithView extends GenericInteractionView
+        class InnkeeperView extends GenericInteractionView
+        class MerchantView extends GenericInteractionView
+        class SorceressView extends GenericInteractionView
+    }
+    
+    package inventory {
+        class InventoryView
+        package overlay as inventory_overlay {
+            class ItemActionOverlay
+            class ItemInspectionOverlay
+        }
+        InventoryView *-- ItemActionOverlay
+        InventoryView *-- ItemInspectionOverlay
+    }
+    
+    package map as view_map {
+        class MapView
+    }
+    
+    package menu {
+        class PauseMenuView
+    }
+    
+    package util {
+        class ViewportCalculator
+    }
+    
+    GameView *-- MapView
+    GameView *-- InventoryView
+    GameView *-- BattleView
+    GameView *-- PauseMenuView
+    GameView *-- ArmorerView
+    GameView *-- BlacksmithView
+    GameView *-- MerchantView
+    GameView *-- SorceressView
+    GameView *-- InnkeeperView
+    GameView --> ViewportCalculator
+}
+Game --> org.example.thewitcher.model.entity.player.Player
+Game --> org.example.thewitcher.model.map.Location
+Game --> org.example.thewitcher.model.battle.Battle
+Game --> org.example.thewitcher.model.game.GameState
+Game --> org.example.thewitcher.model.entity.Interactable
+Game --> org.example.thewitcher.model.items.Item
+CharacterBattleUnit --> org.example.thewitcher.model.entity.character.Character
+MonsterBattleUnit --> org.example.thewitcher.model.entity.monster.Monster
+PlayerBattleUnit --> org.example.thewitcher.model.entity.player.Player
+org.example.thewitcher.model.entity.player.Player *-- org.example.thewitcher.model.items.Equipment
+org.example.thewitcher.model.entity.player.Player *-- org.example.thewitcher.model.items.AppliedEquipment
+org.example.thewitcher.model.entity.player.Player o-- org.example.thewitcher.model.battle.IBattleUnit
+InventoryController ..> org.example.thewitcher.model.game.Game.InventoryEntry : uses
+InventoryController ..> org.example.thewitcher.model.items.IWearable : checks
+MapController ..> org.example.thewitcher.model.map.data.ObjectRegistry : uses
+@enduml

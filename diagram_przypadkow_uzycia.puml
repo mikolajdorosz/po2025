@@ -1,0 +1,107 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Player (Geralt)" as player
+actor "Enemy" as enemy
+
+package "NPCs" {
+    actor "Merchant" as merchant
+    actor "Blacksmith" as blacksmith
+    actor "Armorer" as armorer
+    actor "Sorceress" as sorceress
+    actor "Innkeeper" as innkeeper
+}
+
+rectangle "The Witcher Game System" {
+
+    package "System" {
+        usecase "Start Game" as UC_Start
+        usecase "Save & Quit" as UC_Save
+        usecase "Restart Game" as UC_Restart
+        usecase "Pause Game" as UC_Pause
+    }
+
+    package "Exploration" {
+        usecase "Navigate Map" as UC_Move
+        usecase "Gather Herb" as UC_Gather
+        usecase "Interact with Entity" as UC_Interact
+    }
+
+    package "Inventory Management" {
+        usecase "View Inventory" as UC_ViewInv
+        usecase "Inspect Item" as UC_Inspect
+        usecase "Equip Item" as UC_Equip
+        usecase "Unequip Item" as UC_Unequip
+        usecase "Drop Item" as UC_Drop
+        usecase "Consume Food/Elixir" as UC_Consume
+    }
+
+    package "Battle System" {
+        usecase "Enter Battle" as UC_Battle
+        usecase "Attack Enemy" as UC_Attack
+        usecase "Defend (Guard Player)" as UC_Defend
+        usecase "Drink Elixir (Battle)" as UC_DrinkElixirBattle
+        usecase "Escape Battle" as UC_Escape
+        usecase "Choose Weapon" as UC_Weapon
+    }
+
+    package "NPC Interaction" {
+        usecase "Trade Items" as UC_Trade
+        usecase "Repair Armor" as UC_Repair
+        usecase "Repair Weapon" as UC_RepairW
+        usecase "Craft Elixir" as UC_CraftElixir
+    }
+}
+
+' Player relationships
+player -- UC_Start
+player -- UC_Pause
+UC_Pause ..> UC_Save : <<extend>>
+UC_Pause ..> UC_Restart : <<extend>>
+
+player -- UC_Move
+player -- UC_Gather
+player -- UC_Interact
+player -- UC_ViewInv
+
+UC_ViewInv <.. UC_Inspect : <<extend>>
+UC_ViewInv <.. UC_Equip : <<extend>>
+UC_ViewInv <.. UC_Unequip : <<extend>>
+UC_ViewInv <.. UC_Drop : <<extend>>
+UC_ViewInv <.. UC_Consume : <<extend>>
+
+player -- UC_Battle
+UC_Battle ..> UC_Attack : <<include>>
+UC_Battle <.. UC_DrinkElixirBattle : <<extend>>
+UC_Battle <.. UC_Escape : <<extend>>
+UC_Battle ..> UC_Weapon : <<include>>
+
+UC_Battle <.. UC_Defend : <<extend>>
+
+actor "Ally" as ally
+UC_Attack -- enemy
+UC_Battle -- ally
+
+' Specific constraints verified in code:
+' Player cannot Defend. Ally cannot Drink Elixir or Escape.
+ally -- UC_Defend
+player -- UC_DrinkElixirBattle
+player -- UC_Escape
+
+' Interaction relationships
+UC_Interact <|-- UC_Trade
+UC_Interact <|-- UC_Repair
+UC_Interact <|-- UC_RepairW
+UC_Interact <|-- UC_CraftElixir
+
+UC_Trade -- merchant
+UC_Trade -- blacksmith
+UC_Trade -- armorer
+
+UC_Repair -- armorer
+UC_RepairW -- blacksmith
+UC_CraftElixir -- sorceress
+UC_Interact -- innkeeper
+
+@enduml
