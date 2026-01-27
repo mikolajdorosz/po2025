@@ -19,6 +19,7 @@ public class MapController {
             case D -> game.movePlayer(1, 0);
             case I -> game.setState(GameState.INVENTORY);
             case E -> checkInteraction();
+            case ESCAPE -> game.setState(GameState.PAUSE_MENU);
         }
     }
 

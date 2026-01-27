@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Location {
+public abstract class Location implements java.io.Serializable {
     protected Point[][] location;
     protected Player player;
     protected int[][] fileContents;

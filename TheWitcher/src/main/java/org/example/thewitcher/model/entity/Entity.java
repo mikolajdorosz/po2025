@@ -1,6 +1,6 @@
 package org.example.thewitcher.model.entity;
 
-public abstract class Entity {
+public abstract class Entity implements java.io.Serializable {
     protected int x;
     protected int y;
     protected String name;

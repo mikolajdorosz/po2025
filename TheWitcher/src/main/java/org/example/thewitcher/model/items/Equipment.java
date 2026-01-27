@@ -3,7 +3,7 @@ package org.example.thewitcher.model.items;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Equipment {
+public class Equipment implements java.io.Serializable {
     private String ownerName;
     private List<Item> items;
 

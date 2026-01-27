@@ -5,7 +5,7 @@ import org.example.thewitcher.model.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppliedEquipment {
+public class AppliedEquipment implements java.io.Serializable {
     private List<String> items;
     private Silver silver;
     private Steel steel;
