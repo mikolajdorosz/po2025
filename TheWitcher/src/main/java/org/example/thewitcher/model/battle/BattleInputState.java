@@ -4,5 +4,5 @@ public enum BattleInputState {
     ACTION,
     ENEMY,
     WEAPON,
-    ELIXIR_SELECTION
+    ELIXIR_SELECTION,
 }

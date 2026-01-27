@@ -38,14 +38,14 @@ public class BattleController {
             case DIGIT3 -> game.getBattle().allysAction(BattleAction.DRINK_ELIXIR);
             case DIGIT4 -> { game.getBattle().allysAction(BattleAction.ESCAPE); finishBattle(); }
         }
-        if (game.getBattle().isFinished()) finishBattle();
     }
     private void handleEnemy(String charInput) {
         if (charInput == null || charInput.isEmpty()) return;
         int index = Character.toLowerCase(charInput.charAt(0)) - 'a';
         if (index >= 0 && index < game.getBattle().getEnemies().size()) {
             game.getBattle().setEnemy(index);
-            game.getBattle().executePendingAction();
+            if (!game.getBattle().getIsAllyAttacking()) game.getBattle().executePendingAction();
+            else game.getBattle().executeAttack();
             if (game.getBattle().isFinished()) finishBattle();
         }
     }

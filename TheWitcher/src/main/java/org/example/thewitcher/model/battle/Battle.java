@@ -19,6 +19,7 @@ public class Battle {
     private BattleInputState inputState;
     private BattleAction pendingAction;
     private WeaponType pendingWeapon;
+    private boolean isAllyAttacking;
 
     public Battle(List<IBattleUnit> allies, List<IBattleUnit> enemies) {
         this.allies = new ArrayList<>(allies);
@@ -30,6 +31,7 @@ public class Battle {
         this.allyIndex = 0;
         this.enemyIndex = -1;
         this.inputState = BattleInputState.ACTION;
+        this.isAllyAttacking = false;
     }
 
     public List<IBattleUnit> getAllies() { return allies; }
@@ -45,6 +47,8 @@ public class Battle {
     public void setEnemy(int enemyIndex) { this.enemyIndex = enemyIndex; }
     public void resetEnemy() { this.enemyIndex = -1; }
     public boolean isPlayerAlive() { return allies.stream().anyMatch(a -> a.getEntity() instanceof Player); }
+    public boolean getIsAllyAttacking() { return isAllyAttacking; }
+    public void setIsAllyAttacking(boolean value) { this.isAllyAttacking = value; }
 
     public void allysAction(BattleAction action) {
         pendingAction = action;
@@ -53,7 +57,11 @@ public class Battle {
     }
     public void executePendingAction() {
         switch (pendingAction) {
-            case ATTACK -> { setInputState(BattleInputState.WEAPON); return; }
+            case ATTACK -> {
+                if (!isAllyAttacking) setInputState(BattleInputState.WEAPON);
+                else setInputState(BattleInputState.ACTION);
+                return;
+            }
             case DEFEND -> defend();
             case DRINK_ELIXIR -> { drinkElixir(); return;}
             case ESCAPE -> escape();
@@ -73,7 +81,21 @@ public class Battle {
         executeAttackWithWeapon();
     }
     public void executeAttackWithWeapon() {
-        allyAttack(pendingWeapon);
+        playerAttack(pendingWeapon);
+        pendingAction = null;
+        pendingWeapon = null;
+        resetEnemy();
+        cleanupDead();
+        updateState();
+        if (isFinished()) return;
+        if (!nextAlly()) {
+            resetAllyTurn();
+            enemyTurn();
+        }
+        setInputState(BattleInputState.ACTION);
+    }
+    public void executeAttack() {
+        allysAttack();
         pendingAction = null;
         pendingWeapon = null;
         resetEnemy();
@@ -103,6 +125,7 @@ public class Battle {
     private boolean nextAlly() { allyIndex++; return allyIndex < allies.size(); }
     private void resetAllyTurn() {
         allyIndex = 0;
+        isAllyAttacking = false;
         resetDefense();
     }
     private void enemyTurn() {
@@ -117,13 +140,12 @@ public class Battle {
         }
     }
 
-    private void allyAttack(WeaponType weapon) {
-        if (getEnemy() == null) return;
-        System.out.println(getAlly().getEntity().getName());
-        if (getAlly().getEntity() instanceof Player) getEnemy().takeDamage(getAlly().attack(getEnemy(), weapon));
-        else getEnemy().takeDamage(getAlly().attack());
-
+    private void playerAttack(WeaponType weapon) {
+        if (getEnemy() == null || !(getAlly().getEntity() instanceof Player)) return;
+        getEnemy().takeDamage(getAlly().attack(getEnemy(), weapon));
+        isAllyAttacking = true;
     }
+    private void allysAttack() { getEnemy().takeDamage(getAlly().attack()); }
     private void defend() { getAlly().setDefending(true); }
 
     private void drinkElixir() { setInputState(BattleInputState.ELIXIR_SELECTION); }
