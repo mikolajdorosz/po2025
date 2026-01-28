@@ -12,16 +12,16 @@ public class CarComponentsRepository {
     public static CarComponentsRepository getInstance() { return INSTANCE; }
 
     private final ObservableList<Engine> engines = FXCollections.observableArrayList(
-            new Engine(6000, "Engine A", 120.0, 1500.0),
-            new Engine(7000, "Engine B", 130.0, 2000.0)
+        new Engine(6000, "Engine A", 120.0, 1500.0),
+        new Engine(7000, "Engine B", 130.0, 2000.0)
     );
     private final ObservableList<Clutch> clutches = FXCollections.observableArrayList(
-            new Clutch("Standard Clutch", 35, 2000),
-            new Clutch("Performance Clutch", 45, 3500)
+        new Clutch("Standard Clutch", 35, 2000),
+        new Clutch("Performance Clutch", 45, 3500)
     );
     private final ObservableList<Gearbox> gearboxes = FXCollections.observableArrayList(
-            new Gearbox(6, GearboxType.MANUAL, "Manual 6-Speed", 85.0, 2500.0, clutches.getFirst()),
-            new Gearbox(8, GearboxType.AUTOMATIC, "Automatic 8-Speed", 95.0, 3000.0)
+        new Gearbox(6, GearboxType.MANUAL, "Manual 6-Speed", 85.0, 2500.0, clutches.getFirst()),
+        new Gearbox(8, GearboxType.AUTOMATIC, "Automatic 8-Speed", 95.0, 3000.0)
     );
 
     public ObservableList<Engine> getEngines() { return engines; }

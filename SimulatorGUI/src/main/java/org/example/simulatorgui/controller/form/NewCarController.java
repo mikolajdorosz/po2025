@@ -12,7 +12,6 @@ import org.example.simulatorgui.model.car.Car;
 import org.example.simulatorgui.repo.CarRepository;
 import org.example.simulatorgui.model.components.Engine;
 import org.example.simulatorgui.model.components.Gearbox;
-import org.example.simulatorgui.model.util.Position;
 import org.example.simulatorgui.model.util.Utils;
 
 import java.io.IOException;
@@ -74,9 +73,11 @@ public class NewCarController {
         try {
             double weight = Double.parseDouble(carWeightTextField.getText());
             int vMax = Integer.parseInt(carMaxSpeedTextField.getText());
-            Position position = new Position(0, 0);
-            return Optional.of(new Car(plateNumber, model, weight, vMax, position, engine, gearbox));
-        } catch (NumberFormatException e) { throw new IllegalStateException("Input value is incorrect!"); }
+            return Optional.of(new Car(plateNumber, model, weight, vMax, engine, gearbox));
+        } catch (NumberFormatException e) { throw new IllegalStateException("Input value is incorrect!"); } catch (
+                InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // ===================== ACTIONS =====================
