@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.Label?><?import javafx.scene.layout.HBox?><?import javafx.scene.layout.VBox?>
 <?import javafx.scene.image.ImageView?>
-<HBox fx:id="tileHBox" visible="false" managed="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.simulatorgui.controller.car.CarController" spacing="12" prefHeight="34" style="-fx-padding: 8 12;-fx-background-radius: 12;-fx-background-color: rgba(248, 249, 251, 0.75) ;-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);">
+<HBox fx:id="tileHBox" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.simulatorgui.controller.car.CarController" spacing="12" prefHeight="34" style="-fx-padding: 8 12;-fx-background-radius: 12;-fx-background-color: rgba(248, 249, 251, 0.75) ;-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);">
     <VBox spacing="2">
         <Label text="PLATE" style="-fx-text-fill: #7a7a7a; -fx-font-size: 9px; -fx-letter-spacing: 0.8px;"/>
         <Label fx:id="plateNumberLabel" text="Plate" style="-fx-text-fill: #111111; -fx-font-size: 15px; -fx-font-weight: 600;"/>

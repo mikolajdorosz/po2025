@@ -1,5 +1,6 @@
 package org.example.simulatorgui.controller.car;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -19,17 +20,18 @@ public class CarController implements ICarListener {
     public void setCar(Car car) {
         if (this.car != null) this.car.removeListener(this);
         this.car = car;
-        car.addListener(this);
+        if (this.car != null) {
+            car.addListener(this);
+            Platform.runLater(this::refresh);
+        }
     }
 
     // ===================== UPDATE =====================
     public void refresh() {
         if (car == null) return;
-        tileHBox.setVisible(true);
-        tileHBox.setManaged(true);
         plateNumberLabel.setText(car.getPlateNumber());
         modelLabel.setText(car.getModel());
         carImageView.setImage(car.getImage());
     }
-    @Override public void onCarUpdated(Car car) { refresh(); }
+    @Override public void onCarUpdated(Car car) { Platform.runLater(this::refresh); }
 }

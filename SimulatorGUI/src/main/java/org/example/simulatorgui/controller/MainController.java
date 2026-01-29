@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.simulatorgui.controller.car.CarController;
 import org.example.simulatorgui.controller.car.CarHUDController;
+import org.example.simulatorgui.controller.car.CarTile;
 import org.example.simulatorgui.model.car.ICarListener;
 import org.example.simulatorgui.model.util.Utils;
 import org.example.simulatorgui.repo.CarRepository;
@@ -36,7 +37,7 @@ public class MainController implements ICarListener {
 
     private final CarRepository carRepository;
     private CarHUDController carHUDController;
-    private CarController carController;
+    private final Map<Car, CarTile> carTiles = new HashMap<>();
     private final Map<Car, ImageView> carViews = new HashMap<>();
     private final Map<Car, ImageView> flagViews = new HashMap<>();
     private Car car;
@@ -46,7 +47,7 @@ public class MainController implements ICarListener {
     private void setCar(Car car) {
         if (this.car != null) this.car.removeListener(this);
         this.car = car;
-        car.addListener(this);
+        if (this.car != null) car.addListener(this);
     }
 
     // ===================== INITIALIZATION =====================
@@ -58,8 +59,6 @@ public class MainController implements ICarListener {
 
         carHUDController = loadCarHUD();
         carHUDController.setCar(car);
-        carController = loadCarTile();
-        carController.setCar(car);
 
         trackInteraction();
         handleCarSelection();
@@ -80,17 +79,20 @@ public class MainController implements ICarListener {
             setCar(storedCarsComboBox.getSelectionModel().getSelectedItem());
             carHUDController.setCar(car);
             carHUDController.setHasTarget(hasTargetPosition());
-            carController.setCar(car);
             toggleButtons();
         });
     }
     private void trackInteraction() {
         raceTrackPane.setOnMouseClicked(e -> {
-            if (car.getToggler()) placeCar(e.getX(), e.getY());
-            else placeTarget(e.getX(), e.getY());
+            if (car == null) return;
+            if (car.getToggler()) {
+                try {
+                    placeCar(e.getX(), e.getY());
+                } catch (IOException ex) { throw new RuntimeException(ex); }
+            } else placeTarget(e.getX(), e.getY());
         });
     }
-    private void placeCar(double x, double y) {
+    private void placeCar(double x, double y) throws IOException {
         if (hasStartingPosition()) return;
         Position position = new Position(x, y);
         int index = storedCarsComboBox.getSelectionModel().getSelectedIndex();
@@ -100,6 +102,9 @@ public class MainController implements ICarListener {
         carViews.put(car, carImageView);
         car.setToggler(!car.getToggler());
         carRepository.getCarsOnTrack().add(car);
+        CarTile tile = loadCarTile(car);
+        carTiles.put(car, tile);
+        carContainer.getChildren().add(tile.node());
         startButton.getStyleClass().setAll("btn", "btn-grey");
         targetButton.getStyleClass().setAll("btn", "btn-red");
     }
@@ -127,9 +132,10 @@ public class MainController implements ICarListener {
         car.setToggler(true);
         car.setStartingPosition(null);
         car.setCurrentTarget(null);
-        carRepository.getCarsOnTrack().remove(car);
         clearCarImage();
         clearFlagImage();
+        clearCarTile();
+        carRepository.getCarsOnTrack().remove(car);
         toggleButtons();
     }
     private void refresh() {
@@ -144,22 +150,34 @@ public class MainController implements ICarListener {
     private void toggleButtons() {
         startButton.getStyleClass().setAll("btn", "btn-grey");
         targetButton.getStyleClass().setAll("btn", "btn-grey");
+        if (car == null) return;
         if (car.getToggler() && !hasStartingPosition()) startButton.getStyleClass().setAll("btn", "btn-blue");
         else if (!car.getToggler() && !hasTargetPosition()) targetButton.getStyleClass().setAll("btn", "btn-red");
     }
     private boolean hasStartingPosition() { return car.getStartingPosition() != null; }
-    private boolean hasTargetPosition() { return car.getCurrentTarget() != null; }
-    private void clearFlagImage() { raceTrackPane.getChildren().removeIf(node -> node instanceof ImageView flagIV && flagIV.getImage().getUrl().contains(flagViews.get(car).getImage().getUrl())); }
-    private void clearCarImage() { raceTrackPane.getChildren().removeIf(node ->  node instanceof ImageView carIV && carIV.getImage().getUrl().contains(carViews.get(car).getImage().getUrl())); }
+    private boolean hasTargetPosition() { if (car != null) return car.getCurrentTarget() != null; return false; }
+    private void clearFlagImage() {
+        ImageView view = flagViews.remove(car);
+        if (view != null) raceTrackPane.getChildren().remove(view);
+    }
+    private void clearCarImage() {
+        ImageView view = carViews.remove(car);
+        if (view != null) raceTrackPane.getChildren().remove(view);
+    }
+    private void clearCarTile() {
+        CarTile tile = carTiles.remove(car);
+        if (tile != null) carContainer.getChildren().remove(tile.node());
+    }
 
     // ===================== CAR VIEW COMPONENTS =====================
-    private CarController loadCarTile() throws IOException {
+    private CarTile loadCarTile(Car car) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/org/example/simulatorgui/view/car/car.fxml")
         );
         Node tile = loader.load();
-        carContainer.getChildren().add(tile);
-        return loader.getController();
+        CarController controller = loader.getController();
+        controller.setCar(car);
+        return new CarTile(controller, tile);
     }
     private CarHUDController loadCarHUD() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -191,15 +209,16 @@ public class MainController implements ICarListener {
     @FXML private void onDeleteCar() {
         boolean deleteCar = Utils.showDeleteAlert(car);
         if (!deleteCar) return;
+        setDefaultComboBoxValue();
+        clearFlagImage();
+        clearCarImage();
+        carRepository.getCarsOnTrack().remove(car);
+        clearCarTile();
         Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
             carRepository.getStoredCars().remove(selected);
             if (!carRepository.getStoredCars().isEmpty()) storedCarsComboBox.getSelectionModel().selectFirst();
         }
-        carRepository.getCarsOnTrack().remove(car);
-        setDefaultComboBoxValue();
-        clearFlagImage();
-        clearCarImage();
     }
 
     @Override public void onCarUpdated(Car car) { Platform.runLater(this::refresh); }

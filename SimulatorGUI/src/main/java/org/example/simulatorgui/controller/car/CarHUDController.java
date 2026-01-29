@@ -1,5 +1,6 @@
 package org.example.simulatorgui.controller.car;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,9 +27,11 @@ public class CarHUDController implements ICarListener {
     public void setCar(Car car) {
         if (this.car != null) this.car.removeListener(this);
         this.car = car;
-        car.addListener(this);
-        bindControls();
-        refresh();
+        if (this.car != null) {
+            car.addListener(this);
+            bindControls();
+            refresh();
+        }
     }
     private void bindControls() {
         boolean isAutomatic = car.getGearbox().getType().equals(GearboxType.AUTOMATIC);
@@ -56,56 +59,70 @@ public class CarHUDController implements ICarListener {
 
     // ===================== ACTIONS =====================
     @FXML private void onCarIgnition() {
+        if (car == null) return;
         if (car.getRunning()) car.turnOff();
         else car.turnOn();
         refresh();
     }
     @FXML private void onGearDown() {
+        if (car == null) return;
         if (!car.getGearbox().getType().equals(GearboxType.MANUAL)) return;
         car.getGearbox().gearDown();
         refresh();
         gearDownButton.getStyleClass().setAll("btn", "btn-grey");
     }
-    @FXML private void onGearDownRelease() { gearDownButton.getStyleClass().setAll("btn", "btn-orange"); }
+    @FXML private void onGearDownRelease() {
+        if (car == null) return;
+        gearDownButton.getStyleClass().setAll("btn", "btn-orange");
+    }
     @FXML private void onClutch() {
+        if (car == null) return;
         if (!car.getGearbox().getType().equals(GearboxType.MANUAL)) return;
         if (car.getGearbox().getClutch().getPressed()) car.getGearbox().getClutch().release();
         else car.getGearbox().getClutch().press();
         setButtonStyle(clutchButton, car.getGearbox().getClutch().getPressed());
     }
     @FXML private void onGas() {
+        if (car == null) return;
         if (!car.getRunning()) return;
         car.setGasPressed(true);
         gasButton.getStyleClass().setAll("btn", "btn-grey");
         refresh();
     }
     @FXML private void onGasRelease() {
+        if (car == null) return;
         if (!car.getRunning()) return;
         car.setGasPressed(false);
         gasButton.getStyleClass().setAll("btn", "btn-blue");
         refresh();
     }
     @FXML private void onBrake() {
+        if (car == null) return;
         if (!car.getRunning()) return;
         car.setBrakePressed(true);
         brakeButton.getStyleClass().setAll("btn", "btn-grey");
         refresh();
     }
     @FXML private void onBrakeRelease() {
+        if (car == null) return;
         if (!car.getRunning()) return;
         car.setBrakePressed(false);
         brakeButton.getStyleClass().setAll("btn", "btn-orange");
         refresh();
     }
     @FXML private void onGearUp() {
+        if (car == null) return;
         if (!car.getGearbox().getType().equals(GearboxType.MANUAL)) return;
         car.getGearbox().gearUp();
         refresh();
         gearUpButton.getStyleClass().setAll("btn", "btn-grey");
     }
-    @FXML private void onGearUpRelease() { gearUpButton.getStyleClass().setAll("btn", "btn-blue"); }
+    @FXML private void onGearUpRelease() {
+        if (car == null) return;
+        gearUpButton.getStyleClass().setAll("btn", "btn-blue");
+    }
     private void setButtonStyle(Button btn, boolean isActive) {
         btn.getStyleClass().setAll("btn", isActive ? "btn-grey" : "btn-blue");
     }
-    @Override public void onCarUpdated(Car car) { refresh(); }
+    @Override public void onCarUpdated(Car car) { Platform.runLater(this::refresh); }
 }
