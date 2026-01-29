@@ -78,11 +78,10 @@ public class MainController implements ICarListener {
     private void handleCarSelection() {
         storedCarsComboBox.setOnAction(e -> {
             setCar(storedCarsComboBox.getSelectionModel().getSelectedItem());
-            if (car.getToggler()) if (!hasStartingPosition()) startButton.getStyleClass().setAll("btn", "btn-blue");
-            if (!car.getToggler()) if (!hasTargetPosition()) targetButton.getStyleClass().setAll("btn", "btn-red");
             carHUDController.setCar(car);
             carHUDController.setHasTarget(hasTargetPosition());
             carController.setCar(car);
+            toggleButtons();
         });
     }
     private void trackInteraction() {
@@ -101,7 +100,6 @@ public class MainController implements ICarListener {
         carViews.put(car, carImageView);
         car.setToggler(!car.getToggler());
         carRepository.getCarsOnTrack().add(car);
-        System.out.println(carRepository.getCarsOnTrack().size());
         startButton.getStyleClass().setAll("btn", "btn-grey");
         targetButton.getStyleClass().setAll("btn", "btn-red");
     }
@@ -132,6 +130,7 @@ public class MainController implements ICarListener {
         carRepository.getCarsOnTrack().remove(car);
         clearCarImage();
         clearFlagImage();
+        toggleButtons();
     }
     private void refresh() {
         for (Car car : carRepository.getStoredCars()) {
@@ -141,6 +140,12 @@ public class MainController implements ICarListener {
             view.setLayoutY(car.getCurrentPosition().getY());
             if (car.getCurrentTarget() == null && car.getCurrentPosition() != null) clearFlagImage();
         }
+    }
+    private void toggleButtons() {
+        startButton.getStyleClass().setAll("btn", "btn-grey");
+        targetButton.getStyleClass().setAll("btn", "btn-grey");
+        if (car.getToggler() && !hasStartingPosition()) startButton.getStyleClass().setAll("btn", "btn-blue");
+        else if (!car.getToggler() && !hasTargetPosition()) targetButton.getStyleClass().setAll("btn", "btn-red");
     }
     private boolean hasStartingPosition() { return car.getStartingPosition() != null; }
     private boolean hasTargetPosition() { return car.getCurrentTarget() != null; }
