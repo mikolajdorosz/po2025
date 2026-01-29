@@ -19,10 +19,8 @@ public class CarHUDController implements ICarListener {
     @FXML private Button brakeButton;
     @FXML private Button gasButton;
     private Car car;
-    private boolean hasTargetPosition;
 
     // ===================== SETUP =====================
-    public void setHasTarget(boolean hasTargetPosition) { this.hasTargetPosition = hasTargetPosition; }
     public Car getCar() { return car; }
     public void setCar(Car car) {
         if (this.car != null) this.car.removeListener(this);
@@ -46,15 +44,16 @@ public class CarHUDController implements ICarListener {
         rpmLabel.setText(String.valueOf(car.getEngine().getRpm()));
         speedLabel.setText(String.valueOf(car.getSpeed()));
         gearLabel.setText(String.valueOf(car.getGearbox().getCurrentGear()));
-        //toggleControls();
+        toggleControls();
     }
     private void toggleControls() {
-        carIgnitionButton.setDisable(!hasTargetPosition);
-        clutchButton.setDisable(!hasTargetPosition);
-        gearDownButton.setDisable(!hasTargetPosition);
-        gearUpButton.setDisable(!hasTargetPosition);
-        brakeButton.setDisable(!hasTargetPosition);
-        gasButton.setDisable(!hasTargetPosition);
+        boolean readyToGo = car.getStartingPosition() == null || car.getCurrentTarget() == null;
+        carIgnitionButton.setDisable(readyToGo);
+        clutchButton.setDisable(readyToGo);
+        gearDownButton.setDisable(readyToGo);
+        gearUpButton.setDisable(readyToGo);
+        brakeButton.setDisable(readyToGo);
+        gasButton.setDisable(readyToGo);
     }
 
     // ===================== ACTIONS =====================
@@ -73,6 +72,7 @@ public class CarHUDController implements ICarListener {
     }
     @FXML private void onGearDownRelease() {
         if (car == null) return;
+        refresh();
         gearDownButton.getStyleClass().setAll("btn", "btn-orange");
     }
     @FXML private void onClutch() {
@@ -80,6 +80,7 @@ public class CarHUDController implements ICarListener {
         if (!car.getGearbox().getType().equals(GearboxType.MANUAL)) return;
         if (car.getGearbox().getClutch().getPressed()) car.getGearbox().getClutch().release();
         else car.getGearbox().getClutch().press();
+        refresh();
         setButtonStyle(clutchButton, car.getGearbox().getClutch().getPressed());
     }
     @FXML private void onGas() {
@@ -119,6 +120,7 @@ public class CarHUDController implements ICarListener {
     }
     @FXML private void onGearUpRelease() {
         if (car == null) return;
+        refresh();
         gearUpButton.getStyleClass().setAll("btn", "btn-blue");
     }
     private void setButtonStyle(Button btn, boolean isActive) {

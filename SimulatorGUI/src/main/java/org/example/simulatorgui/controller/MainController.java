@@ -78,7 +78,6 @@ public class MainController implements ICarListener {
         storedCarsComboBox.setOnAction(e -> {
             setCar(storedCarsComboBox.getSelectionModel().getSelectedItem());
             carHUDController.setCar(car);
-            carHUDController.setHasTarget(hasTargetPosition());
             toggleButtons();
         });
     }
@@ -97,6 +96,7 @@ public class MainController implements ICarListener {
         Position position = new Position(x, y);
         int index = storedCarsComboBox.getSelectionModel().getSelectedIndex();
         car.setStartingPosition(position);
+        carHUDController.refresh();
         ImageView carImageView = placeImg("cars/car"+ (index+1)%6 +".png", position);
         car.setImage(carImageView.getImage());
         carViews.put(car, carImageView);
@@ -113,6 +113,7 @@ public class MainController implements ICarListener {
         Position position = new Position(x, y);
         int index = storedCarsComboBox.getSelectionModel().getSelectedIndex();
         car.setCurrentTarget(position);
+        carHUDController.refresh();
         flagViews.put(car, placeImg("flags/flag"+ (index+1)%6 +".png", position));
         car.setToggler(!car.getToggler());
         targetButton.getStyleClass().setAll("btn", "btn-grey");
@@ -136,6 +137,7 @@ public class MainController implements ICarListener {
         clearFlagImage();
         clearCarTile();
         carRepository.getCarsOnTrack().remove(car);
+        carHUDController.refresh();
         toggleButtons();
     }
     private void refresh() {

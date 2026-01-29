@@ -98,6 +98,7 @@ public class Car extends Thread {
             startingPosition = currentTarget;
             currentTarget = null;
             toggler = false;
+            turnOff();
         }
     }
     private boolean hasReachedTarget() {
