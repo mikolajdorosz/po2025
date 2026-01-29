@@ -12,11 +12,8 @@ public class Position {
         this.y = y;
     }
 
-    public Position getPosition() { return this; }
     public double getX() { return x; }
     public double getY() { return y; }
-
-    public void setPosition(Position position) { this.x = position.getX(); this.y = position.getY(); }
 
     public void updatePosition(double deltaX, double deltaY) {
         x += deltaX;

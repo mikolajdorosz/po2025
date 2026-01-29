@@ -1,5 +1,7 @@
 package org.example.simulatorgui.controller.form;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -27,7 +29,7 @@ public class GearboxController {
 
 
     private final CarComponentsRepository carComponentsRepository = CarComponentsRepository.getInstance();
-    private ObjectProperty<GearboxType> gearboxTypeProperty = new SimpleObjectProperty<>();
+    private GearboxType gearboxType;
     private NewCarController addCarController;
     private ComponentsController carComponentsController;
 
@@ -50,35 +52,34 @@ public class GearboxController {
         typeManualToggleButton.setToggleGroup(gearboxTypeToggleGroup);
         gearboxTypeToggleGroup.selectedToggleProperty().addListener(
                 (obs, oldToggle, newToggle) -> {
-                    if (newToggle == null) {
-                        oldToggle.setSelected(true);
-                        return;
-                    }
-                    GearboxType type = GearboxType.valueOf(newToggle.getUserData().toString());
-                    gearboxTypeProperty.set(type);
-                    clutchComboBoxContainer.setDisable(type == GearboxType.AUTOMATIC);
+                    if (newToggle == null) { oldToggle.setSelected(true); return; }
+                    gearboxType = GearboxType.valueOf(newToggle.getUserData().toString());
+                    clutchComboBoxContainer.setDisable(gearboxType == GearboxType.AUTOMATIC);
                 }
         );
         Toggle selected = gearboxTypeToggleGroup.getSelectedToggle();
         if (selected != null) {
-            GearboxType type = GearboxType.valueOf(selected.getUserData().toString());
-            gearboxTypeProperty.set(type);
-            clutchComboBoxContainer.setDisable(type == GearboxType.AUTOMATIC);
+            gearboxType = GearboxType.valueOf(selected.getUserData().toString());
+            clutchComboBoxContainer.setDisable(gearboxType == GearboxType.AUTOMATIC);
         }
     }
     private void validateInput() {
         gearboxPriceTextField.setTextFormatter(Utils.createDecimalTextFormatter());
         gearboxWeightTextField.setTextFormatter(Utils.createDecimalTextFormatter());
         gearsTextField.setTextFormatter(Utils.createIntegerTextFormatter());
-        confirmGearboxButton.disableProperty().bind(
-            gearboxNameTextField.textProperty().isEmpty()
-                .or(gearboxPriceTextField.textProperty().isEmpty())
-                .or(gearboxWeightTextField.textProperty().isEmpty())
-                .or(gearsTextField.textProperty().isEmpty())
-                .or(clutchComboBox.valueProperty().isNull()
-                    .and(gearboxTypeProperty.isEqualTo(GearboxType.MANUAL))
-                )
+        BooleanBinding invalidInput = Bindings.createBooleanBinding(
+            () -> gearboxNameTextField.getText().isEmpty()
+                || gearboxPriceTextField.getText().isEmpty()
+                || gearboxWeightTextField.getText().isEmpty()
+                || gearsTextField.getText().isEmpty()
+                || (gearboxType == GearboxType.MANUAL && clutchComboBox.getValue() == null),
+            gearboxNameTextField.textProperty(),
+            gearboxPriceTextField.textProperty(),
+            gearboxWeightTextField.textProperty(),
+            gearsTextField.textProperty(),
+            clutchComboBox.valueProperty()
         );
+        confirmGearboxButton.disableProperty().bind(invalidInput);
     }
 
     public Gearbox getGearboxFromInput() {
@@ -95,9 +96,8 @@ public class GearboxController {
             int gears = Integer.parseInt(gearsTextField.getText());
             double weight = Double.parseDouble(gearboxWeightTextField.getText());
             double price = Double.parseDouble(gearboxPriceTextField.getText());
-            GearboxType type = gearboxTypeProperty.get();
-            if (type == GearboxType.MANUAL) return new Gearbox(gears, type, name, weight, price, clutch);
-            else return new Gearbox(gears, type, name, weight, price);
+            if (gearboxType == GearboxType.MANUAL) return new Gearbox(gears, gearboxType, name, weight, price, clutch);
+            else return new Gearbox(gears, gearboxType, name, weight, price);
         } catch (NumberFormatException e) { throw new IllegalStateException("Input value is incorrect!"); }
     }
 

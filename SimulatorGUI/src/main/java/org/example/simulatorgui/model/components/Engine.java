@@ -3,7 +3,7 @@ package org.example.simulatorgui.model.components;
 public class Engine extends Component {
     private static final int DEFAULT_MIN_RPM = 1000;
     private static final double GAS_RPM_INCREASE = 1500;
-    private static final double NO_GAS_RPM_DECREASE = 500;
+    private static final double NO_GAS_RPM_DECREASE = 250;
 
     private int rpm;
     private int minRpm;
