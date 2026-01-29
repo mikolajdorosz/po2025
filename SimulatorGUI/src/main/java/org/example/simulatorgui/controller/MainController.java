@@ -221,6 +221,7 @@ public class MainController implements ICarListener {
             carRepository.getStoredCars().remove(selected);
             if (!carRepository.getStoredCars().isEmpty()) storedCarsComboBox.getSelectionModel().selectFirst();
         }
+        carHUDController.refresh();
     }
 
     @Override public void onCarUpdated(Car car) { Platform.runLater(this::refresh); }
