@@ -85,28 +85,24 @@ public class CarHUDController implements ICarListener {
     }
     @FXML private void onGas() {
         if (car == null) return;
-        if (!car.getRunning()) return;
         car.setGasPressed(true);
         gasButton.getStyleClass().setAll("btn", "btn-grey");
         refresh();
     }
     @FXML private void onGasRelease() {
         if (car == null) return;
-        if (!car.getRunning()) return;
         car.setGasPressed(false);
         gasButton.getStyleClass().setAll("btn", "btn-blue");
         refresh();
     }
     @FXML private void onBrake() {
         if (car == null) return;
-        if (!car.getRunning()) return;
         car.setBrakePressed(true);
         brakeButton.getStyleClass().setAll("btn", "btn-grey");
         refresh();
     }
     @FXML private void onBrakeRelease() {
         if (car == null) return;
-        if (!car.getRunning()) return;
         car.setBrakePressed(false);
         brakeButton.getStyleClass().setAll("btn", "btn-orange");
         refresh();

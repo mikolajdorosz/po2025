@@ -115,6 +115,7 @@ public class Car extends Thread {
         engine.stop();
         gearbox.setCurrentGear(0);
         speed = 0;
+        gasPressed = false;
         running = false;
         Platform.runLater(this::notifyUpdated);
     }

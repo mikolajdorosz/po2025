@@ -133,11 +133,12 @@ public class MainController implements ICarListener {
         car.setToggler(true);
         car.setStartingPosition(null);
         car.setCurrentTarget(null);
+        car.turnOff();
         clearCarImage();
         clearFlagImage();
         clearCarTile();
-        carRepository.getCarsOnTrack().remove(car);
         carHUDController.refresh();
+        carRepository.getCarsOnTrack().remove(car);
         toggleButtons();
     }
     private void refresh() {
@@ -214,14 +215,15 @@ public class MainController implements ICarListener {
         setDefaultComboBoxValue();
         clearFlagImage();
         clearCarImage();
+        car.turnOff();
         carRepository.getCarsOnTrack().remove(car);
         clearCarTile();
+        carHUDController.refresh();
         Car selected = storedCarsComboBox.getValue();
         if (selected != null) {
             carRepository.getStoredCars().remove(selected);
             if (!carRepository.getStoredCars().isEmpty()) storedCarsComboBox.getSelectionModel().selectFirst();
         }
-        carHUDController.refresh();
     }
 
     @Override public void onCarUpdated(Car car) { Platform.runLater(this::refresh); }
