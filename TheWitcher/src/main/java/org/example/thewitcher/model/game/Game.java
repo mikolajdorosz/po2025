@@ -33,7 +33,7 @@ public class Game implements java.io.Serializable {
     public Game() {
         player = new Player();
         location = new Velen(player);
-        //location = new TestMap(player);
+        location = new TestMap(player);
         state = GameState.MAP;
     }
 

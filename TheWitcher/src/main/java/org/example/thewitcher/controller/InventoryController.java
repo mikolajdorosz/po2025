@@ -70,7 +70,7 @@ public class InventoryController {
                     // Equip / Use
                     if (item.getType().equals("food") || item.getType().equals("elixir")) {
                         game.setMessage(game.getPlayer().use(item));
-                    } else {
+                    } else if (item instanceof IWearable) {
                         game.setPlayer(game.getPlayer().equipItem(item));
                         game.setMessage("Equipped: " + item.getName());
                     }

@@ -1,0 +1,77 @@
+@startuml
+title Game Initialization Sequence Diagram
+
+actor "JavaFX Platform" as FX
+participant "Main" as Main
+participant "GameApp" as App
+participant "GameConfig" as Config
+participant "GameView" as View
+participant "GameController" as GC
+participant "GameStateManager" as GSM
+participant "Game" as Game
+participant "Scene" as Scene
+participant "Stage" as Stage
+
+FX -> Main : start(stage)
+
+Main -> App : new GameApp()
+App --> Main
+
+Main -> App : start(stage)
+
+App -> Config : builder().build()
+Config --> App : config
+
+App -> View : new GameView(config)
+View --> App : view
+
+App -> GC : new GameController(view)
+
+GC -> GSM : loadGame()
+GSM --> GC : loadedGame (Game)
+
+alt loadedGame != null
+    GC -> GC : game = loadedGame
+else loadedGame == null
+    GC -> Game : new Game()
+    Game --> GC : newGame
+    GC -> GC : game = newGame
+end
+
+GC -> GC : initControllers()
+note right of GC
+    Creates MapController, InventoryController, 
+    ArmorerController, BlacksmithController, 
+    MerchantController, SorceressController, 
+    BattleController, PauseMenuController
+end note
+GC --> GC
+
+GC --> App : controller
+
+App -> Scene : new Scene(view.getCanvas())
+Scene --> App : scene
+
+App -> GC : attachInput(scene)
+GC -> Scene : setOnKeyPressed(EventHandler)
+Scene --> GC
+GC --> App
+
+App -> Stage : setTitle(config.getTitle())
+Stage --> App
+
+App -> Stage : setScene(scene)
+Stage --> App
+
+App -> Stage : show()
+Stage --> App
+
+App -> GC : start()
+note right of GC: Starts AnimationTimer
+GC --> App
+
+App --> Main
+
+Main --> FX
+
+@enduml

@@ -1,0 +1,74 @@
+@startuml
+actor Player
+participant "GameController" as GameController
+participant "BattleController" as Controller
+participant "Game" as Game
+participant "Battle" as Battle
+participant "PlayerBattleUnit" as PlayerUnit
+participant "MonsterBattleUnit" as EnemyUnit
+
+title Battle Sequence: Player Attack
+
+Player -> GameController: Press '1' (Attack)
+GameController -> Controller: handleInput(DIGIT1)
+
+Controller -> Game: getBattle()
+Game --> Controller: battle
+
+Controller -> Battle: getInputState()
+Battle --> Controller: ACTION
+
+Controller -> Controller: handleAction(DIGIT1)
+Controller -> Battle: allysAction(ATTACK)
+Battle -> Battle: pendingAction = ATTACK
+Battle -> Battle: inputState = ENEMY
+
+
+' Loop/Wait for next input
+... Player chooses Enemy ...
+
+Player -> GameController: Type 'a' (Select Enemy A)
+GameController -> Controller: handleInput(KeyCode.A, "a")
+
+Controller -> Game: getBattle()
+Game --> Controller: battle
+
+Controller -> Battle: getInputState()
+Battle --> Controller: ENEMY
+
+Controller -> Controller: handleEnemy("a")
+Controller -> Battle: selectEnemy(0)
+Battle -> Battle: enemyIndex = 0
+Battle -> Battle: inputState = WEAPON
+note right: For Player, we need to choose a weapon first
+
+
+' Wait for weapon choice
+... Player chooses Weapon ...
+
+Player -> GameController: Press '1' (Silver Sword)
+GameController -> Controller: handleInput(DIGIT1)
+
+Controller -> Game: getBattle()
+Game --> Controller: battle
+
+Controller -> Battle: getInputState()
+Battle --> Controller: WEAPON
+
+
+Controller -> Controller: handleWeapon(DIGIT1)
+Controller -> Battle: chooseWeapon(SILVER)
+Battle -> Battle: pendingWeapon = SILVER
+Battle -> Battle: performAttack()
+
+Battle -> Battle: getAlly()
+Battle -> PlayerUnit: attack(enemy, SILVER)
+PlayerUnit --> Battle: damage
+
+Battle -> Battle: getEnemy()
+Battle -> EnemyUnit: takeDamage(damage)
+EnemyUnit --> Battle: void
+
+Battle -> Battle: endTurn()
+
+@enduml

@@ -1,0 +1,54 @@
+@startuml
+title Save and Quit Sequence Diagram
+
+actor Player
+participant "Scene (JavaFX)" as Scene
+participant "GameController" as GC
+participant "MapController" as MC
+participant "Game" as Game
+participant "PauseMenuController" as PMC
+participant "GameStateManager" as GSM
+participant "Platform (JavaFX)" as Platform
+
+note over Player, Scene: Player is on the Map
+
+Player -> Scene : Press ESCAPE
+
+Scene -> GC : KeyPressed Event (ESCAPE)
+
+GC -> Game : getState()
+Game --> GC : MAP
+
+GC -> MC : handleInput(ESCAPE)
+
+MC -> Game : setState(PAUSE_MENU)
+Game --> MC
+
+MC --> GC
+
+
+note over Player, Scene: Player is in Pause Menu
+
+Player -> Scene : Press '2'
+
+Scene -> GC : KeyPressed Event (DIGIT2)
+
+GC -> Game : getState()
+Game --> GC : PAUSE_MENU
+
+GC -> PMC : handleInput(DIGIT2)
+
+PMC -> GSM : saveGame(game)
+GSM -> GSM : ObjectOutputStream.writeObject(game)
+GSM --> PMC
+
+PMC -> GC : onStopTimer.run()
+note right of GC: Executes timer.stop()
+GC --> PMC
+
+PMC -> Platform : exit()
+Platform --> PMC
+
+PMC --> GC
+
+@enduml

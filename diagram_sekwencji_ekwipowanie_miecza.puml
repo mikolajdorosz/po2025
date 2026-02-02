@@ -1,0 +1,198 @@
+@startuml
+title Inventory and Equip Silver Sword Sequence Diagram
+
+actor Player
+participant "Scene (JavaFX)" as Scene
+participant "GameController" as GC
+participant "AnimationTimer" as Timer
+participant "MapController" as MC
+participant "InventoryController" as IC
+participant "Game" as Game
+participant "Player" as Player
+participant "GameView" as View
+participant "InventoryView" as InvView
+participant "ItemActionOverlay" as Overlay
+
+note over Player, GC: Input Phase: Opening Inventory
+
+Player -> Scene : Press 'I'
+activate Scene
+Scene -> GC : KeyPressed Event (I)
+activate GC
+
+GC -> Game : getState()
+activate Game
+Game --> GC : MAP
+deactivate Game
+
+GC -> MC : handleInput(I)
+activate MC
+MC -> Game : setState(INVENTORY)
+activate Game
+Game --> MC
+deactivate Game
+MC --> GC
+deactivate MC
+
+deactivate GC
+deactivate Scene
+
+note over Timer, Overlay: Render Phase (Next Frame)
+
+Timer -> View : render(game)
+activate View
+View -> Game : getState()
+activate Game
+Game --> View : INVENTORY
+deactivate Game
+View -> InvView : render(game)
+activate InvView
+InvView --> View
+deactivate InvView
+View --> Timer
+deactivate View
+
+
+note over Player, GC: Input Phase: Selecting Silver Sword
+
+Player -> Scene : Press 'a'
+activate Scene
+Scene -> GC : KeyPressed Event (A)
+activate GC
+
+GC -> Game : getState()
+activate Game
+Game --> GC : INVENTORY
+deactivate Game
+
+GC -> IC : handleInput(A, "a")
+activate IC
+IC -> IC : handleInventory(A, "a")
+activate IC
+
+IC -> Game : getInventoryEntries()
+activate Game
+Game --> IC : entries
+deactivate Game
+
+loop for each entry
+    IC -> IC : entry.key == 'a' ?
+    opt match
+        IC -> Game : setSelectedItem(item)
+        activate Game
+        Game --> IC
+        deactivate Game
+        IC -> Game : setState(INVENTORY_ITEM_ACTION_MENU)
+        activate Game
+        Game --> IC
+        deactivate Game
+    end
+end
+
+IC --> IC
+deactivate IC
+IC --> GC
+deactivate IC
+
+deactivate GC
+deactivate Scene
+
+note over Timer, Overlay: Render Phase (Next Frame)
+
+Timer -> View : render(game)
+activate View
+View -> Game : getState()
+activate Game
+Game --> View : INVENTORY_ITEM_ACTION_MENU
+deactivate Game
+
+View -> InvView : render(game)
+activate InvView
+InvView -> Overlay : render(game)
+activate Overlay
+Overlay --> InvView
+deactivate Overlay
+InvView --> View
+deactivate InvView
+View --> Timer
+deactivate View
+
+note over Player, GC: Input Phase: Equipping Item
+
+Player -> Scene : Press '2'
+activate Scene
+Scene -> GC : KeyPressed Event (DIGIT2)
+activate GC
+
+GC -> Game : getState()
+activate Game
+Game --> GC : INVENTORY_ITEM_ACTION_MENU
+deactivate Game
+
+GC -> IC : handleInput(DIGIT2, "2")
+activate IC
+IC -> IC : handleInventoryItemActionMenu(DIGIT2)
+activate IC
+
+IC -> Game : getSelectedItem()
+activate Game
+Game --> IC : item (Silver Sword)
+deactivate Game
+
+IC -> Game : getInventoryEntries()
+activate Game
+Game --> IC : entries
+deactivate Game
+note right of IC: Checks if item is already applied
+
+IC -> Game : getPlayer()
+activate Game
+Game --> IC : player
+deactivate Game
+
+IC -> Player : equipItem(item)
+activate Player
+create "SilverPlayerDecorator" as Decorator
+Player -> Decorator : new(player, item)
+activate Decorator
+Decorator --> Player
+deactivate Decorator
+Player --> IC : decoratedPlayer
+deactivate Player
+
+IC -> Game : setPlayer(decoratedPlayer)
+activate Game
+Game --> IC
+deactivate Game
+
+IC -> Game : setState(INVENTORY)
+activate Game
+Game --> IC
+deactivate Game
+
+IC --> IC
+deactivate IC
+IC --> GC
+deactivate IC
+
+deactivate GC
+deactivate Scene
+
+note over Timer, Overlay: Render Phase (Next Frame)
+
+Timer -> View : render(game)
+activate View
+View -> Game : getState()
+activate Game
+Game --> View : INVENTORY
+deactivate Game
+
+View -> InvView : render(game)
+activate InvView
+note right of InvView: Silver Sword now shown in Applied column
+InvView --> View
+deactivate InvView
+View --> Timer
+deactivate View
+
+@enduml
